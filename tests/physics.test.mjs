@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {pointInPolygon,segmentDistance,createCollisionIndex,moveWithCollision,safeExit,nearestRoad,parseProgress} from '../src/physics.js';
+const square={points:[[0,0],[10,0],[10,10],[0,10]]};
+test('polygon boundaries, concavity and degenerate segments are safe',()=>{assert.equal(pointInPolygon(5,5,square.points),true);assert.equal(pointInPolygon(10,2,square.points),true);assert.equal(pointInPolygon(-1,5,square.points),false);assert.equal(segmentDistance(3,4,0,0,0,0),5);});
+test('high speed movement cannot tunnel through thin buildings',()=>{const blocked=createCollisionIndex([{points:[[5,-10],[5.2,-10],[5.2,10],[5,10]]}]);const p={x:0,z:0};moveWithCollision(p,40,0,blocked,.45);assert.ok(p.x<4.56);assert.ok(p.x>4);});
+test('collision slides along walls and respects courtyards',()=>{const blocked=createCollisionIndex([{...square,holes:[[[3,3],[7,3],[7,7],[3,7]]]}]);assert.equal(blocked(5,5,.4),false);assert.equal(blocked(1,1,.4),true);assert.equal(blocked(3.1,5,.4),true);const p={x:-2,z:2};moveWithCollision(p,8,3,blocked,.4);assert.ok(p.x<0);assert.ok(p.z>4.9);});
+test('vehicle exit searches both sides and refuses a trapped exit',()=>{const car={x:0,z:0,angle:0};assert.equal(safeExit(car,()=>true),null);const p=safeExit(car,(x)=>x>0);assert.ok(p.x<0);});
+test('nearest driving road excludes footpaths',()=>{const roads=[{points:[[0,0],[10,0]],type:'footway',name:'Sendero'},{points:[[0,8],[10,8]],type:'residential',name:'Calle'}];assert.equal(nearestRoad(5,1,roads,true).name,'Calle');assert.equal(nearestRoad(5,1,roads).name,'Sendero');});
+test('corrupt progress does not interrupt gameplay',()=>{assert.equal(parseProgress('{oops').size,0);assert.equal(parseProgress('null').size,0);assert.deepEqual([...parseProgress('["studio",null,2,"studio"]')],['studio']);});

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.env*
+!.env.example
+artifacts/
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+*.log
+
+__pycache__/
+*.pyc

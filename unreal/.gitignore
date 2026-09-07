@@ -1,0 +1,15 @@
+**/Binaries/
+**/Intermediate/
+**/Saved/
+**/DerivedDataCache/
+**/.vs/
+**/*.sln
+**/*.suo
+**/*.code-workspace
+**/__pycache__/
+**/Content/Data/neiva.json
+**/Content/Maps/
+**/Content/Materials/
+**/Plugins/CesiumForUnreal/
+**/Content/Private/
+**/.env*

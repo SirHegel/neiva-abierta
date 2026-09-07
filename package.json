@@ -1,0 +1,29 @@
+{
+  "name": "neiva-abierta",
+  "version": "0.1.0",
+  "description": "Exploración libre de Neiva con cartografía abierta, edición web y proyecto Unreal",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && python3 -m http.server 4173 --directory dist",
+    "data": "node scripts/map-data.mjs"
+  },
+  "keywords": [],
+  "author": "Jhon Steven Álvarez Ruiz",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "puppeteer-core": "^25.10.0"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SirHegel/neiva-abierta.git"
+  }
+}
