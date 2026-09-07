@@ -11,6 +11,7 @@ import {parseArgs} from 'node:util';
 import {setTimeout as delay} from 'node:timers/promises';
 import {findFirefox, isolatedEnvironment} from './isolated-firefox.mjs';
 import {decodedBetween, inputReadiness} from './stream-progress.mjs';
+import {nativeControlsPlan, validateInteractionModes} from './stream-controls.mjs';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const {values} = parseArgs({options: {
@@ -19,6 +20,7 @@ const {values} = parseArgs({options: {
   timeout: {type: 'string', default: '90'},
   exercise: {type: 'boolean', default: false},
   drive: {type: 'boolean', default: false},
+  controls: {type: 'boolean', default: false},
   fixture: {type: 'boolean', default: false},
   record: {type: 'boolean', default: false},
   browser: {type: 'string', default: 'firefox'},
@@ -34,10 +36,11 @@ const seconds = Number(values.seconds), timeout = Number(values.timeout);
 if (!Number.isInteger(seconds) || seconds < 3 || seconds > 60 ||
     !Number.isInteger(timeout) || timeout < 5 || timeout > 300)
   throw Error('seconds must be 3–60; timeout must be 5–300.');
-if (values.drive && values.exercise) throw Error('--drive and --exercise are mutually exclusive.');
-if (values.drive && values.record && seconds > 45)
-  throw Error('--drive --record requires seconds <=45 to include the input sequence within the 60 s recording limit.');
+validateInteractionModes({...values, seconds});
 for (const flag of ['AutoConnect', 'AutoPlayVideo', 'StartVideoMuted']) address.searchParams.set(flag, 'true');
+// Epic's locked mouse mode needs a click to acquire pointer lock. This explicit
+// route audits free mouse movement with no button held using its hovering mode.
+if (values.controls) address.searchParams.set('HoveringMouse', 'true');
 for (const [key, value] of Object.entries({WaitForStreamer: 'true',
   MaxReconnectAttempts: String(timeout), StreamerAutoJoinInterval: '1000'}))
   if (!address.searchParams.has(key)) address.searchParams.set(key, value);
@@ -59,6 +62,9 @@ const report = {schema: 1, observedAtUtc: new Date().toISOString(), videoVerifie
   note: values.fixture ? 'LOCAL FIXTURE VIDEO ONLY. This is not Unreal Engine or native gameplay evidence.' :
     'This observes decoded WebRTC video. Native process identity and gameplay outcomes require separate verification.',
   samples: [], inputSent: [], inputEvents: [], gameplayVerified: false,
+  ...(values.controls ? {controlsVerified: false,
+    controlsAssumption: 'Operator-selected fresh native game at mapped spawn, control yaw 20 degrees and console closed; not verified by this observer.',
+    controlsMouseModeRequested: 'HoveringMouse'} : {}),
   ...(values.drive ? {driveAssumption: 'Operator-selected fresh game at mapped spawn and control yaw 20 degrees; not verified by this observer.'} : {})};
 
 async function keyDown(key) {
@@ -87,6 +93,24 @@ async function holdKeys(keys, milliseconds, label) {
     if (failure) throw failure;
   }
   report.inputSent.push(label);
+}
+
+async function queryNativeState(name) {
+  // The operator must start with the UE console closed. Its single-line mode
+  // closes after this one command; never type a second command into gameplay.
+  const query = {name, requestedAtUtc: new Date().toISOString(), commandSent: false,
+    nativeStateVerified: false, screenshot: `${name}.png`};
+  (report.nativeStateQueries ||= []).push(query);
+  await holdKeys(['Backquote'], 60, 'Console:open');
+  await delay(250, undefined, {signal: abort.signal});
+  for (const key of 'NeivaState') await holdKeys([key], 45, `Console:key:${key}`);
+  await holdKeys(['Enter'], 60, 'Console:execute-NeivaState');
+  query.commandSent = true;
+  query.executedAtUtc = new Date().toISOString();
+  await delay(300, undefined, {signal: abort.signal});
+  report.nativeStateCommandSent = true;
+  report.nativeStateVerified = false; // correlate each query with the native log
+  await page.screenshot({path: join(output, query.screenshot)});
 }
 
 async function deadline(promise, milliseconds) {
@@ -261,7 +285,7 @@ try {
       droppedFrames: quality.droppedVideoFrames, connection: peer.connectionState, incoming};
   });
   report.samples.push(await sample());
-  if (values.drive || values.exercise) {
+  if (values.drive || values.exercise || values.controls) {
     const baseline = report.samples[0], started = performance.now();
     const maxWaitMs = 8000;
     report.warmup = {passed: false, maxWaitMs, requiredNewFrames: 3,
@@ -284,6 +308,14 @@ try {
     } finally { report.warmup.elapsedMs = Math.round(performance.now() - started); }
     if (!report.warmup.passed)
       throw Error('No advancing video before input: required 3 new decoded frames and new bytes within 8 seconds. No input sent.');
+  }
+  if (values.controls) {
+    report.controlsMouseMode = await page.evaluate(() => ({
+      hoveringMouse: window.pixelStreaming?.config?.isFlagEnabled('HoveringMouse') ?? null,
+      pointerLocked: Boolean(document.pointerLockElement),
+    }));
+    if (report.controlsMouseMode.hoveringMouse !== true)
+      throw Error('Native controls require Epic HoveringMouse mode. No input sent.');
   }
   if (values.record) {
     await page.evaluate((maxBytes) => {
@@ -354,6 +386,24 @@ try {
     await holdKeys(['Shift', 'w'], 1000, 'Shift+W:1000ms');
     report.driveSequenceSent = true; // input delivery is not gameplay validation
   }
+  if (values.controls) {
+    await page.evaluate(() => document.querySelector('video')?.closest('[tabindex]')?.focus({preventScroll: true}));
+    report.controlsPlan = nativeControlsPlan();
+    for (const step of report.controlsPlan) {
+      abort.signal.throwIfAborted();
+      if (step.type === 'key') await holdKeys([step.key], step.milliseconds, step.label);
+      else if (step.type === 'wait') await delay(step.milliseconds, undefined, {signal: abort.signal});
+      else if (step.type === 'native-state') await queryNativeState(step.name);
+      else if (step.type === 'mouse') {
+        // No mouse.down/click call occurs anywhere in this route.
+        await page.mouse.move(step.x, step.y, {steps: 10});
+        report.inputEvents.push({type: 'mousemove', x: step.x, y: step.y,
+          buttons: 0, name: step.name, atUtc: new Date().toISOString()});
+        report.inputSent.push(`mouse:${step.name}:${step.x},${step.y}:buttons=0`);
+      }
+    }
+    report.controlsSequenceSent = true; // screenshots/native telemetry still need review
+  }
   for (let i = 0; i < seconds; ++i) {
     await delay(1000, undefined, {signal: abort.signal});
     report.samples.push(await sample());
@@ -381,18 +431,7 @@ try {
   report.videoVerified = last.connection === 'connected' && last.width > 0 && last.height > 0 &&
     Number.isFinite(duration) && duration > 0 && report.receivedFrames > 0 && report.liveAtEnd;
   if (!report.videoVerified) throw Error('No currently advancing decoded WebRTC video was verified.');
-  if (values['native-state']) {
-    // Opt-in native diagnostic: the operator must start with the UE console
-    // closed. Its single-line mode closes automatically after this ONE command.
-    await holdKeys(['Backquote'], 60, 'Console:open');
-    await delay(250, undefined, {signal: abort.signal});
-    for (const key of 'NeivaState') await holdKeys([key], 45, `Console:key:${key}`);
-    await holdKeys(['Enter'], 60, 'Console:execute-NeivaState');
-    await delay(300, undefined, {signal: abort.signal});
-    report.nativeStateCommandSent = true;
-    report.nativeStateVerified = false; // verify the native log separately
-    await page.screenshot({path: join(output, 'after-native-state.png')});
-  }
+  if (values['native-state']) await queryNativeState('after-native-state');
 } catch (error) {
   report.error = abort.signal.aborted ? 'Observation interrupted.' :
     String(error.message).replace(/(?:https?|wss?):\/\/[^\s"']+/g, '[player URL]').slice(0, 500);
