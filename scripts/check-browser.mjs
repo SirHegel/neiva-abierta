@@ -11,6 +11,7 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.setViewport({width:1440,height:960});const start=Date.now();await page.goto(origin,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>window.neiva?.snapshot().ready,{timeout:120000});
+  assert.equal(await page.evaluate(()=>neiva.snapshot().visualVersion),'0.2-photographic');
   const readyMs=Date.now()-start;console.log('World ready',readyMs);
   await page.screenshot({path:'artifacts/desktop-intro.png'});
   await page.click('#play');await sleep(400);assert.equal((await page.evaluate(()=>neiva.snapshot())).active,true);
@@ -31,13 +32,14 @@ try{
   assert.deepEqual(errors,[]);results.push({device:'desktop',width:1440,readyMs,graphics,walking:true,vehicleInteraction:true,studioContact:true,pause:true,mapTravel:true,errors,...await page.evaluate(()=>neiva.snapshot())});
   await page.close();
   for(const width of [320,390]){
-    const p=await browser.newPage(),err=[];p.on('pageerror',e=>err.push(e.message));await p.setViewport({width,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true});await p.goto(origin);await p.waitForFunction(()=>window.neiva?.snapshot().ready,{timeout:120000});
-    await p.screenshot({path:`artifacts/mobile-${width}-intro.png`});await p.tap('#play');await sleep(500);const before=await p.evaluate(()=>neiva.snapshot());
+    const p=await browser.newPage(),err=[];p.on('pageerror',e=>err.push(e.message));p.on('console',m=>{if(m.type()==='error')err.push(m.text());});await p.setViewport({width,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true});await p.goto(origin);await p.waitForFunction(()=>window.neiva?.snapshot().ready,{timeout:120000});
+    await p.screenshot({path:`artifacts/mobile-${width}-intro.png`});await p.tap('#play');await p.waitForFunction(()=>neiva.snapshot().active&&neiva.snapshot().near==='studio');await p.tap('#touch-interact');await p.waitForSelector('#studio-dialog[open]');assert.match(await p.$eval('#studio-dialog .primary',a=>a.href),/^mailto:alvarezruizj289@gmail.com/);await p.tap('#studio-dialog .close');await p.waitForFunction(()=>neiva.snapshot().active);const before=await p.evaluate(()=>neiva.snapshot());
     const bounds=await p.$eval('#joystick',el=>{const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};});
     const cdp=await p.createCDPSession();const touch={x:bounds.x,y:bounds.y-37,id:1,radiusX:6,radiusY:6,force:1};
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch]});await p.waitForFunction(([x,z])=>Math.hypot(neiva.snapshot().player.x-x,neiva.snapshot().player.z-z)>.4,{timeout:45000},[before.player.x,before.player.z]);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await sleep(200);
     await p.screenshot({path:`artifacts/mobile-${width}-play.png`});const layout=await p.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth,buttons:['joystick','touch-interact','map-button','menu-button'].map(id=>{const r=document.getElementById(id).getBoundingClientRect();return {id,width:r.width,height:r.height,inside:r.x>=0&&r.right<=innerWidth&&r.y>=0&&r.bottom<=innerHeight};})}));assert.equal(layout.document,layout.viewport);for(const b of layout.buttons){assert.ok(b.width>=44&&b.height>=44&&b.inside,JSON.stringify(b));}assert.deepEqual(err,[]);
-    results.push({device:'mobile',width,joystick:true,layout,errors:err});await p.close();
+    await p.tap('#map-button');await p.waitForSelector('#map-dialog[open]');await p.tap('#destinations button:nth-child(2)');await p.waitForFunction(()=>neiva.snapshot().active&&neiva.snapshot().progress.length>=2);assert.deepEqual(err,[]);
+    results.push({device:'mobile',width,joystick:true,studioContact:true,mapTravel:true,layout,errors:err});await p.close();
   }
   await writeFile('artifacts/browser-results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
 }finally{await browser.close();}

@@ -1,6 +1,7 @@
 #include "NeivaWorld.h"
 
 #include "Algo/Reverse.h"
+#include "Animation/AnimSequence.h"
 #include "Camera/CameraComponent.h"
 #include "CollisionQueryParams.h"
 #include "CollisionShape.h"
@@ -9,6 +10,7 @@
 #include "Components/DirectionalLightComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SkyLightComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Dom/JsonObject.h"
@@ -17,7 +19,9 @@
 #include "Engine/Engine.h"
 #include "Engine/SkyLight.h"
 #include "Engine/SkyAtmosphere.h"
+#include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/TextureCube.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -33,6 +37,7 @@
 #include "Misc/Parse.h"
 #include "Misc/Paths.h"
 #include "ProceduralMeshComponent.h"
+#include "KismetProceduralMeshLibrary.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
@@ -57,7 +62,12 @@ namespace Neiva
                 Indices.Add(Vertices.Num());
                 Vertices.Add(P);
                 Normals.Add(Normal);
-                UVs.Add(FVector2D(P.X, P.Y + P.Z) / 250.0);
+                // Dominant-plane UVs: 1 UV = 1 metre, including vertical walls.
+                // Split vertices retain flat normals; normal maps use derived tangents.
+                const FVector N = Normal.GetAbs();
+                const FVector2D UV = N.Z >= N.X && N.Z >= N.Y ? FVector2D(P.X, P.Y)
+                    : N.X >= N.Y ? FVector2D(P.Y, P.Z) : FVector2D(P.X, P.Z);
+                UVs.Add(UV / 100.0);
                 Colors.Add(Color);
             }
         }
@@ -71,8 +81,10 @@ namespace Neiva
         void Upload(UProceduralMeshComponent* Mesh, int32 Index, UMaterialInterface* Material, bool Collision)
         {
             if (Vertices.IsEmpty()) return;
+            TArray<FProcMeshTangent> Tangents;
+            UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Indices, UVs, Normals, Tangents);
             Mesh->CreateMeshSection_LinearColor(Index, Vertices, Indices, Normals, UVs,
-                Colors, TArray<FProcMeshTangent>(), Collision);
+                Colors, Tangents, Collision);
             if (Material) Mesh->SetMaterial(Index, Material);
         }
     };
@@ -159,7 +171,7 @@ namespace Neiva
         }
     }
 
-    void Extrude(FGeometry& G, TArray<FVector> P, double Height, FLinearColor Color)
+    void Extrude(FGeometry& G, TArray<FVector> P, double Height, FLinearColor Color, FGeometry* Roof = nullptr)
     {
         if (P.Num() < 3) return;
         double Area = 0;
@@ -176,7 +188,7 @@ namespace Neiva
             G.Quad(A, B, B + Up, A + Up, Color);
         }
         for (FVector& V : P) V.Z += Height;
-        Face(G, P, Color * FLinearColor(0.7f, 0.72f, 0.76f, 1));
+        Face(Roof ? *Roof : G, P, Color);
     }
 
     void Ribbon(FGeometry& G, const TArray<FVector>& P, double Width, FLinearColor Color)
@@ -201,31 +213,12 @@ namespace Neiva
         if (GEngine) GEngine->AddOnScreenDebugMessage(15, 6.0f, FColor::Cyan, Text);
     }
 
-    void ColorMesh(UStaticMeshComponent* Mesh, FLinearColor Color)
+    UMaterialInterface* Material(const TCHAR* Name)
     {
-        // Constructors only record the color: dynamic UObjects are created in BeginPlay.
-        Mesh->ComponentTags.Add(FName(*(TEXT("NeivaColor:") + Color.ToString())));
-    }
-
-    void ApplyColors(AActor* Actor)
-    {
-        UMaterialInterface* Base = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/M_NeivaSolid.M_NeivaSolid"));
-        if (!Base) return;
-        TInlineComponentArray<UStaticMeshComponent*> Components(Actor);
-        for (UStaticMeshComponent* Mesh : Components)
-        {
-            for (FName Tag : Mesh->ComponentTags)
-            {
-                const FString Text = Tag.ToString();
-                if (!Text.StartsWith(TEXT("NeivaColor:"))) continue;
-                FLinearColor Color;
-                if (!Color.InitFromString(Text.RightChop(11))) continue;
-                UMaterialInstanceDynamic* M = UMaterialInstanceDynamic::Create(Base, Mesh);
-                M->SetVectorParameterValue(TEXT("Color"), Color);
-                Mesh->SetMaterial(0, M);
-                break;
-            }
-        }
+        const FString Path = FString::Printf(TEXT("/Game/NeivaAssets/Materials/%s.%s"), Name, Name);
+        auto* Result = LoadObject<UMaterialInterface>(nullptr, *Path);
+        if (!Result) UE_LOG(LogTemp, Error, TEXT("Neiva: missing PBR material %s. Run bootstrap_editor.py."), *Path);
+        return Result;
     }
 
     void Touch(APlayerController* PC)
@@ -263,7 +256,14 @@ void ANeivaCity::BuildCity()
         return;
     }
     Raw.Empty(); // parsed JSON owns the values; release the duplicated source text now
-    Surface = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/M_NeivaSurface.M_NeivaSurface"));
+    Surface = Neiva::Material(TEXT("M_Facade"));
+    UpperSurface = Neiva::Material(TEXT("M_UpperFacade"));
+    if (!UpperSurface) UpperSurface = Surface;
+    RoadMaterial = Neiva::Material(TEXT("M_Road"));
+    RoofMaterial = Neiva::Material(TEXT("M_Roof"));
+    GrassMaterial = Neiva::Material(TEXT("M_Grass"));
+    GroundMaterial = Neiva::Material(TEXT("M_Ground"));
+    WaterMaterial = Neiva::Material(TEXT("M_Water"));
     const TArray<TSharedPtr<FJsonValue>>* Roads = nullptr;
     Data->TryGetArrayField(TEXT("roads"), Roads);
     double Nearest = TNumericLimits<double>::Max();
@@ -337,9 +337,9 @@ void ANeivaCity::BuildCity()
             Sectors.FindOrAdd(Key).Add(O);
         }
         int32 Chunk = 0;
-        auto Flush = [this, &Chunk](FGeometry& Geometry)
+        auto Flush = [this, &Chunk](FGeometry& Geometry, FGeometry& Roofs, FGeometry& UpperWalls)
         {
-            if (Geometry.Vertices.IsEmpty()) return;
+            if (Geometry.Vertices.IsEmpty() && UpperWalls.Vertices.IsEmpty()) return;
             auto* Sector = NewObject<UProceduralMeshComponent>(this,
                 *FString::Printf(TEXT("BuildingSector_%d"), Chunk++));
             Sector->SetupAttachment(Mesh);
@@ -350,24 +350,29 @@ void ANeivaCity::BuildCity()
             BuildingMeshes.Add(Sector);
             Sector->RegisterComponent();
             Geometry.Upload(Sector, 0, Surface, true);
+            Roofs.Upload(Sector, 1, RoofMaterial, true);
+            UpperWalls.Upload(Sector, 2, UpperSurface, true);
             Geometry = FGeometry();
+            Roofs = FGeometry();
+            UpperWalls = FGeometry();
         };
         for (const auto& Sector : Sectors)
         {
-            FGeometry Geometry;
+            FGeometry Geometry, Roofs, UpperWalls;
             for (const auto& O : Sector.Value)
             {
                 double Height = 6;
                 O->TryGetNumberField(TEXT("height"), Height);
                 const float Shade = 0.65f + 0.16f * (BuildingCount % 5) / 4.0f;
-                Extrude(Geometry, Points(O), FMath::Clamp(Height, 2.0, 160.0) * 100,
-                    FLinearColor(Shade, Shade * 0.91f, Shade * 0.79f));
+                Extrude(Height > 6.4 ? UpperWalls : Geometry, Points(O), FMath::Clamp(Height, 2.0, 160.0) * 100,
+                    FLinearColor(Shade, Shade * 0.91f, Shade * 0.79f), &Roofs);
                 ++BuildingCount;
                 const TArray<TSharedPtr<FJsonValue>>* Holes = nullptr;
                 if (O->TryGetArrayField(TEXT("holes"), Holes) && !Holes->IsEmpty()) ++UncutCourtyards;
-                if (Geometry.Vertices.Num() >= 60000) Flush(Geometry);
+                if (Geometry.Vertices.Num() + Roofs.Vertices.Num() + UpperWalls.Vertices.Num() >= 60000)
+                    Flush(Geometry, Roofs, UpperWalls);
             }
-            Flush(Geometry);
+            Flush(Geometry, Roofs, UpperWalls);
         }
         UE_LOG(LogTemp, Display, TEXT("Neiva: %d/%d buildings in %d mesh chunks; preview radius %.0f m (0=all); %d exterior-only courtyard footprints."),
             BuildingCount, TotalBuildings, Chunk, BuildingRadiusMeters, UncutCourtyards);
@@ -403,10 +408,10 @@ void ANeivaCity::BuildCity()
         StudioPoint + FVector(55, -201, 220), StudioPoint + FVector(-55, -201, 220), FLinearColor(0.02f, 0.08f, 0.1f));
     if (bGenerateMapGeometry)
     {
-        Terrain.Upload(Mesh, 0, Surface, true);
-        Streets.Upload(Mesh, 1, Surface, true);
-        Water.Upload(Mesh, 3, Surface, false);
-        Green.Upload(Mesh, 4, Surface, false);
+        Terrain.Upload(Mesh, 0, GroundMaterial, true);
+        Streets.Upload(Mesh, 1, RoadMaterial, true);
+        Water.Upload(Mesh, 3, WaterMaterial, false);
+        Green.Upload(Mesh, 4, GrassMaterial, false);
     }
     Studio.Upload(Mesh, 5, Surface, true);
     UTextRenderComponent* Sign = NewObject<UTextRenderComponent>(this, TEXT("EstudioFicticio"));
@@ -424,6 +429,7 @@ void ANeivaCity::BuildCity()
 
 ANeivaCharacter::ANeivaCharacter()
 {
+    PrimaryActorTick.bCanEverTick = true;
     GetCapsuleComponent()->InitCapsuleSize(36, 92);
     bUseControllerRotationYaw = false;
     GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -437,31 +443,51 @@ ANeivaCharacter::ANeivaCharacter()
     Arm->bUsePawnControlRotation = true;
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camara"));
     Camera->SetupAttachment(Arm);
-    struct FPart { const TCHAR* Name; FVector Position; FVector Scale; FLinearColor Color; bool Sphere; };
-    const FPart Parts[] = {
-        {TEXT("Torso"), FVector(0,0,2), FVector(.42,.30,.65), FLinearColor(.07,.27,.25), false},
-        {TEXT("Cabeza"), FVector(0,0,54), FVector(.29,.29,.33), FLinearColor(.49,.30,.19), true},
-        {TEXT("PiernaIzq"), FVector(0,-12,-56), FVector(.17,.17,.60), FLinearColor(.035,.05,.07), false},
-        {TEXT("PiernaDer"), FVector(0,12,-56), FVector(.17,.17,.60), FLinearColor(.035,.05,.07), false},
-        {TEXT("BrazoIzq"), FVector(0,-26,2), FVector(.14,.14,.62), FLinearColor(.49,.30,.19), false},
-        {TEXT("BrazoDer"), FVector(0,26,2), FVector(.14,.14,.62), FLinearColor(.49,.30,.19), false}
-    };
-    for (const FPart& Part : Parts)
-    {
-        auto* Body = CreateDefaultSubobject<UStaticMeshComponent>(Part.Name);
-        Body->SetupAttachment(RootComponent);
-        Body->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, Part.Sphere ? TEXT("/Engine/BasicShapes/Sphere.Sphere") : TEXT("/Engine/BasicShapes/Cube.Cube")));
-        Body->SetRelativeLocation(Part.Position);
-        Body->SetRelativeScale3D(Part.Scale);
-        Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-        Neiva::ColorMesh(Body, Part.Color);
-    }
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ANeivaCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    Neiva::ApplyColors(this);
+    const auto* Settings = GetDefault<UNeivaVisualSettings>();
+    USkeletalMesh* VisualMesh = Settings->CharacterMesh.LoadSynchronous();
+    if (!VisualMesh)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Neiva: import CharacterMesh with bootstrap_editor.py; no block avatar is substituted."));
+        return;
+    }
+    GetMesh()->SetSkeletalMesh(VisualMesh);
+    const FBoxSphereBounds Bounds = VisualMesh->GetBounds().TransformBy(FTransform(Settings->CharacterRotation));
+    const float Scale = FMath::Max(1.f, Settings->CharacterHeightCm) / FMath::Max(1.f, float(Bounds.BoxExtent.Z * 2));
+    GetMesh()->SetRelativeRotation(Settings->CharacterRotation);
+    GetMesh()->SetRelativeScale3D(FVector(Scale));
+    GetMesh()->SetRelativeLocation(-Bounds.Origin * Scale + FVector(0, 0,
+        Bounds.BoxExtent.Z * Scale - GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()));
+    IdleAnimation = Settings->IdleAnimation.LoadSynchronous();
+    WalkAnimation = Settings->WalkAnimation.LoadSynchronous();
+    RunAnimation = Settings->RunAnimation.LoadSynchronous();
+    // Reject clips from another skeleton; no implicit retargeting of a licensed rig.
+    for (TObjectPtr<UAnimSequence>* Clip : {&IdleAnimation, &WalkAnimation, &RunAnimation})
+    {
+        if (*Clip && (*Clip)->GetSkeleton() != VisualMesh->GetSkeleton())
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Neiva: incompatible animation skeleton for %s."), *(*Clip)->GetName());
+            *Clip = nullptr;
+        }
+    }
+}
+
+void ANeivaCharacter::Tick(float DT)
+{
+    Super::Tick(DT);
+    const float Speed = GetVelocity().Size2D();
+    UAnimSequence* Desired = Speed > 500 && RunAnimation ? RunAnimation.Get()
+        : Speed > 8 && WalkAnimation ? WalkAnimation.Get() : IdleAnimation.Get();
+    if (Desired && Desired != ActiveAnimation)
+    {
+        GetMesh()->PlayAnimation(Desired, true);
+        ActiveAnimation = Desired;
+    }
 }
 
 void ANeivaCharacter::SetupPlayerInputComponent(UInputComponent* Input)
@@ -520,30 +546,9 @@ ANeivaCar::ANeivaCar()
     Collision->SetBoxExtent(FVector(205, 95, 60));
     Collision->SetCollisionProfileName(TEXT("Pawn"));
     SetRootComponent(Collision);
-    auto* Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Carroceria"));
-    Body->SetupAttachment(RootComponent);
-    Body->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")));
-    Body->SetRelativeScale3D(FVector(4.1, 1.8, .65));
-    Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    Neiva::ColorMesh(Body, FLinearColor(.045,.34,.35));
-    auto* Cabin = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cabina"));
-    Cabin->SetupAttachment(RootComponent);
-    Cabin->SetStaticMesh(Body->GetStaticMesh());
-    Cabin->SetRelativeLocation(FVector(-20,0,52));
-    Cabin->SetRelativeScale3D(FVector(2.1,1.6,.65));
-    Cabin->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    Neiva::ColorMesh(Cabin, FLinearColor(.018,.045,.075));
-    for (int32 I = 0; I < 4; ++I)
-    {
-        auto* Wheel = CreateDefaultSubobject<UStaticMeshComponent>(*FString::Printf(TEXT("Rueda%d"), I));
-        Wheel->SetupAttachment(RootComponent);
-        Wheel->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cylinder.Cylinder")));
-        Wheel->SetRelativeLocation(FVector(I < 2 ? 130 : -130, I % 2 ? 91 : -91, -34));
-        Wheel->SetRelativeRotation(FRotator(0,0,90));
-        Wheel->SetRelativeScale3D(FVector(.64,.64,.24));
-        Wheel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-        Neiva::ColorMesh(Wheel, FLinearColor(.025,.03,.035));
-    }
+    Visual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CarroceriaImportada"));
+    Visual->SetupAttachment(RootComponent);
+    Visual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("BrazoCamara"));
     Arm->SetupAttachment(RootComponent);
     Arm->TargetArmLength = 750;
@@ -556,7 +561,21 @@ ANeivaCar::ANeivaCar()
 void ANeivaCar::BeginPlay()
 {
     Super::BeginPlay();
-    Neiva::ApplyColors(this);
+    const auto* Settings = GetDefault<UNeivaVisualSettings>();
+    UStaticMesh* CarMesh = Settings->CarMesh.LoadSynchronous();
+    if (!CarMesh)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Neiva: import CarMesh with bootstrap_editor.py; no block car is substituted."));
+        return;
+    }
+    Visual->SetStaticMesh(CarMesh);
+    const FBoxSphereBounds Bounds = CarMesh->GetBounds().TransformBy(FTransform(Settings->CarRotation));
+    const float Length = float(FMath::Max(Bounds.BoxExtent.X, Bounds.BoxExtent.Y) * 2);
+    const float Scale = FMath::Max(1.f, Settings->CarLengthCm) / FMath::Max(1.f, Length);
+    Visual->SetRelativeRotation(Settings->CarRotation);
+    Visual->SetRelativeScale3D(FVector(Scale));
+    Visual->SetRelativeLocation(-Bounds.Origin * Scale + FVector(0, 0,
+        Bounds.BoxExtent.Z * Scale - Collision->GetUnscaledBoxExtent().Z));
 }
 void ANeivaCar::SetupPlayerInputComponent(UInputComponent* Input)
 {
@@ -659,7 +678,12 @@ void ANeivaGameMode::StartPlay()
         Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
         Sky->GetLightComponent()->SetIntensity(1.2f);
         Sky->GetLightComponent()->SetLowerHemisphereColor(FLinearColor(.20,.27,.36));
-        Sky->GetLightComponent()->RecaptureSky();
+        if (UTextureCube* Environment = GetDefault<UNeivaVisualSettings>()->EnvironmentCube.LoadSynchronous())
+        {
+            Sky->GetLightComponent()->SourceType = SLS_SpecifiedCubemap;
+            Sky->GetLightComponent()->SetCubemap(Environment);
+        }
+        else Sky->GetLightComponent()->RecaptureSky();
     }
     Super::StartPlay();
     if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))

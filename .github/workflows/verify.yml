@@ -16,4 +16,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Validar preparación de Unreal (no compila el motor)
-        run: python3 unreal/NeivaAbierta/Scripts/prepare_project.py
+        run: |
+          python3 unreal/NeivaAbierta/Scripts/prepare_project.py
+          python3 unreal/NeivaAbierta/Scripts/asset_plan.py --check
+          python3 -m unittest discover -s unreal/NeivaAbierta/Scripts/tests -v
+          python3 -m py_compile unreal/NeivaAbierta/Scripts/*.py

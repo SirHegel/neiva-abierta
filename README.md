@@ -8,12 +8,19 @@ mapa con destinos y un pequeño estudio ficticio para contactar a Jhon Steven
 [Jugar en Vercel](https://neiva-abierta.vercel.app/) ·
 [Sala de juegos y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/)
 
+![Captura del juego: recreación de la Catedral y su entorno](public/preview.webp)
+
 ## Alcance de esta versión
 
 La edición web usa Three.js/WebGL 2 y funciona como sitio estático en Vercel.
 Las calles, parques y huellas de edificios proceden de datos abiertos. Las
-fachadas, alturas ausentes, árboles decorativos, montañas y vehículos se generan
-como una interpretación visual. El suelo del juego es plano. No es una réplica
+alturas ausentes, fachadas y árboles son una interpretación visual. La edición
+0.2 usa un personaje humano animado de Microsoft Rocketbox, el automóvil
+Car Concept de Khronos, mapas PBR fotográficos de Poly Haven, iluminación HDR,
+sombras solares y fachadas de apariencia fotográfica generadas con IA. La
+Catedral de la Inmaculada Concepción tiene una malla arquitectónica específica
+con arcos, torre, reloj y cubiertas. Los demás edificios conservan huellas reales
+y reciben fachadas, aleros y tejados representativos. El suelo del juego es plano. No es una réplica
 fotográfica ni un levantamiento completo de cada barrio e interior de Neiva.
 El estudio mide 6 × 4 × 3,5 metros de juego y no representa una dirección real.
 
@@ -89,6 +96,10 @@ patios, salida obstruida del carro, proyección y validez del mapa. El rendimien
 real depende de GPU, resolución y cobertura visible; no se afirma una tasa de
 fotogramas sin medición en el dispositivo.
 
+[Actores y licencias](docs/ACTORES.md) · [Materiales](docs/MATERIALES.md) ·
+[Fachadas generadas y prompts](docs/FACHADAS-GENERADAS.md) ·
+[Catedral y límites de fidelidad](docs/LUGARES-MODELADOS.md).
+
 Umbral funcional: cero errores JavaScript, movimiento comprobable, entrada/salida
 del vehículo, panel de contacto accesible y cero desbordamiento horizontal a
 320/390 px. Las comprobaciones de navegador se ejecutan con
@@ -99,4 +110,8 @@ de la ejecución en la entrega; Unreal requiere su validación independiente.
 
 Código original: [MIT](LICENSE). Three.js: MIT. Unreal Engine conserva la
 licencia de Epic y no está incluido. Datos y atribuciones: [MAPAS.md](docs/MAPAS.md).
-El código abierto del juego no cambia la licencia de los proveedores externos.
+Personaje Microsoft Rocketbox: MIT; automóvil Car Concept de Eric Chadwick,
+Darmstadt Graphics Group GmbH, 2024: CC BY 4.0, con sus condiciones de marcas
+conservadas. Materiales y HDR de Poly Haven: CC0. Atribuciones también disponibles
+dentro del juego, en Sobre este mundo. El código abierto del juego no cambia
+la licencia de los proveedores externos.

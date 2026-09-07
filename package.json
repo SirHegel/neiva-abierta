@@ -1,6 +1,6 @@
 {
   "name": "neiva-abierta",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Exploración libre de Neiva con cartografía abierta, edición web y proyecto Unreal",
   "scripts": {
     "test": "node --test tests/*.test.mjs",

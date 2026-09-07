@@ -13,6 +13,29 @@ class UCameraComponent;
 class UStaticMeshComponent;
 class UBoxComponent;
 class UMaterialInterface;
+class USkeletalMesh;
+class UStaticMesh;
+class UAnimSequence;
+class UTextureCube;
+
+// Runtime asset references are editable in DefaultGame.ini. No editor module
+// is linked into the game, and missing art never becomes a block avatar.
+UCLASS(Config=Game, DefaultConfig)
+class NEIVAABIERTA_API UNeivaVisualSettings : public UObject
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<USkeletalMesh> CharacterMesh;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UStaticMesh> CarMesh;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UTextureCube> EnvironmentCube;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UAnimSequence> IdleAnimation;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UAnimSequence> WalkAnimation;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UAnimSequence> RunAnimation;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") FRotator CharacterRotation = FRotator::ZeroRotator;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") FRotator CarRotation = FRotator::ZeroRotator;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") float CharacterHeightCm = 180;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") float CarLengthCm = 420;
+};
 
 UCLASS()
 class NEIVAABIERTA_API ANeivaCity : public AActor
@@ -34,6 +57,12 @@ private:
     UPROPERTY() TObjectPtr<UProceduralMeshComponent> Mesh;
     UPROPERTY() TArray<TObjectPtr<UProceduralMeshComponent>> BuildingMeshes;
     UPROPERTY() TObjectPtr<UMaterialInterface> Surface;
+    UPROPERTY() TObjectPtr<UMaterialInterface> UpperSurface;
+    UPROPERTY() TObjectPtr<UMaterialInterface> RoadMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> RoofMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> GrassMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> WaterMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> GroundMaterial;
     bool bBuilt = false;
 };
 
@@ -44,6 +73,7 @@ class NEIVAABIERTA_API ANeivaCharacter : public ACharacter
 public:
     ANeivaCharacter();
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
     virtual void SetupPlayerInputComponent(UInputComponent* Input) override;
     void Interact();
     void ResetPosition();
@@ -57,6 +87,10 @@ private:
     void SprintOff();
     UPROPERTY() TObjectPtr<USpringArmComponent> Arm;
     UPROPERTY() TObjectPtr<UCameraComponent> Camera;
+    UPROPERTY() TObjectPtr<UAnimSequence> IdleAnimation;
+    UPROPERTY() TObjectPtr<UAnimSequence> WalkAnimation;
+    UPROPERTY() TObjectPtr<UAnimSequence> RunAnimation;
+    UPROPERTY() TObjectPtr<UAnimSequence> ActiveAnimation;
 };
 
 UCLASS()
@@ -79,6 +113,7 @@ private:
     void BrakeOn();
     void BrakeOff();
     UPROPERTY() TObjectPtr<UBoxComponent> Collision;
+    UPROPERTY() TObjectPtr<UStaticMeshComponent> Visual;
     UPROPERTY() TObjectPtr<USpringArmComponent> Arm;
     UPROPERTY() TObjectPtr<UCameraComponent> Camera;
     UPROPERTY() TObjectPtr<ANeivaCharacter> Passenger;

@@ -2,7 +2,7 @@
 
 El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, preparado para **Unreal Engine 5.5**. Incluye código C++ original, personaje anónimo en tercera persona, coche arcade conducible, colisiones, calles y edificios procedurales a partir del mismo JSON que usa la web. Un estudio ficticio de **6 × 4 m, altura 3,5 m** permite abrir un correo a `alvarezruizj289@gmail.com` al acercarse y pulsar **E**. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
 
-**Estado comprobado:** validación del JSON compartido y sintaxis de los scripts Python. Unreal Editor, UnrealBuildTool y una GPU de Unreal no están instalados en el entorno de creación: **no hay compilación, prueba de juego Unreal ni ejecutable empaquetado verificados**. Las mallas y el avatar son una base procedural; no representan fachadas fotográficas ni un inventario completo de la ciudad.
+**Estado comprobado:** validación del JSON compartido, recursos artísticos locales y sintaxis Python. Unreal Editor y UnrealBuildTool no están disponibles en el entorno de creación: **no hay compilación, prueba de juego Unreal ni ejecutable empaquetado verificados**. La preparación ahora importa un humano con esqueleto y un coche detallado, materiales PBR fotográficos y fachadas generadas. El C++ ya no construye un avatar ni un coche con cubos. Las fachadas siguen siendo interpretaciones, sin inventario fotográfico completo de la ciudad.
 
 ## Abrir y jugar
 
@@ -11,6 +11,7 @@ El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, prepara
 
    ```bash
    python3 unreal/NeivaAbierta/Scripts/prepare_project.py
+   python3 unreal/NeivaAbierta/Scripts/asset_plan.py --check
    ```
 
 3. Genera los archivos del proyecto con la integración de Unreal de tu sistema y compila el target **NeivaAbiertaEditor / Development Editor**. En Linux con una instalación del motor, el comando equivalente es:
@@ -20,8 +21,8 @@ El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, prepara
      "$PWD/unreal/NeivaAbierta/NeivaAbierta.uproject" -WaitMutex
    ```
 
-4. Abre el `.uproject`. En la primera apertura todavía no existe el mapa binario `/Game/Maps/Neiva`. Desde **Tools → Execute Python Script**, ejecuta `Scripts/bootstrap_editor.py`: crea el mapa vacío y los dos materiales PBR. El código del GameMode genera la ciudad al comenzar Play. El script crea un nivel únicamente si no existe; guarda tu nivel actual antes de ejecutarlo.
-5. Cierra y vuelve a abrir el editor para que los componentes del personaje y coche carguen los materiales recién creados. Abre `/Game/Maps/Neiva` y pulsa **Play**.
+4. Abre el `.uproject`, con los plugins Interchange, Interchange Editor, Python y Editor Scripting Utilities disponibles para UE 5.5. En la primera apertura todavía no existe el mapa binario `/Game/Maps/Neiva`. Desde **Tools → Execute Python Script**, ejecuta `Scripts/bootstrap_editor.py`: valida los archivos antes de modificar assets, importa materiales/modelos y crea el mapa únicamente si falta. Guarda tu nivel actual antes de ejecutar el script.
+5. Abre `/Game/Maps/Neiva` y pulsa **Play**. El GameMode genera la ciudad y los actores cargan el arte en `BeginPlay`. Comprueba escala, orientación, suelo, materiales y reproducción del esqueleto. Si falta un recurso, el log da su ruta; no lo sustituye por un avatar/coche de bloques.
 
 | Acción | Control |
 | --- | --- |
@@ -54,11 +55,80 @@ El análisis del JSON actual, sin ejecutar Unreal, contabiliza **604 sectores oc
 
 Para una vista previa más ligera, el actor `NeivaCity` expone `BuildingRadiusMeters`: **0 carga todo**. También se puede iniciar el juego/editor con `-NeivaBuildingRadius=1500` para seleccionar edificios cuyo centro está a 1.500 m del punto inicial. El HUD muestra el número cargado frente al total y el radio activo. Ese límite permanece fijo durante la sesión: **no carga sectores nuevos al caminar**. El resto de superficies geográficas permanece cargado. `BuildingTileSizeMeters` permite variar el tamaño de sector entre 100 y 2.000 m. Estos ajustes requieren verificación de rendimiento en el equipo final.
 
-La colisión del coche es arcade, con barrido de una caja y salida lateral comprobada. Sus ruedas y el avatar usan geometría básica, sin rig ni animaciones esqueléticas. Se requiere trabajo artístico y medición adicional para una ciudad fotorealista. Activar Lumen por sí solo no produce fotorealismo: los componentes procedurales tampoco equivalen a mallas estáticas horneadas con Nanite y campos de distancia. Para producción, convierte sectores validados a Static Mesh, añade LOD/HLOD y mide iluminación y rendimiento sobre hardware real.
+La colisión del coche sigue siendo arcade, con barrido de una caja invisible y salida lateral comprobada. El render usa el coche importado completo; sus ruedas quedan unidas a la malla y no giran independientemente en esta preparación Unreal. El humano usa el rig y las animaciones originales de Rocketbox, con bloqueo de raíz para que el movimiento proceda de CharacterMovement. Los cambios de idle a walk son directos: quedan pendientes BlendSpace, IK y validación de pisada. La arquitectura continúa basada en huellas extruidas y necesita revisión artística y medición para una ciudad fotorealista. Activar Lumen por sí solo no produce fotorealismo: los componentes procedurales tampoco equivalen a mallas estáticas horneadas con Nanite y campos de distancia. Para producción, convierte sectores validados a Static Mesh, añade LOD/HLOD y mide iluminación y rendimiento sobre hardware real.
+
+## Recursos realistas y contrato de importación
+
+`Scripts/asset_plan.py` resuelve fuentes locales de `public/models`,
+`public/textures` y `public/facades`. Valida presencia, cabeceras FBX/GLB,
+escalas positivas y SHA-256 de los originales PBR/HDR antes de ejecutar
+mutaciones en el editor. Selecciona `sourceMaps` del manifiesto: JPEG/PNG
+originales para Unreal; las variantes WebP se reservan al cliente web.
+
+| Fuente local | Asset generado | Uso |
+| --- | --- | --- |
+| `models/character/character.fbx` | `/Game/NeivaAssets/Models/Character/SK_Character` | Humano Rocketbox, rig original |
+| `models/character/idle.fbx`, `walk.fbx` | `AN_Idle`, `AN_Walk` en la carpeta del personaje | Respiración y marcha, mismo Skeleton |
+| `models/car/car.glb` | `/Game/NeivaAssets/Models/Car/SM_Car` | Coche detallado, jerarquía horneada antes de combinar piezas |
+| `textures/*_{color,normal,arm}_1k.jpg` | `/Game/NeivaAssets/Materials/M_*` | Asfalto, yeso, ladrillo, pavimento, cubierta y terreno |
+| `facades/neiva-residential.png` | Material `M_Facade`, atlas de 16 × 6,4 m | Fachadas generadas para volúmenes de hasta 6,4 m |
+| `facades/neiva-upper.png` | Material `M_UpperFacade`, atlas de 9,6 × 6,4 m | Fachadas generadas de volúmenes más altos |
+| `textures/sunny_sky_2k.hdr` | `/Game/NeivaAssets/Environment/T_sunny_sky_2k` | Cubemap del SkyLight |
+
+Los nombres y dimensiones del atlas son convenciones artísticas del juego.
+La procedencia está en [FACHADAS-GENERADAS.md](FACHADAS-GENERADAS.md),
+[MATERIALES.md](MATERIALES.md) y [ACTORES.md](ACTORES.md). Las imágenes generadas
+no documentan fachadas de direcciones reales. Los materiales Poly Haven son
+CC0; Rocketbox tiene su licencia MIT de Microsoft; el coche conserva las
+atribuciones CC-BY-4.0 y condiciones de marcas que figuran en su carpeta.
+
+El color se importa como sRGB. ARM permanece lineal: R → oclusión ambiental,
+G → rugosidad, B → metalicidad. Las normales OpenGL de Poly Haven invierten
+el canal verde al importarse a Unreal. La convención de las normales Rocketbox
+no está documentada en la fuente: `NEIVA_CHARACTER_NORMAL_OPENGL=1` es una
+selección inicial revisable; usa `0` si la inspección en Unreal exige el sentido
+opuesto. Los mapas especulares originales no se reinterpretan como rugosidad.
+El pelo/cejas conserva el PNG con alfa y material Masked, umbral 0,45, doble cara.
+
+Las UV de geometría procedural expresan un metro por unidad y se proyectan
+según la normal dominante; las tangentes se calculan antes de cargar la malla.
+Muros y cubiertas tienen secciones/materiales separados. Los normales y ARM
+de yeso acompañan al color del atlas generado como acabado representativo.
+El agua sigue siendo una superficie opaca simple, sin simulación volumétrica.
+La catedral detallada del cliente web no se ha trasladado aún al código Unreal.
+
+`[/Script/NeivaAbierta.NeivaVisualSettings]` en `Config/DefaultGame.ini` permite
+cambiar las referencias del personaje, coche, cubemap y animaciones. Los campos
+`CharacterRotation` y `CarRotation` ajustan el frente del recurso importado;
+`CharacterHeightCm=180` y `CarLengthCm=420` fijan la escala desde sus bounds.
+La importación FBX convierte ejes/unidades y fuerza frente X. El glTF conserva
+sus transformaciones internas al combinarse: hay que verificar el sentido final
+en el editor, sin trasladar un giro web a Unreal por suposición. `RunAnimation`
+está vacío porque no se suministró un clip de carrera; el movimiento rápido
+reutiliza walk hasta asignar una animación compatible.
+
+La segunda ejecución reutiliza las mallas y texturas importadas. Para volver
+a importarlas tras cambiar fuentes, inicia el editor con
+`NEIVA_REIMPORT_ASSETS=1`. Los grafos de materiales de `/Game/NeivaAssets/Materials`
+se regeneran; guarda materiales personalizados fuera de ese espacio. Un resultado
+con varias mallas cuando se esperaba una detiene el proceso y exige revisar la
+importación; no se elige una pieza arbitraria del coche. El informe del editor
+se escribe en `Saved/NeivaAssets-import.json`, excluido de Git.
+
+El ensamblado utiliza la [API FBX de Epic para UE 5.5](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/FbxImportUI?application_version=5.5)
+y [InterchangeManager](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/InterchangeManager?application_version=5.5).
+La [configuración de meshes de Interchange](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/InterchangeGenericMeshPipeline?application_version=5.5)
+expone la combinación de mallas estáticas; el horneado de jerarquía conserva
+las posiciones relativas del modelo. Estas llamadas están preparadas según
+la documentación, pendientes de ejecución con la instalación real del motor.
+El GLB del coche declara 29 materiales y extensiones de barniz, transmisión,
+iridiscencia, emisión, variantes y transformación UV. Su equivalencia visual
+debe contrastarse con Interchange instalado: la importación de una malla no
+certifica que todas esas extensiones se reproduzcan igual que en el cliente web.
 
 ## Google Maps 3D con Cesium: vista previa opcional
 
-Google ofrece Photorealistic 3D Tiles mediante su Map Tiles API, y documenta Cesium for Unreal como renderizador compatible. No es una exportación de Street View ni una descarga libre de toda Neiva. **La disponibilidad de fotogrametría de Neiva no se ha confirmado con una clave activa**. Los datos de Google conservan sus propios términos y atribuciones; no pasan a ser MIT u ODbL. [Integración oficial de Google](https://developers.google.com/maps/documentation/tile/use-renderer).
+Google ofrece Photorealistic 3D Tiles mediante su Map Tiles API, y documenta Cesium for Unreal como renderizador compatible. No es una exportación de Street View ni una descarga libre de toda Neiva. **Neiva no figura dentro de los polígonos de superficie del visor oficial consultado el 7 de septiembre de 2026**; la revisión usó render vectorial y un control positivo. [Comprobación de cobertura](GOOGLE-COVERAGE.md). Los datos de Google conservan sus propios términos y atribuciones; no pasan a ser MIT u ODbL. [Integración oficial de Google](https://developers.google.com/maps/documentation/tile/use-renderer).
 
 Se incluye una conexión real opcional para inspección dentro del editor:
 
@@ -93,6 +163,8 @@ La cuenta GPU, sus gastos y los servicios de Google no se han creado ni activado
 ```bash
 python3 unreal/NeivaAbierta/Scripts/prepare_project.py --check
 python3 -m py_compile unreal/NeivaAbierta/Scripts/*.py
+python3 unreal/NeivaAbierta/Scripts/asset_plan.py --check
+python3 -m unittest discover -s unreal/NeivaAbierta/Scripts/tests -v
 ```
 
-Estos comandos comprueban estructura de datos y sintaxis Python; no sustituyen UnrealBuildTool, UnrealHeaderTool, pruebas del editor, verificación de APIs de plugins instalados ni pruebas visuales. La API de mallas utilizada corresponde a [UProceduralMeshComponent de Epic](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Plugins/ProceduralMeshComponent/UProceduralMeshComponent/CreateMeshSection/2?application_version=5.5). Los scripts de materiales usan la [API de MaterialEditingLibrary](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/MaterialEditingLibrary).
+La revisión local aprobó las siete pruebas del contrato de arte: originales JPEG, hash alterado, escala cero, ruta fuera de `public/`, clip ausente, descarga HTML disfrazada de GLB y escala de los dos atlas. Estos comandos comprueban estructura de datos, fuentes de arte y sintaxis Python; no sustituyen UnrealBuildTool, UnrealHeaderTool, pruebas del editor, verificación de APIs de plugins instalados ni pruebas visuales. La API de mallas utilizada corresponde a [UProceduralMeshComponent de Epic](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Plugins/ProceduralMeshComponent/UProceduralMeshComponent/CreateMeshSection/2?application_version=5.5). Los scripts de materiales usan la [API de MaterialEditingLibrary](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/MaterialEditingLibrary).

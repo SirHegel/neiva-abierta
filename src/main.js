@@ -1,5 +1,5 @@
 import * as T from 'three';
-import { createWorld,updateTraffic } from './world.js';
+import { createWorld,updateTraffic } from './world-realistic.js';
 import { createCollisionIndex,moveWithCollision,nearestRoad,safeExit,parseProgress } from './physics.js';
 
 const $=id=>document.getElementById(id),canvas=$('world'),keys=new Set();
@@ -43,9 +43,9 @@ $('home-button').addEventListener('click',()=>teleport(world.spawn.x,world.spawn
 $('travel-neighborhood').addEventListener('click',()=>{const n=data?.neighborhoods.find(n=>n.id===$('neighborhoods').value);if(n)teleport(n.x,n.z,n.name);});
 
 let quality=0;const qualityNames=['Auto','Ligera','Alta'];
-function applyQuality(){if(!world)return;const ratio=quality===1?1:quality===2?Math.min(devicePixelRatio,2):Math.min(devicePixelRatio,world.mobile?1.3:1.6);world.renderer.setPixelRatio(ratio);world.renderer.shadowMap.enabled=quality!==1;world.renderer.setSize(innerWidth,innerHeight);$('quality-label').textContent=qualityNames[quality];}
+function applyQuality(){if(!world)return;world.setQuality(quality);$('quality-label').textContent=qualityNames[quality];}
 $('quality-button').addEventListener('click',()=>{quality=(quality+1)%3;applyQuality();toast(`Calidad ${qualityNames[quality].toLowerCase()}`);});
-$('time-button').addEventListener('click',()=>{dayIndex=(dayIndex+1)%3;const configs=[{name:'Tarde',sun:'#fff1cf',intensity:3.2,hemi:2.4,fog:'#b6c8b1',elevation:230,exposure:1.05},{name:'Atardecer',sun:'#ffc18a',intensity:2.3,hemi:1.5,fog:'#c4a58c',elevation:55,exposure:1.1},{name:'Mañana',sun:'#fff9ec',intensity:3.8,hemi:2.8,fog:'#b6d4d1',elevation:360,exposure:1.05}];const c=configs[dayIndex];world.sun.color.set(c.sun);world.sun.intensity=c.intensity;world.hemi.intensity=c.hemi;world.scene.fog.color.set(c.fog);world.renderer.toneMappingExposure=c.exposure;world.sun.userData.elevation=c.elevation;world.sky.material.uniforms.sunPosition.value.set(-160,c.elevation,100).normalize();$('time-label').textContent=c.name;});
+$('time-button').addEventListener('click',()=>{dayIndex=(dayIndex+1)%3;world.setTime(dayIndex);$('time-label').textContent=['Tarde','Atardecer','Mañana'][dayIndex];});
 $('photo-button').addEventListener('click',()=>{photoRequested=true;});
 
 window.addEventListener('keydown',e=>{
@@ -70,12 +70,12 @@ $('run-button').addEventListener('pointerdown',e=>{sprinting=true;$('run-button'
 function cameraUpdate(dt,snap=false){
   if(!world)return;const {camera,spawn}=world;
   let target,pos;
-  if(!started){const angle=.9+(reduced?0:clock*.015);const focus=data.meta.focus||[spawn.x,spawn.z];target=new T.Vector3(focus[0],10,focus[1]);pos=new T.Vector3(focus[0]+Math.sin(angle)*200,135,focus[1]+Math.cos(angle)*200);}
+  if(!started){const focus=data.meta.focus,drift=reduced?0:Math.sin(clock*.07)*1.1;target=new T.Vector3(-917.4,13,-63.8);pos=new T.Vector3(focus[0]-18+drift,2.5,focus[1]-25);}
   else{const distance=driving?10.5:7.3;target=new T.Vector3(player.x,driving?1.45:1.35,player.z);let actual=distance;
     for(let d=1.5;d<distance;d+=.5){const cx=player.x+Math.sin(yaw)*d,cz=player.z+Math.cos(yaw)*d;if(blocked(cx,cz,.15)){actual=Math.max(1.2,d-.5);break;}}
     pos=new T.Vector3(player.x+Math.sin(yaw)*actual*Math.cos(pitch),target.y+Math.sin(pitch)*actual+1,player.z+Math.cos(yaw)*actual*Math.cos(pitch));}
   camera.position.lerp(pos,snap?1:1-Math.exp(-dt*8));camera.lookAt(target);
-  world.sun.position.set(player.x-160,world.sun.userData.elevation||230,player.z+100);world.sun.target.position.set(player.x,0,player.z);world.sun.target.updateMatrixWorld();
+  world.sun.position.set(player.x-160,world.sun.userData.elevation||230,player.z+(started?100:-140));world.sun.target.position.set(player.x,0,player.z);world.sun.target.updateMatrixWorld();
 }
 function update(dt){
   if(!world)return;
@@ -96,11 +96,12 @@ function update(dt){
       const walkingBlocked=(x,z,r)=>blocked(x,z,r)||Math.hypot(x-car.x,z-car.z)<1.55;
       moveWithCollision(player,dx,dz,walkingBlocked);const moved=Math.hypot(player.x-ox,player.z-oz);walkDistance+=moved;
       world.avatar.position.set(player.x,0,player.z);if(moved>.001){const desired=Math.atan2(dx,dz),delta=Math.atan2(Math.sin(desired-world.avatar.rotation.y),Math.cos(desired-world.avatar.rotation.y));world.avatar.rotation.y+=delta*(1-Math.exp(-dt*12));}
-      const swing=moved>.001?Math.sin(walkDistance*3.1)*.58:0;world.avatar.userData.limbs.forEach((limb,i)=>limb.rotation.x=swing*(i%2?1:-1)*(i>1?-.8:1));
+      world.updateCharacter(world.avatar,dt,moved/dt);
     }
     updateTraffic(world.traffic,dt,player);
   }
-  world.beacon.rotation.z=clock*.5;world.beacon.position.y=5.2+Math.sin(clock*2)*.15;
+  if(!active&&!driving)world.updateCharacter(world.avatar,dt,0);
+  world.beacon.rotation.z=clock*.5;world.beacon.position.y=4.3+Math.sin(clock*2)*.15;
   cameraUpdate(dt);
   if(clock-uiClock>.18){uiClock=clock;updateHUD();drawMap($('minimap'),false);}
 }
@@ -138,7 +139,7 @@ function setupDestinations(){
   for(const n of [...data.neighborhoods].sort((a,b)=>a.name.localeCompare(b.name,'es'))){const option=document.createElement('option');option.value=n.id;option.textContent=n.name;$('neighborhoods').append(option);}
   $('progress').textContent=`${destinations.filter(p=>progress.has(p.id)).length} / ${destinations.length}`;updateQuest();
 }
-window.addEventListener('resize',()=>{if(!world)return;world.camera.aspect=innerWidth/innerHeight;world.camera.updateProjectionMatrix();world.renderer.setSize(innerWidth,innerHeight);});
+window.addEventListener('resize',()=>world?.resize());
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();pause();toast('Se perdió la conexión gráfica. Recarga la página para volver a jugar.');});
 async function boot(){
   try{
@@ -155,9 +156,9 @@ async function boot(){
     const date=new Date(data.meta.fetchedAt).toLocaleDateString('es-CO',{timeZone:'America/Bogota'});$('map-stats').textContent=`Cartografía consultada: ${date}. ${data.roads.length.toLocaleString('es-CO')} vías, ${data.buildings.length.toLocaleString('es-CO')} huellas de edificios y ${data.neighborhoods.length} etiquetas de barrios en este recorte. Edificios combinados de OSM y Overture; las huellas detectadas automáticamente y las alturas estimadas se identifican en la descarga.`;
     $('loading').hidden=true;$('play').disabled=false;$('play-label').textContent='Entrar a la ciudad';cameraUpdate(1,true);
     // Small read-only diagnostics interface for reproducible browser checks.
-    window.neiva={snapshot:()=>({ready:true,active,driving,player:{...player},car:{...car},studio:{...world.studio},spawn:{...world.spawn},near:near?.type||null,progress:[...progress],roads:data.roads.length,buildings:data.buildings.length,triangles:world.renderer.info.render.triangles,calls:world.renderer.info.render.calls}),isBlocked:(x,z,r)=>blocked(x,z,r)};
+    window.neiva={snapshot:()=>({ready:true,visualVersion:world.visualVersion,active,driving,player:{...player},car:{...car},studio:{...world.studio},spawn:{...world.spawn},near:near?.type||null,progress:[...progress],roads:data.roads.length,buildings:data.buildings.length,triangles:world.renderer.info.render.triangles,calls:world.renderer.info.render.calls}),isBlocked:(x,z,r)=>blocked(x,z,r)};
     requestAnimationFrame(frame);
   }catch(error){console.error(error);$('loading').hidden=true;$('play-label').textContent='Recargar ciudad';$('play').disabled=false;$('play').replaceWith($('play').cloneNode(true));$('play').addEventListener('click',()=>location.reload());$('load-status').textContent='';$('intro').querySelector('.intro-description').textContent='No se pudo iniciar el entorno 3D. Prueba un navegador con WebGL 2 o recarga la página.';toast('La ciudad no pudo cargarse. Puedes volver a intentarlo.');}
 }
-function frame(time){const dt=Math.min((time-lastTime)/1000||.016,.05);lastTime=time;clock+=dt;if(!document.hidden){update(dt);world.renderer.render(world.scene,world.camera);if(photoRequested){photoRequested=false;const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='neiva-abierta.png';a.click();toast('Foto guardada. La imagen muestra esta interpretación de Neiva.');}}requestAnimationFrame(frame);}
+function frame(time){const dt=Math.min((time-lastTime)/1000||.016,.05);lastTime=time;clock+=dt;if(!document.hidden){update(dt);world.render(dt);if(photoRequested){photoRequested=false;const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='neiva-abierta.png';a.click();toast('Foto guardada. La imagen muestra esta interpretación de Neiva.');}}requestAnimationFrame(frame);}
 boot();

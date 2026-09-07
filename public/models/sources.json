@@ -1,0 +1,191 @@
+{
+  "downloadedAt": "2026-09-07T03:53:56.159189+00:00",
+  "assets": [
+    {
+      "file": "LICENSE-ROCKETBOX.txt",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/LICENSE.md",
+      "sha256": "17474e386e0b9e1a700cc3d06b2b0882a2c376d9c6b49c7f8274409b8f8d2352",
+      "bytes": 1066
+    },
+    {
+      "file": "character.fbx",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Export/Male_Adult_01.fbx",
+      "sha256": "8d1edb51b4dc3427ae2456f4407fc105532c145dd019e53cd42bab31cc948a29",
+      "bytes": 521472
+    },
+    {
+      "file": "walk.fbx",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Animations/all_animations_max_motextr_xy/m_walk_neutral.max.fbx",
+      "sha256": "93089851a370e3a117a6bd04c002815f7133fce41c6271e9eb448ca1228b154f",
+      "bytes": 958512
+    },
+    {
+      "file": "idle.fbx",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Animations/all_animations_max_motextr_static/m_idle_breathe_01.max.fbx",
+      "sha256": "281735704260d96e882d13e3c77d0ede00ed5d2e40805cd305000b3e5cbb1090",
+      "bytes": 1397280
+    },
+    {
+      "file": "m002_body_color.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_body_color.tga",
+      "sha256": "6a048a6b2140a1f5293798ca286be64fd0de6d79572e1273ff5765bd578f463f",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_body_normal.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_body_normal.tga",
+      "sha256": "c9892e80c56890f6f5365627835286c2d4d2cc34cc473f6788fe3d560a52fb69",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_body_specular.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_body_specular.tga",
+      "sha256": "c071a46bf86f2cc0062ccddae770a9bc21ebae325634439ac3cc1ed4d92fd684",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_head_color.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_head_color.tga",
+      "sha256": "f5b64e4894930d438f7c419c3c9d0bba1f95fa4de9af078b762ea55bfca1ab85",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_head_normal.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_head_normal.tga",
+      "sha256": "5ef5ae404c9276f17641e392d0d4bdbe5fb23e94f28238b23a381e6a357c42ea",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_head_specular.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_head_specular.tga",
+      "sha256": "c051336b12d443cbd0e04dc3f1ce4109d420f426198aa02a1a1451b87e9a7831",
+      "bytes": 12582956
+    },
+    {
+      "file": "m002_opacity_color.tga",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.tga",
+      "sha256": "53818d3f45519451edd2bc60d6e59cd4057ecd381827463c5503da0439d0a5cf",
+      "bytes": 16777260
+    },
+    {
+      "file": "car.glb",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CarConcept/glTF-Binary/CarConcept.glb",
+      "sha256": "c272098089d78c5cd9fd9f24ff50ee8acf8d932c55f2d55fc10adb6c8998966b",
+      "bytes": 11778688
+    },
+    {
+      "file": "LICENSE-CAR.txt",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CarConcept/LICENSE.md",
+      "sha256": "68fe164ee56cceb1d8376c32c228a74ebf83913355fe953217a2aa315c5cf0c3",
+      "bytes": 945
+    },
+    {
+      "file": "metadata-source.json",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CarConcept/metadata.json",
+      "sha256": "89555a6cb9dc0a4f300abe3cc6476c2d8d77c6f3f2cbde9bf790c1bd320027ed",
+      "bytes": 1334
+    },
+    {
+      "file": "LICENSE-KHRONOS-MARKS.txt",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/LICENSES/LicenseRef-LegalMark-Khronos.txt",
+      "sha256": "2ea9821de870cf8d3faaa115ffc47f56632bf9f98d54d2ac1ce61592040b765c",
+      "bytes": 589
+    }
+  ],
+  "sourceCommits": {
+    "microsoft/Microsoft-Rocketbox": "0943055db6ec570bcef9f2c8b41c9e5467c808f9",
+    "KhronosGroup/glTF-Sample-Assets": "9429648735279342b4c32b8745f7904196607379"
+  },
+  "modifications": [
+    "Character TGA textures converted to JPEG quality 94; alpha texture also exported lossless PNG/WebP. Original FBX rig and motion files retained.",
+    "Web loader converts legacy character materials to MeshStandardMaterial and uses shared Rocketbox skeleton clips with horizontal root motion removed.",
+    "Character scaled to 1.8 m; car normalized to 1.8 m wide and 4.2 m long. Optional paint tint applied at runtime; original car.glb retained."
+  ],
+  "distributedFiles": [
+    {
+      "path": "ATTRIBUTION.txt",
+      "bytes": 1287,
+      "sha256": "8435494be8b07522cc8a686da3767ba1b48129b8c72bef0a9ae22c4c52771f22"
+    },
+    {
+      "path": "car/LICENSE-CAR.txt",
+      "bytes": 945,
+      "sha256": "68fe164ee56cceb1d8376c32c228a74ebf83913355fe953217a2aa315c5cf0c3"
+    },
+    {
+      "path": "car/LICENSE-KHRONOS-MARKS.txt",
+      "bytes": 589,
+      "sha256": "2ea9821de870cf8d3faaa115ffc47f56632bf9f98d54d2ac1ce61592040b765c"
+    },
+    {
+      "path": "car/car.glb",
+      "bytes": 11778688,
+      "sha256": "c272098089d78c5cd9fd9f24ff50ee8acf8d932c55f2d55fc10adb6c8998966b"
+    },
+    {
+      "path": "car/metadata-source.json",
+      "bytes": 1334,
+      "sha256": "89555a6cb9dc0a4f300abe3cc6476c2d8d77c6f3f2cbde9bf790c1bd320027ed"
+    },
+    {
+      "path": "character/LICENSE-ROCKETBOX.txt",
+      "bytes": 1066,
+      "sha256": "17474e386e0b9e1a700cc3d06b2b0882a2c376d9c6b49c7f8274409b8f8d2352"
+    },
+    {
+      "path": "character/character.fbx",
+      "bytes": 521472,
+      "sha256": "8d1edb51b4dc3427ae2456f4407fc105532c145dd019e53cd42bab31cc948a29"
+    },
+    {
+      "path": "character/idle.fbx",
+      "bytes": 1397280,
+      "sha256": "281735704260d96e882d13e3c77d0ede00ed5d2e40805cd305000b3e5cbb1090"
+    },
+    {
+      "path": "character/m002_body_color.jpg",
+      "bytes": 1333318,
+      "sha256": "3fa20673db62ce37aec5d57ca1b8fcd3ba3d72f53dd022358161c96c5b31afa6"
+    },
+    {
+      "path": "character/m002_body_normal.jpg",
+      "bytes": 1183350,
+      "sha256": "623ca151be95a8c4466787c2c1210b10bf1b64ffd5b51f6ce72c048e9d64e26a"
+    },
+    {
+      "path": "character/m002_body_specular.jpg",
+      "bytes": 297369,
+      "sha256": "baa327f8c91bcd710aef88a735db0c124abae5c41fc0c8b8b7114fd370942f3c"
+    },
+    {
+      "path": "character/m002_head_color.jpg",
+      "bytes": 1025963,
+      "sha256": "9444fda4e1e14d4075fa3f4cc74dfddb46171a4405881c59e2ff4dc0ddf661bf"
+    },
+    {
+      "path": "character/m002_head_normal.jpg",
+      "bytes": 1105811,
+      "sha256": "eec6e9be3935d4840e55a2f92cc87567b18e09a52a28f8fd1403758dc14c1ec5"
+    },
+    {
+      "path": "character/m002_head_specular.jpg",
+      "bytes": 732746,
+      "sha256": "b5cd0d4ec479387d477f504546fb00b0627e297705d1ea0dba32947a0b7faf05"
+    },
+    {
+      "path": "character/m002_opacity_color.png",
+      "bytes": 4769992,
+      "sha256": "25ef5f4b4e41b23d49009638aa6de4a629db095cbf216a78c3cc797e5afb1862"
+    },
+    {
+      "path": "character/m002_opacity_color.webp",
+      "bytes": 2718758,
+      "sha256": "884d52fb1c7c18b8968ea0af07240578a0ad2eeb2cf072d850eabad7e5fbacfb"
+    },
+    {
+      "path": "character/walk.fbx",
+      "bytes": 958512,
+      "sha256": "93089851a370e3a117a6bd04c002815f7133fce41c6271e9eb448ca1228b154f"
+    }
+  ]
+}

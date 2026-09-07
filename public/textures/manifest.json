@@ -1,0 +1,848 @@
+{
+  "provider": "Poly Haven",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "downloadedAt": "2026-09-07T03:47:55.819627+00:00",
+  "note": "Original public CC0 PBR files, downloaded via official API. Representative materials, not photographic surveys of Neiva. ARM channels: R ambient occlusion, G roughness, B metalness. OpenGL normal maps.",
+  "assets": [
+    {
+      "key": "asphalt",
+      "assetId": "asphalt_02",
+      "name": "Asphalt 02",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/asphalt_02",
+      "metadataUrl": "https://api.polyhaven.com/info/asphalt_02",
+      "filesUrl": "https://api.polyhaven.com/files/asphalt_02",
+      "tileMeters": [
+        3,
+        3
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "asphalt_color_1k.webp",
+        "normal": "asphalt_normal_1k.webp",
+        "arm": "asphalt_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "asphalt_color_1k.jpg",
+        "normal": "asphalt_normal_1k.jpg",
+        "arm": "asphalt_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "pavement",
+      "assetId": "concrete_pavers_02",
+      "name": "Concrete Pavers 02",
+      "authors": [
+        "Amal Kumar"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/concrete_pavers_02",
+      "metadataUrl": "https://api.polyhaven.com/info/concrete_pavers_02",
+      "filesUrl": "https://api.polyhaven.com/files/concrete_pavers_02",
+      "tileMeters": [
+        2,
+        2
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "pavement_color_1k.webp",
+        "normal": "pavement_normal_1k.webp",
+        "arm": "pavement_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "pavement_color_1k.jpg",
+        "normal": "pavement_normal_1k.jpg",
+        "arm": "pavement_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "plaster",
+      "assetId": "painted_plaster_wall",
+      "name": "Painted Plaster Wall",
+      "authors": [
+        "Amal Kumar"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/painted_plaster_wall",
+      "metadataUrl": "https://api.polyhaven.com/info/painted_plaster_wall",
+      "filesUrl": "https://api.polyhaven.com/files/painted_plaster_wall",
+      "tileMeters": [
+        2,
+        2
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "plaster_color_1k.webp",
+        "normal": "plaster_normal_1k.webp",
+        "arm": "plaster_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "plaster_color_1k.jpg",
+        "normal": "plaster_normal_1k.jpg",
+        "arm": "plaster_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "roof",
+      "assetId": "clay_roof_tiles_02",
+      "name": "Clay Roof Tiles 02",
+      "authors": [
+        "Amal Kumar"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/clay_roof_tiles_02",
+      "metadataUrl": "https://api.polyhaven.com/info/clay_roof_tiles_02",
+      "filesUrl": "https://api.polyhaven.com/files/clay_roof_tiles_02",
+      "tileMeters": [
+        2.5,
+        2.5
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "roof_color_1k.webp",
+        "normal": "roof_normal_1k.webp",
+        "arm": "roof_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "roof_color_1k.jpg",
+        "normal": "roof_normal_1k.jpg",
+        "arm": "roof_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "brick",
+      "assetId": "red_brick",
+      "name": "Red Brick",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/red_brick",
+      "metadataUrl": "https://api.polyhaven.com/info/red_brick",
+      "filesUrl": "https://api.polyhaven.com/files/red_brick",
+      "tileMeters": [
+        1.4,
+        1.4
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "brick_color_1k.webp",
+        "normal": "brick_normal_1k.webp",
+        "arm": "brick_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "brick_color_1k.jpg",
+        "normal": "brick_normal_1k.jpg",
+        "arm": "brick_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "ground",
+      "assetId": "aerial_grass_rock",
+      "name": "Aerial Grass Rock",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/aerial_grass_rock",
+      "metadataUrl": "https://api.polyhaven.com/info/aerial_grass_rock",
+      "filesUrl": "https://api.polyhaven.com/files/aerial_grass_rock",
+      "tileMeters": [
+        15,
+        15
+      ],
+      "resolution": "1k",
+      "maps": {
+        "color": "ground_color_1k.webp",
+        "normal": "ground_normal_1k.webp",
+        "arm": "ground_arm_1k.webp"
+      },
+      "sourceMaps": {
+        "color": "ground_color_1k.jpg",
+        "normal": "ground_normal_1k.jpg",
+        "arm": "ground_arm_1k.jpg"
+      }
+    },
+    {
+      "key": "environment",
+      "assetId": "kloofendal_43d_clear_puresky",
+      "name": "Kloofendal 43d Clear (Pure Sky)",
+      "authors": [
+        "Greg Zaal"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/kloofendal_43d_clear_puresky",
+      "metadataUrl": "https://api.polyhaven.com/info/kloofendal_43d_clear_puresky",
+      "filesUrl": "https://api.polyhaven.com/files/kloofendal_43d_clear_puresky",
+      "resolution": "2k",
+      "maps": {
+        "hdr": "sunny_sky_2k.hdr"
+      }
+    },
+    {
+      "key": "foliage",
+      "assetId": "jacaranda_tree",
+      "name": "Jacaranda Tree leaves atlas",
+      "authors": [
+        "Rob Tuytel",
+        "Rico Cilliers"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "sourcePage": "https://polyhaven.com/a/jacaranda_tree",
+      "metadataUrl": "https://api.polyhaven.com/info/jacaranda_tree",
+      "filesUrl": "https://api.polyhaven.com/files/jacaranda_tree",
+      "resolution": "1k",
+      "maps": {
+        "color": "foliage_color_1k.webp",
+        "normal": "foliage_normal_1k.webp",
+        "arm": "foliage_arm_1k.webp",
+        "alpha": "foliage_alpha_1k.webp"
+      },
+      "uv": "Atlas UVs, not world tiling. Use alpha tested leaf cards; no claim of actual local tree species.",
+      "sourceMaps": {
+        "color": "foliage_color_1k.jpg",
+        "normal": "foliage_normal_1k.jpg",
+        "arm": "foliage_arm_1k.jpg",
+        "alpha": "foliage_alpha_1k.png"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "asphalt_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+      "bytes": 731707,
+      "sha256": "1aa5ce99f58a625c71d48cfc3e68b65ca85ccb00f39e045c0a928608a0ea25ed",
+      "sourceMd5": "fa19772d4817754c3efab708c651f5a8"
+    },
+    {
+      "path": "asphalt_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_nor_gl_1k.jpg",
+      "bytes": 1240122,
+      "sha256": "42a1c381b53204e83a982db2864479a30bc127bbdeebb1006f8ee51bff099df3",
+      "sourceMd5": "338da8de636ea36133170578cac82e8e"
+    },
+    {
+      "path": "asphalt_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_arm_1k.jpg",
+      "bytes": 296770,
+      "sha256": "56bd8e591a3db579846fcb5185f60b0651e0bd4ea85c3529c339e6746243c9cf",
+      "sourceMd5": "33820445f43af5e5ee484674b6939271"
+    },
+    {
+      "path": "pavement_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_diff_1k.jpg",
+      "bytes": 699805,
+      "sha256": "483c284c13153b8a8d010dbc58b4e52e65ad2525ddc69b3daf8722c70731730f",
+      "sourceMd5": "a0669d6bb1ef8db865b7c05795761c5b"
+    },
+    {
+      "path": "pavement_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_nor_gl_1k.jpg",
+      "bytes": 704346,
+      "sha256": "54eeb307a2f028134382b5e02d4d66b3272d10b8531e6f2b0d59fc466f560d67",
+      "sourceMd5": "4af20fb7e056987a7441d365d9d3fc80"
+    },
+    {
+      "path": "pavement_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_arm_1k.jpg",
+      "bytes": 429274,
+      "sha256": "f15b0f742d162b03ed4cf69ba95130663d2d89d6413d8d38885a784e8bf0400e",
+      "sourceMd5": "f034ff649825d375788d11721138ec81"
+    },
+    {
+      "path": "plaster_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_diff_1k.jpg",
+      "bytes": 686726,
+      "sha256": "440310f05af089f2c93353167573403cbc3f805948203237b5d26431eeb9e19c",
+      "sourceMd5": "15ba8c1f63a5ab412b1eabe31728540a"
+    },
+    {
+      "path": "plaster_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_nor_gl_1k.jpg",
+      "bytes": 900461,
+      "sha256": "8eb01647d126eb5341e2c325821ad48c8ca11349dbef53447c95422c5d91cc9d",
+      "sourceMd5": "43fff290583dbdfc9bfa088a2750e840"
+    },
+    {
+      "path": "plaster_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_arm_1k.jpg",
+      "bytes": 511105,
+      "sha256": "2f13ed444e3e8f13087bca0890969d30795ed074bcfb11737d1ad6f5f0b53992",
+      "sourceMd5": "a4c1ff7470669daec9e274d915471246"
+    },
+    {
+      "path": "roof_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_diff_1k.jpg",
+      "bytes": 903929,
+      "sha256": "227a062b38b170e02c27eaa513dae45dc8bc893a62cbd8d0c08e2c32b381fc25",
+      "sourceMd5": "43c45fa3ac4c68ffb28aa813cec32608"
+    },
+    {
+      "path": "roof_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_nor_gl_1k.jpg",
+      "bytes": 990101,
+      "sha256": "1548d3ebce335a4590d9e421556c4189a7b63852c793a568c71b9e533f8b62d5",
+      "sourceMd5": "9e24ddc6fbf048291f8e24bfb1f16e6d"
+    },
+    {
+      "path": "roof_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_arm_1k.jpg",
+      "bytes": 564611,
+      "sha256": "da94d4ce78607c4cb0450c669e8ca5d18852eb284def75445663f959cc1af63b",
+      "sourceMd5": "b3ecf39f9c8eb803131f84fbfe20e865"
+    },
+    {
+      "path": "brick_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_diff_1k.jpg",
+      "bytes": 766044,
+      "sha256": "6dea3a2b5a3185ff48d299d182c405a9f787129d79677792db6de4afd81c47f6",
+      "sourceMd5": "269e69449755abd1ede473e634b670e7"
+    },
+    {
+      "path": "brick_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_nor_gl_1k.jpg",
+      "bytes": 1052038,
+      "sha256": "99bd2c60dfdb02b011cc3551bd9ab51d9b0be2807e3ba8f7a53c8a4c945b2f87",
+      "sourceMd5": "3a49f27fb909b2db794f60bf1ce6659f"
+    },
+    {
+      "path": "brick_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_arm_1k.jpg",
+      "bytes": 701031,
+      "sha256": "803019d7d99ec30066189fae8517aa33f927a0fcaecf185204ce93d33e07e7ab",
+      "sourceMd5": "677d7938c3b7fdb1973af527ecce2077"
+    },
+    {
+      "path": "ground_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_diff_1k.jpg",
+      "bytes": 666655,
+      "sha256": "57b8041bfe0d0f01430e4dbaad45e7ddddf0a9fc97317f90dbc51f7b0d9e1b5d",
+      "sourceMd5": "e920ce36afd0abff000b8366d3d768d3"
+    },
+    {
+      "path": "ground_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_nor_gl_1k.jpg",
+      "bytes": 904956,
+      "sha256": "1aa3e23bff453f152e089b9f83aa36b4901651e019f7e2ca01d5331a9bbbda78",
+      "sourceMd5": "c8aa4c4f09b113cc7edef89ddeaccad9"
+    },
+    {
+      "path": "ground_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_arm_1k.jpg",
+      "bytes": 216829,
+      "sha256": "95d8f5180bafaab3f76c394cee3dca9b4f8ca6531281c00c4a06e4485d0ab956",
+      "sourceMd5": "1f37fdb9b46b7fe34932ed9aa77df0bf"
+    },
+    {
+      "path": "sunny_sky_2k.hdr",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/kloofendal_43d_clear_puresky_2k.hdr",
+      "bytes": 4624289,
+      "sha256": "462a3cc63bfcd9fe0299137a0f33f4ade84e237f4cb6115fe46f5ab400693fe6",
+      "sourceMd5": "62f7cb7b1dac5a90a5bbde728606773b"
+    },
+    {
+      "path": "foliage_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_diff_1k.jpg",
+      "bytes": 533896,
+      "sha256": "6fe80c1f514ef690cccefb90b7e559fbd1aa9c8935fdc02523cc8ab83c22f7c2",
+      "sourceMd5": "8ae91737f39567629768a255817d80be"
+    },
+    {
+      "path": "foliage_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_nor_gl_1k.jpg",
+      "bytes": 700843,
+      "sha256": "61520be2529ffe8e3d93d4361892134833bb4657117e121749089769067914c1",
+      "sourceMd5": "7cbd82c0dd4b8c8a4ab314338f50404d"
+    },
+    {
+      "path": "foliage_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_arm_1k.jpg",
+      "bytes": 332762,
+      "sha256": "577eab0a07279fb4afd24522e85e0f188058c88db4b35eb0b330005b0d745b7a",
+      "sourceMd5": "fabee050680fd173032acf003ef61191"
+    },
+    {
+      "path": "foliage_alpha_1k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/jacaranda_tree/jacaranda_tree_leaves_alpha_1k.png",
+      "bytes": 506043,
+      "sha256": "c708a7e928a2e4d26981b021a22deeefc0ebb0e467f60b53cfa636a7e24d68f7",
+      "sourceMd5": "740214de7b900e30737009ff4ee2c01a"
+    },
+    {
+      "path": "asphalt_color_1k.webp",
+      "sourcePath": "asphalt_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+      "bytes": 429814,
+      "sha256": "f04b0c1f609aeaddf20b078744ae6706cbd88a72448beb0dfe78f342a89dc252",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "asphalt_normal_1k.webp",
+      "sourcePath": "asphalt_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_nor_gl_1k.jpg",
+      "bytes": 593200,
+      "sha256": "a2e6dfd73f7c097e62dd793f17715b7937858edbd68353ec42b0c12389a43ce6",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "asphalt_arm_1k.webp",
+      "sourcePath": "asphalt_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_arm_1k.jpg",
+      "bytes": 351358,
+      "sha256": "c2271e8e2bb12b1e87c9220efdea50e3bbe9384839603e2c8b16e3722d3948de",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "pavement_color_1k.webp",
+      "sourcePath": "pavement_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_diff_1k.jpg",
+      "bytes": 161516,
+      "sha256": "024830905d72470921076b94a8822e431bf8808a2c9df6ca7f33a101ec2fd6a0",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "pavement_normal_1k.webp",
+      "sourcePath": "pavement_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_nor_gl_1k.jpg",
+      "bytes": 239814,
+      "sha256": "80ed838ef6716313318b1f01c32f983ff1036b138e60c5d29d63178aaab664ad",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "pavement_arm_1k.webp",
+      "sourcePath": "pavement_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavers_02/concrete_pavers_02_arm_1k.jpg",
+      "bytes": 36222,
+      "sha256": "b4b61942a20c596a6464876bfa2dce9ab402de905ef6c6b90b32801023fe1d65",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "plaster_color_1k.webp",
+      "sourcePath": "plaster_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_diff_1k.jpg",
+      "bytes": 189218,
+      "sha256": "bb3c2e4a4c780158967ea3654741f524152e26993868f1c10b2cb318bbf3c046",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "plaster_normal_1k.webp",
+      "sourcePath": "plaster_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_nor_gl_1k.jpg",
+      "bytes": 438484,
+      "sha256": "ec0ba189cbe3f9bd07b4bb396de298fa5659076f654cc702512e7f0a1e6adafd",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "plaster_arm_1k.webp",
+      "sourcePath": "plaster_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/painted_plaster_wall/painted_plaster_wall_arm_1k.jpg",
+      "bytes": 37578,
+      "sha256": "8fc02c660e4bc9208affbba9ef7d8ffe53e642445764de371ed902946faba1ab",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "roof_color_1k.webp",
+      "sourcePath": "roof_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_diff_1k.jpg",
+      "bytes": 218488,
+      "sha256": "aeadbe7038d3acd0296d34d3f98b8c8355d16793b87ff642bdd09a264d21e00b",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "roof_normal_1k.webp",
+      "sourcePath": "roof_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_nor_gl_1k.jpg",
+      "bytes": 399138,
+      "sha256": "9baa48ef918b4bfa66b689d77b1512585b5773db8afedec58c7a3f73c7384c19",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "roof_arm_1k.webp",
+      "sourcePath": "roof_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_02/clay_roof_tiles_02_arm_1k.jpg",
+      "bytes": 92914,
+      "sha256": "2588be4042c88b1447099de693dc5aca7f8a133530cc63f1dc9f192848b36a9e",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "brick_color_1k.webp",
+      "sourcePath": "brick_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_diff_1k.jpg",
+      "bytes": 143002,
+      "sha256": "34b1baafb2f98130335b51acf32b642704a550374bc69b4eb89f0dbcee638709",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "brick_normal_1k.webp",
+      "sourcePath": "brick_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_nor_gl_1k.jpg",
+      "bytes": 499370,
+      "sha256": "56ceae73dd1553bb211e711cf5d5f3d34146cd026e79384ee1300f2238b3b46b",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "brick_arm_1k.webp",
+      "sourcePath": "brick_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_brick/red_brick_arm_1k.jpg",
+      "bytes": 131208,
+      "sha256": "7db8a97e6db2c99856b10e325a5a327bac1a1393431d5e7dcb03a0e28125fee3",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "ground_color_1k.webp",
+      "sourcePath": "ground_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_diff_1k.jpg",
+      "bytes": 262520,
+      "sha256": "aa066aef2d23dca2eb6fcb2c6202d2a7c358813475b5577f467b1f03db172c6a",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "ground_normal_1k.webp",
+      "sourcePath": "ground_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_nor_gl_1k.jpg",
+      "bytes": 475828,
+      "sha256": "d820d7e116841e84bdbd8d91e317d5ec5c7cfa61d2cf202ba17c0c90a0d9746e",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "ground_arm_1k.webp",
+      "sourcePath": "ground_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_arm_1k.jpg",
+      "bytes": 210928,
+      "sha256": "a3acea46989c0dc96b91931c4ae12b0e1c7ca56586530712471f6d02331efc81",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "foliage_color_1k.webp",
+      "sourcePath": "foliage_color_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_diff_1k.jpg",
+      "bytes": 138648,
+      "sha256": "2c3c4d53594b2bb296a8b9e97117df8795f4a9a7bdae714092e6ea7b096a1cc2",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "86",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "foliage_normal_1k.webp",
+      "sourcePath": "foliage_normal_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_nor_gl_1k.jpg",
+      "bytes": 260964,
+      "sha256": "de57713a5ca96d8800e5636d52092c33f5a31223184597f5d7a2ec06206fbc1f",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "94",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "foliage_arm_1k.webp",
+      "sourcePath": "foliage_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/jacaranda_tree/jacaranda_tree_leaves_arm_1k.jpg",
+      "bytes": 51808,
+      "sha256": "bab9338ad3f9b9c44589742dcbe083e79664aeb5b9d10ebbaf518e67bcab257a",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-q",
+          "90",
+          "-m",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    },
+    {
+      "path": "foliage_alpha_1k.webp",
+      "sourcePath": "foliage_alpha_1k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/jacaranda_tree/jacaranda_tree_leaves_alpha_1k.png",
+      "bytes": 150932,
+      "sha256": "56a2a7bb2b95a86bd139b02150268d422d30976aac10310782dd278bf05870bb",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "encoding": {
+        "tool": "cwebp",
+        "options": [
+          "-lossless",
+          "-z",
+          "6"
+        ],
+        "operation": "Format compression only; no generated or painted pixels"
+      }
+    }
+  ],
+  "runtimeBytes": 10137241,
+  "encodingNote": "WebP runtime variants preserve original photographic images; original JPEG/PNG maps retained for Unreal import and audit. Alpha is lossless; normal quality94, ARM90, color86."
+}
