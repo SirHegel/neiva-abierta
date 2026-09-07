@@ -57,13 +57,13 @@
     "note": "La tasa RTP decodificada no es un benchmark de renderizado nativo ni una medición en otros equipos."
   },
   "checks": {
-    "nodeTestsPassed": 98,
+    "nodeTestsPassed": 99,
     "rootPythonTestsPassed": 57,
     "launcherContractTestsPassed": 44,
     "stagedMapTestsPassed": 13,
     "unrealScriptsTestsPassed": 22,
-    "totalTestsPassed": 177,
-    "countsRelation": "57 root Python = 44 launcher + 13 staged map. Total = 98 Node + 57 root Python + 22 Unreal Scripts.",
+    "totalTestsPassed": 178,
+    "countsRelation": "57 root Python = 44 launcher + 13 staged map. Total = 99 Node + 57 root Python + 22 Unreal Scripts.",
     "runReportedBy": "Agente principal tras ejecutar la suite completa durante package-01.",
     "webBuildPassed": true,
     "previousWebBuildPassed": true,
@@ -71,8 +71,8 @@
     "cppMotionKernelCompiledAndTested": true,
     "cppMotionKernelIsTheGameExecutable": false,
     "targetedAdditionalControlTestsPassed": 3,
-    "additionalControlsTestScope": "Tres regresiones nuevas del inspector; suite Node completa revalidada: 98 pruebas correctas. Las 79 pruebas Python corresponden a la corrida previa del mismo código Python.",
-    "nodeTestsRecheckedAt": "2026-09-07T17:53:22.724368+00:00"
+    "additionalControlsTestScope": "Cámara, pausa y lanzador de distribución: suite Node completa revalidada, 99 pruebas correctas. Las 79 pruebas Python corresponden a la corrida previa del mismo código Python.",
+    "nodeTestsRecheckedAt": "2026-09-07T18:31:20.813305+00:00"
   },
   "streaming": {
     "upstreamRevision": "c3e3abea6590a19e1c0ab4d2954efd6a1d949db3",

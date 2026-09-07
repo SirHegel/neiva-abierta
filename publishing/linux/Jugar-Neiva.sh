@@ -4,6 +4,11 @@ set -euo pipefail
 
 neiva_root=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 neiva_game="$neiva_root/Linux/NeivaAbierta.sh"
+neiva_render_args=(
+    -vulkan
+    '-ini:Engine:[ConsoleVariables]:r.Shadow.Virtual.ResolutionLodBiasDirectional=0.5'
+    '-ini:Engine:[ConsoleVariables]:r.Shadow.Virtual.ResolutionLodBiasDirectionalMoving=0.5'
+)
 
 if [[ $(uname -s) != Linux || $(uname -m) != x86_64 ]]; then
     printf '%s\n' 'Este paquete requiere Linux x86_64.' >&2
@@ -26,7 +31,7 @@ if [[ "$neiva_gpu" == auto ]] && command -v nvidia-smi >/dev/null 2>&1 \
     && command -v timeout >/dev/null 2>&1 \
     && timeout 5s nvidia-smi -L >/dev/null 2>&1; then
     exec env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia \
-        __VK_LAYER_NV_optimus=NVIDIA_only "$neiva_game" -vulkan "$@"
+        __VK_LAYER_NV_optimus=NVIDIA_only "$neiva_game" "${neiva_render_args[@]}" "$@"
 fi
 
-exec "$neiva_game" -vulkan "$@"
+exec "$neiva_game" "${neiva_render_args[@]}" "$@"

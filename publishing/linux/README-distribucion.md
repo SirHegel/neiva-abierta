@@ -41,6 +41,10 @@ Puedes pasar opciones de ventana de Unreal, por ejemplo:
 ./Jugar-Neiva.sh -windowed -ResX=1280 -ResY=720
 ```
 
+El lanzador aplica un perfil de menor resolución de sombras direccionales para
+reducir el trabajo de sombras de la geometría procedural. Este ajuste sacrifica
+algo de nitidez; no resuelve todas las limitaciones gráficas de la ciudad.
+
 La carga inicial construye la geometría cartográfica y puede tardar. Conserva
 todos los archivos de `Linux/`: un binario aislado no basta para abrir el juego.
 

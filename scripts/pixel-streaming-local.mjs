@@ -148,8 +148,12 @@ export function main(args=process.argv.slice(2)){
       execFileSync(process.platform==='win32'?'python':'python3',
         [resolve(repo,'scripts/unreal.py'),'verify-package','--output',folder],
         {cwd:repo,stdio:['ignore','pipe','pipe']});
-      executable=target==='Linux'?resolve(folder,'Linux/NeivaAbierta.sh'):resolve(folder,'Windows/NeivaAbierta.exe');
+      const distributionLauncher=resolve(folder,'Jugar-Neiva.sh');
+      executable=target==='Linux'
+        ?(existsSync(distributionLauncher)?distributionLauncher:resolve(folder,'Linux/NeivaAbierta.sh'))
+        :resolve(folder,'Windows/NeivaAbierta.exe');
       if(!existsSync(executable))throw Error(`No existe el lanzador del paquete: ${executable}`);
+      if(target==='Linux'&&!executableFile(executable))throw Error(`El lanzador del paquete no es un archivo ejecutable: ${executable}`);
     }
     const launch=gameLaunchPlan(values),gameArgs=launch.gameArgs;
     if(values['dry-run']||action==='doctor'){

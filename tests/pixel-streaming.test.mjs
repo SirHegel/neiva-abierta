@@ -114,7 +114,7 @@ test('doctor reports the VP8 virtual plan without creating a server or game',con
   assert.ok(!('environment' in plan));
 });
 
-test('doctor validates a complete mimetic inventory without running its launcher',context=>{
+test('doctor validates payload before preferring distribution wrapper or falling back to native launcher',context=>{
   if(process.platform!=='linux'||!existsSync('/bin/true')||
     !existsSync(resolve(repo,'artifacts/unreal-native/PixelStreamingInfrastructure/Signalling/dist/cjs/pixelstreamingsignalling.js'))){
     context.skip('Local Linux infrastructure check');return;
@@ -141,9 +141,56 @@ test('doctor validates a complete mimetic inventory without running its launcher
     assert.equal(plan.runtimeValidated,false);
     assert.equal(plan.gameCommandArgs[3],resolve(folder,'Linux/NeivaAbierta.sh'));
     assert.ok(plan.gameArgs.includes('-PixelStreamingEncoderCodec=VP8'));
+    const wrapper=resolve(folder,'Jugar-Neiva.sh');
+    writeFileSync(wrapper,'#!/bin/sh\nexit 78\n',{mode:0o755});
+    const preferred=spawnSync(process.execPath,args,{cwd:repo,encoding:'utf8',timeout:15000});
+    assert.equal(preferred.status,0,preferred.stderr);
+    const preferredPlan=JSON.parse(preferred.stdout);
+    assert.equal(preferredPlan.gameCommandArgs[3],wrapper);
+    assert.equal(preferredPlan.executable,wrapper);
+    assert.deepEqual(preferredPlan.gameArgs,plan.gameArgs);
+    chmodSync(wrapper,0o644);
+    const denied=spawnSync(process.execPath,args,{cwd:repo,encoding:'utf8',timeout:15000});
+    assert.notEqual(denied.status,0,'An existing unusable wrapper must not silently lose its render profile');
+    chmodSync(wrapper,0o755);
     writeFileSync(resolve(folder,data[0]),'');
     const broken=spawnSync(process.execPath,args,{cwd:repo,encoding:'utf8',timeout:15000});
     assert.notEqual(broken.status,0,'Missing package bytes must prevent even a positive doctor plan');
+  }finally{rmSync(folder,{recursive:true,force:true});}
+});
+
+test('distribution launcher passes the same early shadow profile through PRIME and default paths',context=>{
+  if(process.platform!=='linux'||process.arch!=='x64'){
+    context.skip('Linux x86_64 shell launcher');return;
+  }
+  const folder=mkdtempSync(resolve(tmpdir(),'neiva shadow wrapper '));
+  try{
+    const bin=resolve(folder,'fixture-tools');
+    mkdirSync(bin);mkdirSync(resolve(folder,'Linux'));
+    copyFileSync(resolve(repo,'publishing/linux/Jugar-Neiva.sh'),resolve(folder,'Jugar-Neiva.sh'));
+    // No Unreal or GPU work: the game is a JSON echo and nvidia-smi is a fixture.
+    writeFileSync(resolve(bin,'nvidia-smi'),'#!/bin/sh\nexit 0\n',{mode:0o755});
+    writeFileSync(resolve(bin,'timeout'),'#!/bin/sh\nshift\nexec "$@"\n',{mode:0o755});
+    writeFileSync(resolve(folder,'Linux/NeivaAbierta.sh'),`#!/usr/bin/env node
+console.log(JSON.stringify({args:process.argv.slice(2),prime:process.env.__NV_PRIME_RENDER_OFFLOAD,
+glx:process.env.__GLX_VENDOR_LIBRARY_NAME,optimus:process.env.__VK_LAYER_NV_optimus}));
+`,{mode:0o755});
+    const forwarded=['-ExecCmds=t.MaxFPS 30','-ResX=1280','argument with spaces'];
+    for(const mode of ['default','auto']){
+      const result=spawnSync('bash',[resolve(folder,'Jugar-Neiva.sh'),...forwarded],{
+        encoding:'utf8',timeout:5000,env:{...process.env,PATH:`${bin}:${process.env.PATH}`,
+          NEIVA_GPU:mode,__NV_PRIME_RENDER_OFFLOAD:'original',__GLX_VENDOR_LIBRARY_NAME:'original',
+          __VK_LAYER_NV_optimus:'original'}});
+      assert.equal(result.status,0,result.stderr);
+      const output=JSON.parse(result.stdout);
+      assert.deepEqual(output.args,['-vulkan',
+        '-ini:Engine:[ConsoleVariables]:r.Shadow.Virtual.ResolutionLodBiasDirectional=0.5',
+        '-ini:Engine:[ConsoleVariables]:r.Shadow.Virtual.ResolutionLodBiasDirectionalMoving=0.5',...forwarded]);
+      assert.equal(output.args.filter(arg=>arg.startsWith('-ExecCmds=')).length,1);
+      assert.equal(output.prime,mode==='auto'?'1':'original');
+      assert.equal(output.glx,mode==='auto'?'nvidia':'original');
+      assert.equal(output.optimus,mode==='auto'?'NVIDIA_only':'original');
+    }
   }finally{rmSync(folder,{recursive:true,force:true});}
 });
 
