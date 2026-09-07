@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/HUD.h"
 #include "GameFramework/SaveGame.h"
+#include "UObject/SoftObjectPtr.h"
 #include "NeivaMotion.h"
 #include "NeivaWorld.generated.h"
 

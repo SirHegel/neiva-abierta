@@ -851,7 +851,8 @@ void ANeivaGameMode::StartPlay()
         Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
         Sun->GetLightComponent()->SetIntensity(75000.f);
         Sun->GetLightComponent()->SetLightColor(FLinearColor(1,.87,.73));
-        if (auto* Directional = Cast<UDirectionalLightComponent>(Sun->GetLightComponent())) Directional->bAtmosphereSunLight = true;
+        if (auto* Directional = Cast<UDirectionalLightComponent>(Sun->GetLightComponent()))
+            Directional->SetAtmosphereSunLight(true);
     }
     if (!Neiva::Find<ASkyAtmosphere>(GetWorld())) GetWorld()->SpawnActor<ASkyAtmosphere>();
     if (!Neiva::Find<ASkyLight>(GetWorld()))

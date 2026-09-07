@@ -30,6 +30,24 @@ Por tanto, **no hay compilación C++, paquete ejecutable ni vídeo de Unreal
 validados**. El código de preparación, las pruebas sin motor y la señalización
 se validan por separado. No se publica una captura Three.js como captura Unreal.
 
+La dependencia oficial **v23 / clang 18.1.0** ya se descargó, se verificó y se
+extrajo en la caché local. Son 1.483.760.275 bytes comprimidos, SHA-256
+`048ad147d66e45b9dcfcbc986770f8df1ccbf94de11480877e72d2b3b1b48087`.
+El ejecutable del compilador responde correctamente. **Este SDK no contiene
+Unreal Editor y no acredita una compilación del juego.** Procede de la
+[tabla de requisitos de Epic para UE 5.5](https://dev.epicgames.com/documentation/en-us/unreal-engine/linux-development-requirements-for-unreal-engine?application_version=5.5).
+
+También está disponible Xvfb en la caché local, extraído del paquete de Ubuntu
+sin instalación administrativa. Se comprobó una pantalla virtual independiente
+de 1280 × 720 mediante `xdpyinfo`; no se ha probado aún Unreal dentro de ella.
+
+La revisión del importador corrigió los nombres de texturas bajo Interchange
+5.5 y el destino de reimportación, valida que un HDR produzca un cubemap y
+exige guardar también materiales y texturas dependientes del carro. Los errores
+de guardado impiden generar el informe de importación satisfactoria. Las 16
+pruebas de preparación nativa y 39 del lanzador/cartografía pasan sin el motor;
+las siete regresiones nuevas emplean dobles de la API Python, no Unreal real.
+
 ## Construir y ejecutar
 
 Instalar la distribución oficial de **UE 5.5** desde

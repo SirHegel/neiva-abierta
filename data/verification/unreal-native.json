@@ -17,7 +17,7 @@
   },
   "checks": {
     "nodeTestsPassed": 82,
-    "unrealSourceContractTestsPassed": 9,
+    "unrealSourceContractTestsPassed": 16,
     "launcherContractTestsPassed": 26,
     "stagedMapTestsPassed": 13,
     "webBuildPassed": true,
@@ -66,5 +66,28 @@
     "data/field-survey.json",
     "artifacts/unreal-native/streaming-browser-audit.json",
     "artifacts/unreal-native/streaming-process-audit-fixed.json"
-  ]
+  ],
+  "preparationRecheckedAt": "2026-09-07T15:27:04.216809+00:00",
+  "installedDependencies": {
+    "linuxToolchain": {
+      "source": "https://cdn.unrealengine.com/Toolchain_Linux/native-linux-v23_clang-18.1.0-rockylinux8.tar.gz",
+      "archiveBytes": 1483760275,
+      "sha256": "048ad147d66e45b9dcfcbc986770f8df1ccbf94de11480877e72d2b3b1b48087",
+      "gzipIntegrity": true,
+      "tarInventoryValidated": true,
+      "compilerVersionCommandPassed": true,
+      "isUnrealEngine": false
+    },
+    "virtualDisplay": {
+      "name": "Xvfb",
+      "ubuntuPackage": "2:21.1.22-1ubuntu1",
+      "installedInUserCache": true,
+      "xdpyinfoPassed": true,
+      "resolution": [
+        1280,
+        720
+      ],
+      "unrealRunVerified": false
+    }
+  }
 }

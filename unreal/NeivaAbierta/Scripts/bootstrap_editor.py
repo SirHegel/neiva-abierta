@@ -19,25 +19,43 @@ editor = unreal.EditorAssetLibrary
 REIMPORT = os.environ.get("NEIVA_REIMPORT_ASSETS") == "1"
 
 
+def save_asset(asset):
+    if asset is None or not editor.save_loaded_asset(asset):
+        raise RuntimeError(f"Cannot save generated asset: {asset}")
+
+
 def import_texture(source, kind, folder="Textures"):
     name = "T_" + Path(source).stem
     path = f"{ROOT}/{folder}/{name}"
-    texture = unreal.load_asset(path) if editor.does_asset_exist(path) and not REIMPORT else None
-    if texture is None:
-        task = unreal.AssetImportTask()
-        for key, value in {"filename": source, "destination_path": f"{ROOT}/{folder}",
-                           "destination_name": name, "automated": True, "replace_existing": REIMPORT,
-                           "save": True}.items():
-            task.set_editor_property(key, value)
-        assets.import_asset_tasks([task])
-        texture = unreal.load_asset(path)
-        if texture is None:
-            raise RuntimeError(f"Texture import failed: {source}; inspect Unreal's import log")
+    cls = unreal.TextureCube if kind == "hdr" else unreal.Texture2D
+    texture = unreal.load_asset(path) if editor.does_asset_exist(path) else None
+    if texture is not None and not isinstance(texture, cls):
+        raise RuntimeError(f"Expected {cls.__name__} at {path}; refusing to replace another asset type")
+    if texture is None or REIMPORT:
+        # UE 5.5 ignores AssetImportTask.destination_name with Interchange.
+        # Name in the pipeline and explicitly target the existing reimport asset.
+        pipeline = unreal.InterchangeGenericTexturePipeline()
+        for key, value in {"asset_name": name, "import_textures": True,
+                           "import_udi_ms": False, "allow_non_power_of_two": True,
+                           "detect_normal_map_texture": False}.items():
+            pipeline.set_editor_property(key, value)
+        if kind == "hdr":
+            pipeline.set_editor_property("file_extensions_to_import_as_long_lat_cubemap", {"hdr"})
+        params = unreal.ImportAssetParameters()
+        for key, value in {"is_automated": True, "replace_existing": REIMPORT,
+                           "destination_name": name,
+                           "override_pipelines": [unreal.SoftObjectPath(pipeline.get_path_name())]}.items():
+            params.set_editor_property(key, value)
+        if texture is not None:
+            params.set_editor_property("reimport_asset", texture)
+        manager = unreal.InterchangeManager.get_interchange_manager_scripted()
+        source_data = unreal.InterchangeManager.create_source_data(source)
+        texture = canonical_asset(manager.import_asset(f"{ROOT}/{folder}", source_data, params), cls, path)
     if kind != "hdr":
         texture.set_editor_property("srgb", kind == "color")
         texture.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_NORMALMAP
                                     if kind == "normal" else unreal.TextureCompressionSettings.TC_DEFAULT)
-    editor.save_loaded_asset(texture)
+    save_asset(texture)
     return texture
 
 
@@ -78,7 +96,7 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
         texture = import_texture(source, channel)
         if channel == "normal":
             texture.set_editor_property("flip_green_channel", normal_opengl)
-            editor.save_loaded_asset(texture)
+            save_asset(texture)
         node = expression(material, unreal.MaterialExpressionTextureSampleParameter2D, -500, row * 250)
         node.set_editor_property("parameter_name", channel.capitalize())
         node.set_editor_property("texture", texture)
@@ -94,7 +112,7 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
         texture.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_VECTOR_DISPLACEMENTMAP)
         texture.set_editor_property("mip_gen_settings", unreal.TextureMipGenSettings.TMGS_NO_MIPMAPS)
         texture.set_editor_property("filter", unreal.TextureFilter.TF_NEAREST)
-        editor.save_loaded_asset(texture)
+        save_asset(texture)
         mask = expression(material, unreal.MaterialExpressionTextureSampleParameter2D, -500, 1000)
         mask.set_editor_property("parameter_name", "ClothingMask")
         mask.set_editor_property("texture", texture)
@@ -141,7 +159,7 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
         node.set_editor_property("r", roughness)
         property_link(node, "", unreal.MaterialProperty.MP_ROUGHNESS)
     library.recompile_material(material)
-    editor.save_loaded_asset(material)
+    save_asset(material)
     return material
 
 
@@ -165,7 +183,7 @@ def landmark_solid_material():
         node.set_editor_property("default_value", default)
         property_link(node, "", prop)
     library.recompile_material(material)
-    editor.save_loaded_asset(material)
+    save_asset(material)
 
 
 def water_material():
@@ -182,7 +200,7 @@ def water_material():
     roughness.set_editor_property("r", .24)
     property_link(roughness, "", unreal.MaterialProperty.MP_ROUGHNESS)
     library.recompile_material(material)
-    editor.save_loaded_asset(material)
+    save_asset(material)
 
 
 def canonical_asset(objects, cls, destination):
@@ -194,9 +212,9 @@ def canonical_asset(objects, cls, destination):
         if editor.does_asset_exist(destination):
             raise RuntimeError(f"Import name conflict at {destination}; inspect both assets before replacing")
         if not editor.rename_asset(result.get_path_name(), destination):
-            raise RuntimeError(f"Cannot rename imported mesh to {destination}")
+            raise RuntimeError(f"Cannot rename imported asset to {destination}")
         result = unreal.load_asset(destination)
-    editor.save_loaded_asset(result)
+    save_asset(result)
     return result
 
 
@@ -226,13 +244,13 @@ def import_fbx(record, skeleton=None):
                        "factory": unreal.FbxFactory()}.items():
         task.set_editor_property(key, value)
     assets.import_asset_tasks([task])
-    imported = [unreal.load_asset(path) for path in task.get_editor_property("imported_object_paths")]
+    imported = task.get_objects()  # Wait for asynchronous import completion, if applicable.
     result = canonical_asset(imported, unreal.AnimSequence if animation else unreal.SkeletalMesh, destination)
     if animation:
         result.set_editor_property("enable_root_motion", False)
         result.set_editor_property("force_root_lock", True)
         result.set_editor_property("root_motion_root_lock", unreal.RootMotionRootLock.ANIM_FIRST_FRAME)
-        editor.save_loaded_asset(result)
+        save_asset(result)
     return result
 
 
@@ -293,13 +311,18 @@ def main():
         else:
             unreal.log_warning(f"Character material slot '{label}' kept as imported; inspect it visually.")
     character.set_editor_property("materials", slots)
-    editor.save_loaded_asset(character)
+    save_asset(character)
     import_car(plan["models"][1])
     levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     if not editor.does_asset_exist("/Game/Maps/Neiva"):
         if not levels.new_level("/Game/Maps/Neiva"):
             raise RuntimeError("Could not create /Game/Maps/Neiva")
-        levels.save_current_level()
+        if not levels.save_current_level():
+            raise RuntimeError("Could not save /Game/Maps/Neiva")
+    # Interchange also creates dependent materials/textures for the car. Persist
+    # the entire generated namespace before reporting a successful import.
+    if not editor.save_directory(ROOT, only_if_is_dirty=True, recursive=True):
+        raise RuntimeError(f"Could not save all generated resources in {ROOT}")
     report = {"schemaVersion": 1, "models": [model["destination"] for model in plan["models"]],
               "materials": [material["destination"] for material in plan["materials"]] +
                   [ROOT + "/Materials/" + name for name in ("M_Landmark_brick", "M_Landmark_plaster",
