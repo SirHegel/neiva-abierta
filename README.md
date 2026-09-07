@@ -1,5 +1,12 @@
 # Neiva Abierta
 
+**Entrega nativa en preparación:** el desarrollo solicitado continúa en
+**Unreal Engine**, con ejecutable para GitHub, descarga desde el sitio personal
+y visualización local mediante Pixel Streaming. No hay todavía motor instalado,
+compilación C++ ni ejecutable Unreal verificados. La web 0.4 de abajo es la edición
+anterior. [Construcción, transmisión y publicación](docs/DISTRIBUCION.md) ·
+[Proyecto Unreal](docs/UNREAL.md).
+
 Una interpretación jugable de Neiva, Huila, Colombia. Acceso gratuito, personaje
 sin nombre, caminata en tercera persona, un carro conducible, tráfico ambiental,
 mapa con destinos y un pequeño estudio ficticio para contactar a Jhon Steven

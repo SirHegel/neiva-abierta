@@ -11,7 +11,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 REPO = PROJECT.parents[1]
 ROOT = "/Game/NeivaAssets"
 SURFACES = {"M_Road": "asphalt", "M_Pavement": "pavement", "M_Facade": "plaster",
-            "M_Brick": "brick", "M_Roof": "roof", "M_Ground": "ground", "M_Grass": "ground"}
+            "M_Plaster": "plaster", "M_Brick": "brick", "M_Roof": "roof", "M_Ground": "ground", "M_Grass": "ground"}
 
 
 def local_source(repo, relative):
@@ -71,6 +71,7 @@ def build_plan(repo=REPO):
         {"kind": "static", "name": "SM_Car", "folder": "Car", "source": "public/models/car/car.glb"},
         {"kind": "animation", "name": "AN_Idle", "folder": "Character", "source": "public/models/character/idle.fbx"},
         {"kind": "animation", "name": "AN_Walk", "folder": "Character", "source": "public/models/character/walk.fbx"},
+        {"kind": "animation", "name": "AN_Run", "folder": "Character", "source": "public/models/character/run.fbx"},
     ]
     for model in models:
         source = local_source(repo, model["source"])
@@ -91,7 +92,14 @@ def build_plan(repo=REPO):
     hdr = local_source(repo, "public/textures/" + environment.get("sourceMaps", environment["maps"])["hdr"])
     if sha256(hdr) != records[hdr.name]["sha256"]:
         raise ValueError("HDR checksum mismatch")
-    return {"root": ROOT, "materials": materials, "models": models,
+    mask = repo / "unreal/NeivaAbierta/SourceArt/rocketbox_clothing_mask.png"
+    audit = repo / "unreal/NeivaAbierta/SourceArt/clothing-mask-audit.json"
+    if not mask.is_file() or not audit.is_file():
+        raise ValueError("Missing audited clothing mask")
+    mask_audit = json.loads(audit.read_text(encoding="utf-8"))
+    if sha256(mask) != mask_audit["maskSHA256"]:
+        raise ValueError("Clothing mask checksum mismatch")
+    return {"root": ROOT, "materials": materials, "models": models, "clothingMask": str(mask),
             "characterTextures": character_textures, "environment": str(hdr)}
 
 

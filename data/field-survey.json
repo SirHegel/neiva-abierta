@@ -1,0 +1,1362 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-07T07:58:26.975Z",
+  "base": {
+    "path": "public/data/neiva.json",
+    "sha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+    "origin": [
+      -75.2809,
+      2.9252
+    ],
+    "totalBuildings": 35875
+  },
+  "license": {
+    "cartographicDerivatives": "ODbL-1.0",
+    "attribution": "© OpenStreetMap contributors · Overture Maps Foundation · Microsoft · Google Open Buildings",
+    "note": "Original notes do not relicense third-party sources or images."
+  },
+  "scope": {
+    "center": [
+      -75.2778407,
+      2.9380357
+    ],
+    "radiusM": 75,
+    "selection": "Base-footprint vertex means within radius; not observed buildings or a panorama-to-building match.",
+    "exhaustiveCityReview": false
+  },
+  "sources": [
+    {
+      "id": "city-base",
+      "kind": "open_cartography",
+      "url": "https://github.com/SirHegel/neiva-abierta/blob/5fd5188fb125309eae3f0b76af3e4755948d07d6/public/data/neiva.json",
+      "accessedAt": "2026-09-07T03:28:29.354Z",
+      "capturedAt": null,
+      "rights": {
+        "derivativeUse": "permitted",
+        "license": "ODbL-1.0",
+        "evidenceUrl": "https://opendatacommons.org/licenses/odbl/1-0/"
+      },
+      "limitation": "Huellas cartográficas y parámetros del juego. No hay medición física verificada."
+    },
+    {
+      "id": "user-streetview-link-20260907",
+      "kind": "reference_only",
+      "url": "https://www.google.com/maps/place/Neiva,+HU/@2.9380357,-75.2778407,3a,75y,87.02h,88.41t/data=!3m7!1e1!3m5!1svUrym1tkh_ZzYiF4dc_vwg!2e0!7i16384!8i8192?hl=es",
+      "accessedAt": "2026-09-07T07:44:07.769Z",
+      "capturedAt": null,
+      "rights": {
+        "derivativeUse": "restricted",
+        "license": null,
+        "evidenceUrl": "https://about.google/brand-resource-center/products-and-services/geo-guidelines/"
+      },
+      "limitation": "Enlace aportado por el usuario; no inspeccionado por este pipeline. No contiene licencia para extraer geometría, fachadas o medidas desde Street View."
+    },
+    {
+      "id": "user-streetview-carrera21-20260907",
+      "kind": "reference_only",
+      "url": "https://www.google.com/maps/place/Neiva,+HU/@2.9373287,-75.2766957,3a,75y,186.21h,50.42t/data=!3m7!1e1!3m5!1sCIC3DQzywCxaSxfLXZIXOA!2e0!7i16384!8i8192?hl=es",
+      "accessedAt": "2026-09-07T07:58:26.975Z",
+      "capturedAt": "2024",
+      "rights": {
+        "derivativeUse": "restricted",
+        "license": null,
+        "evidenceUrl": "https://about.google/brand-resource-center/products-and-services/geo-guidelines/"
+      },
+      "limitation": "Vista observada en la ventana Firefox compartida por el usuario. Notas de comparación; no se descargan texturas ni se extraen geometría o dimensiones."
+    }
+  ],
+  "references": [
+    {
+      "sourceId": "user-streetview-link-20260907",
+      "status": "pending_visual_review",
+      "capturedAt": null,
+      "viewedAt": null,
+      "buildingMatchConfirmed": false
+    },
+    {
+      "sourceId": "user-streetview-carrera21-20260907",
+      "status": "viewed",
+      "capturedAt": "2024",
+      "viewedAt": "2026-09-07T07:58:26.975Z",
+      "buildingMatchConfirmed": false,
+      "viewerAddress": "1760 Cra. 21, Neiva, Huila",
+      "cameraFromUserUrl": {
+        "latitude": 2.9373287,
+        "longitude": -75.2766957,
+        "headingDegrees": 186.21,
+        "tiltDegrees": 50.42
+      },
+      "reviewExtent": "Una vista de la cuadra, no un recorrido completo ni una identificación catastral de cada fachada.",
+      "visualNotes": [
+        "Calzada de concreto con juntas y grietas; no se ve línea central en este encuadre.",
+        "Andenes angostos con cambios de nivel y escalones frente a los accesos.",
+        "A la derecha, fachada clara con franjas amarillas, puerta metálica oscura y toldo azul.",
+        "Fachada contigua coral con marcos claros verdosos y cerramientos oscuros.",
+        "A la izquierda, superficies rojas de escalones o terrazas y bases blancas, junto a cerramientos metálicos grises.",
+        "Poste de concreto junto al andén y árboles visibles al fondo."
+      ],
+      "physicalMeasurements": [],
+      "geometryChangesApplied": false
+    }
+  ],
+  "records": [
+    {
+      "buildingId": "overture/59385f41-15c0-4ebc-9824-035f472877c2",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          346.34,
+          -1423.1
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 1197.23,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 76.85,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 17.58,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 23.02,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 2.32,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 10.31,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 0.61,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 43.42,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            0
+          ],
+          "cartographicLengthM": 14.64,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/73a638b3-599a-4eef-a28c-7b5dc9fe3fc9",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          335.33,
+          -1388.28
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 336.91,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 16.7,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 9.45,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 8.34,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 6.74,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 2.12,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 11.56,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 10.46,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            0
+          ],
+          "cartographicLengthM": 27.95,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/e62a34eb-8fcc-4f1a-b5fe-b8b7ff0a6642",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          383,
+          -1431.02
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 73.44,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 11.6,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 6.3,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 11.7,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 6.3,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/8e067563-747f-4302-8102-c984fcde8704",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          318,
+          -1391.45
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 49.65,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 9.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 5.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 9.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 5.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/aecf5c53-9aa8-410e-895a-1bf961fa6489",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          348.3,
+          -1381.05
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 94.44,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 6.85,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 13.79,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 6.85,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 13.79,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/d5af3471-4976-4d8a-96f7-8a1ac07416ca",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          308.3,
+          -1388.17
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 108.45,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 12.52,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 8.61,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 12.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 8.71,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/ee5f1685-f808-437a-b882-4571c7989c5f",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          283.2,
+          -1430.45
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Google Open Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 41.37,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 7.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 5.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 7.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 5.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/6fa4e1f5-ba53-404b-aafa-6da45de9b731",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          380.41,
+          -1385.64
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 452.76,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 17.14,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 19.94,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 7.91,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 8.41,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 5.41,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 7.21,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 7.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            8
+          ],
+          "cartographicLengthM": 9.82,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/8",
+          "edge": [
+            8,
+            9
+          ],
+          "cartographicLengthM": 7.92,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/9",
+          "edge": [
+            9,
+            10
+          ],
+          "cartographicLengthM": 8.51,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/10",
+          "edge": [
+            10,
+            11
+          ],
+          "cartographicLengthM": 12.32,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/11",
+          "edge": [
+            11,
+            12
+          ],
+          "cartographicLengthM": 3.71,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/12",
+          "edge": [
+            12,
+            13
+          ],
+          "cartographicLengthM": 6.41,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/13",
+          "edge": [
+            13,
+            0
+          ],
+          "cartographicLengthM": 17.63,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/2db8ffda-84e0-4cc2-9798-14cce910982e",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          405.4,
+          -1434.45
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 1112.84,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 58.93,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 27.2,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 14.6,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 7.55,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 6.75,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 3.42,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 19.34,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            8
+          ],
+          "cartographicLengthM": 5.64,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/8",
+          "edge": [
+            8,
+            9
+          ],
+          "cartographicLengthM": 6.05,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/9",
+          "edge": [
+            9,
+            10
+          ],
+          "cartographicLengthM": 8.56,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/10",
+          "edge": [
+            10,
+            11
+          ],
+          "cartographicLengthM": 6.65,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/11",
+          "edge": [
+            11,
+            12
+          ],
+          "cartographicLengthM": 5.35,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/12",
+          "edge": [
+            12,
+            13
+          ],
+          "cartographicLengthM": 5.53,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/13",
+          "edge": [
+            13,
+            0
+          ],
+          "cartographicLengthM": 8.06,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/a29731e2-2426-42c3-8b9c-6010cd72de6e",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          279.13,
+          -1398.28
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Google Open Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 30.27,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 3.98,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 7.53,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 4.1,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 7.45,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/26cad318-9995-42c2-8aac-93f3948b07d4",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          345.73,
+          -1359.05
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 480.74,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 21.11,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 22.83,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 21.02,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            0
+          ],
+          "cartographicLengthM": 22.82,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/52f37723-7abb-4cc1-bb84-45b4b14e3b80",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          376.66,
+          -1365.3
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 522.06,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 12.24,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 13.06,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 1.2,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 10.34,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 10.45,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 6.93,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 20.18,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            8
+          ],
+          "cartographicLengthM": 14.26,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/8",
+          "edge": [
+            8,
+            9
+          ],
+          "cartographicLengthM": 17.17,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/9",
+          "edge": [
+            9,
+            0
+          ],
+          "cartographicLengthM": 2.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    },
+    {
+      "buildingId": "overture/3c52a6ec-8744-412c-aa44-f5516309a3be",
+      "reviewStatus": "unreviewed",
+      "identityConfirmed": false,
+      "anchor": {
+        "local": [
+          320,
+          -1356.89
+        ],
+        "method": "cartographic_vertex_mean",
+        "physicallySurveyed": false
+      },
+      "baseline": {
+        "sourceId": "city-base",
+        "provider": "Microsoft ML Buildings",
+        "footprintStatus": "machine_detected",
+        "cartographicAreaM2": 562.75,
+        "heightM": 5.8,
+        "heightStatus": "estimated",
+        "heightBasis": "game-default-5.8m-no-source-height",
+        "physicallySurveyed": false
+      },
+      "facades": [
+        {
+          "id": "edge/0",
+          "edge": [
+            0,
+            1
+          ],
+          "cartographicLengthM": 28.79,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/1",
+          "edge": [
+            1,
+            2
+          ],
+          "cartographicLengthM": 11.44,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/2",
+          "edge": [
+            2,
+            3
+          ],
+          "cartographicLengthM": 6.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/3",
+          "edge": [
+            3,
+            4
+          ],
+          "cartographicLengthM": 7.62,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/4",
+          "edge": [
+            4,
+            5
+          ],
+          "cartographicLengthM": 4.62,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/5",
+          "edge": [
+            5,
+            6
+          ],
+          "cartographicLengthM": 3.01,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/6",
+          "edge": [
+            6,
+            7
+          ],
+          "cartographicLengthM": 7.92,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/7",
+          "edge": [
+            7,
+            8
+          ],
+          "cartographicLengthM": 5.41,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/8",
+          "edge": [
+            8,
+            9
+          ],
+          "cartographicLengthM": 22.36,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        },
+        {
+          "id": "edge/9",
+          "edge": [
+            9,
+            0
+          ],
+          "cartographicLengthM": 16.65,
+          "reviewStatus": "unreviewed",
+          "observations": []
+        }
+      ],
+      "dimensions": []
+    }
+  ]
+}

@@ -202,6 +202,39 @@ namespace Neiva
         }
     }
 
+    bool Canopy(const TSharedPtr<FJsonObject>& O, FGeometry& Supports, FGeometry& Roofs, double Height)
+    {
+        const TSharedPtr<FJsonObject>* Structure = nullptr;
+        if (!O->TryGetObjectField(TEXT("structure"), Structure)) return false;
+        FString Kind; (*Structure)->TryGetStringField(TEXT("kind"), Kind);
+        if (Kind != TEXT("open-canopy")) return false;
+        double Thickness = .28; (*Structure)->TryGetNumberField(TEXT("roofThickness"), Thickness);
+        Thickness = FMath::Clamp(Thickness, .08, Height);
+        const auto Base = Points(O, (Height - Thickness) * 100);
+        Extrude(Roofs, Base, Thickness * 100, FLinearColor::White);
+        FGeometry Underside; Face(Underside, Base, FLinearColor::White);
+        for (int32 I = 0; I + 2 < Underside.Vertices.Num(); I += 3)
+            Roofs.Triangle(Underside.Vertices[I + 2], Underside.Vertices[I + 1], Underside.Vertices[I], FLinearColor::White);
+        const TArray<TSharedPtr<FJsonValue>>* Columns = nullptr;
+        if ((*Structure)->TryGetArrayField(TEXT("columns"), Columns))
+            for (const auto& Value : *Columns)
+            {
+                const auto Column = Value->AsObject();
+                double X = 0, Z = 0, Radius = .22, ColumnHeight = Height - Thickness;
+                Column->TryGetNumberField(TEXT("x"), X); Column->TryGetNumberField(TEXT("z"), Z);
+                Column->TryGetNumberField(TEXT("radius"), Radius); Column->TryGetNumberField(TEXT("height"), ColumnHeight);
+                TArray<FVector> Ring;
+                for (int32 I = 0; I < 12; ++I)
+                {
+                    const double Angle = 2 * PI * I / 12;
+                    Ring.Add(FVector((X + FMath::Cos(Angle) * Radius) * 100,
+                        (-Z + FMath::Sin(Angle) * Radius) * 100, 0));
+                }
+                Extrude(Supports, Ring, ColumnHeight * 100, FLinearColor::White);
+            }
+        return true;
+    }
+
     template<class T> T* Find(UWorld* World)
     {
         for (TActorIterator<T> It(World); It; ++It) return *It;
@@ -229,6 +262,17 @@ namespace Neiva
         PC->ActivateTouchInterface(Interface);
         PC->bEnableTouchEvents = true;
         Message(TEXT("Controles tactiles activos. Boton INTERACTUAR a la derecha."));
+    }
+
+    bool GroundedCapsule(UWorld* World, FVector Candidate, float Radius, float HalfHeight,
+        const FCollisionQueryParams& Query, FVector& Result)
+    {
+        FHitResult Ground;
+        if (!World->LineTraceSingleByChannel(Ground, Candidate + FVector(0,0,300),
+            Candidate - FVector(0,0,600), ECC_Visibility, Query) || Ground.ImpactNormal.Z < .65f) return false;
+        Result = Ground.ImpactPoint + FVector(0,0,HalfHeight + 3);
+        return !World->OverlapBlockingTestByChannel(Result, FQuat::Identity, ECC_Pawn,
+            FCollisionShape::MakeCapsule(Radius, HalfHeight), Query);
     }
 }
 
@@ -295,8 +339,25 @@ void ANeivaCity::BuildCity()
         double Yaw = HALF_PI;
         if ((*Meta)->TryGetNumberField(TEXT("carYaw"), Yaw)) CarYaw = FMath::RadiansToDegrees(Yaw - HALF_PI);
     }
+    if (Roads)
+    {
+        for (const auto& Value : *Roads)
+        {
+            const auto O = Value->AsObject();
+            FString Type; O->TryGetStringField(TEXT("type"), Type);
+            if (Type != TEXT("footway") && Type != TEXT("pedestrian") && Type != TEXT("path")) continue;
+            const auto Route = Neiva::Points(O, 100);
+            if (Route.Num() < 2 || FVector::Dist2D(Route[0], SpawnPoint) > 65000) continue;
+            double Length = 0; for (int32 I = 1; I < Route.Num(); ++I) Length += FVector::Dist2D(Route[I-1], Route[I]);
+            if (Length >= 600 && Length <= 50000) PedestrianRoutes.Add(Route);
+        }
+        PedestrianRoutes.Sort([this](const TArray<FVector>& A, const TArray<FVector>& B) {
+            return FVector::DistSquared2D(A[0], SpawnPoint) < FVector::DistSquared2D(B[0], SpawnPoint);
+        });
+    }
     using namespace Neiva;
-    FGeometry Terrain, Streets, Water, Green, Studio;
+    const TSet<FString> LandmarkIds = bGenerateMapGeometry ? BuildLandmarks(Data) : TSet<FString>();
+    FGeometry Terrain, Streets, Pavement, Water, Green, Studio;
     FParse::Value(FCommandLine::Get(), TEXT("NeivaBuildingRadius="), BuildingRadiusMeters);
     BuildingRadiusMeters = FMath::Max(0.f, BuildingRadiusMeters);
     BuildingTileSizeMeters = FMath::Clamp(BuildingTileSizeMeters, 100.f, 2000.f);
@@ -312,7 +373,9 @@ void ANeivaCity::BuildCity()
             double Width = 7;
             O->TryGetNumberField(TEXT("width"), Width);
             const auto P = Points(O, 1);
-            Ribbon(Streets, P, FMath::Clamp(Width, 2.0, 36.0) * 100, FLinearColor(0.085f, 0.10f, 0.12f));
+            FString Finish; O->TryGetStringField(TEXT("material"), Finish);
+            Ribbon(Finish == TEXT("pavement") ? Pavement : Streets, P,
+                FMath::Clamp(Width, 2.0, 36.0) * 100, FLinearColor::White);
             ++RoadCount;
         }
     }
@@ -326,6 +389,8 @@ void ANeivaCity::BuildCity()
         for (const auto& Value : *Items)
         {
             const auto O = Value->AsObject();
+            FString Id; O->TryGetStringField(TEXT("id"), Id);
+            if (LandmarkIds.Contains(Id)) { ++BuildingCount; continue; }
             const auto P = Points(O);
             if (P.Num() < 3) continue;
             FVector Center = FVector::ZeroVector;
@@ -364,8 +429,9 @@ void ANeivaCity::BuildCity()
                 double Height = 6;
                 O->TryGetNumberField(TEXT("height"), Height);
                 const float Shade = 0.65f + 0.16f * (BuildingCount % 5) / 4.0f;
-                Extrude(Height > 6.4 ? UpperWalls : Geometry, Points(O), FMath::Clamp(Height, 2.0, 160.0) * 100,
-                    FLinearColor(Shade, Shade * 0.91f, Shade * 0.79f), &Roofs);
+                if (!Canopy(O, Geometry, Roofs, Height))
+                    Extrude(Height > 6.4 ? UpperWalls : Geometry, Points(O), FMath::Clamp(Height, 2.0, 160.0) * 100,
+                        FLinearColor(Shade, Shade * 0.91f, Shade * 0.79f), &Roofs);
                 ++BuildingCount;
                 const TArray<TSharedPtr<FJsonValue>>* Holes = nullptr;
                 if (O->TryGetArrayField(TEXT("holes"), Holes) && !Holes->IsEmpty()) ++UncutCourtyards;
@@ -410,10 +476,11 @@ void ANeivaCity::BuildCity()
     {
         Terrain.Upload(Mesh, 0, GroundMaterial, true);
         Streets.Upload(Mesh, 1, RoadMaterial, true);
+        Pavement.Upload(Mesh, 2, Neiva::Material(TEXT("M_Pavement")), true);
         Water.Upload(Mesh, 3, WaterMaterial, false);
         Green.Upload(Mesh, 4, GrassMaterial, false);
     }
-    Studio.Upload(Mesh, 5, Surface, true);
+    Studio.Upload(Mesh, 5, Neiva::Material(TEXT("M_Studio")), true);
     UTextRenderComponent* Sign = NewObject<UTextRenderComponent>(this, TEXT("EstudioFicticio"));
     Sign->SetupAttachment(Mesh);
     Sign->SetRelativeLocation(StudioPoint + FVector(0, -240, 285));
@@ -434,7 +501,7 @@ ANeivaCharacter::ANeivaCharacter()
     bUseControllerRotationYaw = false;
     GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->RotationRate = FRotator(0, 540, 0);
-    GetCharacterMovement()->MaxWalkSpeed = 420;
+    GetCharacterMovement()->MaxWalkSpeed = 200;
     GetCharacterMovement()->JumpZVelocity = 440;
     Arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("BrazoCamara"));
     Arm->SetupAttachment(RootComponent);
@@ -475,13 +542,22 @@ void ANeivaCharacter::BeginPlay()
             *Clip = nullptr;
         }
     }
+    const TArray<FName> Slots = GetMesh()->GetMaterialSlotNames();
+    for (int32 Index = 0; Index < Slots.Num(); ++Index)
+        if (Slots[Index].ToString().Contains(TEXT("body"), ESearchCase::IgnoreCase))
+        { Clothing = GetMesh()->CreateDynamicMaterialInstance(Index); break; }
+    if (!bPedestrian)
+    {
+        if (const auto* Saved = Cast<UNeivaAppearanceSave>(UGameplayStatics::LoadGameFromSlot(TEXT("NeivaAppearance_v1"), 0)))
+            SetAppearance(Saved->Shirt, Saved->Trousers);
+    }
 }
 
 void ANeivaCharacter::Tick(float DT)
 {
     Super::Tick(DT);
     const float Speed = GetVelocity().Size2D();
-    UAnimSequence* Desired = Speed > 500 && RunAnimation ? RunAnimation.Get()
+    UAnimSequence* Desired = Speed > 280 && RunAnimation ? RunAnimation.Get()
         : Speed > 8 && WalkAnimation ? WalkAnimation.Get() : IdleAnimation.Get();
     if (Desired && Desired != ActiveAnimation)
     {
@@ -504,13 +580,38 @@ void ANeivaCharacter::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindAction(TEXT("Interact"), IE_Pressed, this, &ANeivaCharacter::Interact);
     Input->BindAction(TEXT("Reset"), IE_Pressed, this, &ANeivaCharacter::ResetPosition);
     Input->BindAction(TEXT("TouchControls"), IE_Pressed, this, &ANeivaCharacter::ToggleTouchControls);
+    Input->BindAction(TEXT("Shirt"), IE_Pressed, this, &ANeivaCharacter::CycleShirt);
+    Input->BindAction(TEXT("Trousers"), IE_Pressed, this, &ANeivaCharacter::CycleTrousers);
 }
 void ANeivaCharacter::Forward(float V) { if (Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::X), V); }
 void ANeivaCharacter::Right(float V) { if (Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::Y), V); }
 void ANeivaCharacter::LookYaw(float V) { AddControllerYawInput(V); }
 void ANeivaCharacter::LookPitch(float V) { AddControllerPitchInput(V); }
-void ANeivaCharacter::SprintOn() { GetCharacterMovement()->MaxWalkSpeed = 700; }
-void ANeivaCharacter::SprintOff() { GetCharacterMovement()->MaxWalkSpeed = 420; }
+void ANeivaCharacter::SprintOn() { GetCharacterMovement()->MaxWalkSpeed = 540; }
+void ANeivaCharacter::SprintOff() { GetCharacterMovement()->MaxWalkSpeed = 200; }
+void ANeivaCharacter::SetAppearance(int32 Shirt, int32 Trousers, bool bPersist)
+{
+    static const FLinearColor Shirts[] = {FLinearColor::White, FLinearColor(.16,.37,.65), FLinearColor(.21,.42,.26), FLinearColor(.5,.16,.13)};
+    static const FLinearColor Bottoms[] = {FLinearColor::White, FLinearColor(.22,.29,.41), FLinearColor(.26,.27,.24), FLinearColor(.44,.27,.16)};
+    ShirtStyle = FMath::Clamp(Shirt, 0, 3); TrouserStyle = FMath::Clamp(Trousers, 0, 3);
+    if (Clothing)
+    {
+        Clothing->SetVectorParameterValue(TEXT("ShirtTint"), Shirts[ShirtStyle]);
+        Clothing->SetVectorParameterValue(TEXT("ShortsTint"), Bottoms[TrouserStyle]);
+    }
+    if (bPersist && !bPedestrian)
+    {
+        auto* Saved = Cast<UNeivaAppearanceSave>(UGameplayStatics::CreateSaveGameObject(UNeivaAppearanceSave::StaticClass()));
+        if (!Saved) { Neiva::Message(TEXT("No se pudo crear el guardado de ropa.")); return; }
+        Saved->Shirt = ShirtStyle; Saved->Trousers = TrouserStyle;
+        if (!UGameplayStatics::SaveGameToSlot(Saved, TEXT("NeivaAppearance_v1"), 0))
+            Neiva::Message(TEXT("No se pudo guardar la ropa. La seleccion actual sigue activa."));
+    }
+}
+void ANeivaCharacter::CycleShirt() { SetAppearance((ShirtStyle + 1) % 4, TrouserStyle, true); }
+void ANeivaCharacter::CycleTrousers() { SetAppearance(ShirtStyle, (TrouserStyle + 1) % 4, true); }
+FString ANeivaCharacter::AppearanceLabel() const
+{ return FString::Printf(TEXT("C camiseta %d/4 | V pantalon %d/4 | colores de tela; misma prenda"), ShirtStyle + 1, TrouserStyle + 1); }
 void ANeivaCharacter::ToggleTouchControls() { Neiva::Touch(Cast<APlayerController>(Controller)); }
 void ANeivaCharacter::ResetPosition()
 {
@@ -536,7 +637,55 @@ void ANeivaCharacter::Interact()
             return;
         }
     }
+    for (TActorIterator<ANeivaPedestrian> It(GetWorld()); It; ++It)
+        if (FVector::Dist2D(GetActorLocation(), It->GetActorLocation()) < 240)
+        { Neiva::Message(TEXT("Buen dia. El Parque Santander esta en el centro; E junto al estudio abre el contacto de Jhon.")); return; }
     Neiva::Message(TEXT("Acercate al carro o al pequeno estudio turquesa de Jhon."));
+}
+
+ANeivaPedestrian::ANeivaPedestrian()
+{
+    bPedestrian = true;
+    AutoPossessAI = EAutoPossessAI::Disabled;
+    GetCharacterMovement()->bRunPhysicsWithNoController = true;
+    GetCharacterMovement()->MaxWalkSpeed = 125;
+    // Input is consumed every CharacterMovement frame, so submit it every frame.
+    PrimaryActorTick.TickInterval = 0;
+}
+void ANeivaPedestrian::SetRoute(const TArray<FVector>& Points, int32 AppearanceSeed)
+{
+    Route = Points; TargetPoint = 1; Direction = 1;
+    PreviousLocation = GetActorLocation();
+    SetAppearance(AppearanceSeed % 4, (AppearanceSeed / 2) % 4);
+}
+void ANeivaPedestrian::Tick(float DT)
+{
+    Super::Tick(DT);
+    if (Route.Num() < 2) return;
+    if (WaitSeconds > 0) { WaitSeconds -= DT; return; }
+    FVector Offset = Route[TargetPoint] - GetActorLocation(); Offset.Z = 0;
+    if (Offset.Size() < 75)
+    {
+        if (TargetPoint + Direction >= Route.Num() || TargetPoint + Direction < 0)
+        { Direction *= -1; WaitSeconds = 1.5f; }
+        TargetPoint += Direction; StuckSeconds = 0; return;
+    }
+    const FVector Desired = Offset.GetSafeNormal();
+    FCollisionQueryParams Query; Query.AddIgnoredActor(this);
+    FHitResult Hit;
+    const bool Blocked = GetWorld()->SweepSingleByChannel(Hit, GetActorLocation(),
+        GetActorLocation() + Desired * 110, FQuat::Identity, ECC_Pawn,
+        FCollisionShape::MakeCapsule(42, 86), Query) && Hit.ImpactNormal.Z < .5f;
+    if (!Blocked) AddMovementInput(Desired, 1, true);
+    if (Blocked || FVector::DistSquared2D(GetActorLocation(), PreviousLocation) < 1) StuckSeconds += DT;
+    else StuckSeconds = 0;
+    PreviousLocation = GetActorLocation();
+    if (StuckSeconds > 2)
+    {
+        // Reverse along the existing path; never teleport through an obstacle.
+        Direction *= -1; TargetPoint = FMath::Clamp(TargetPoint + Direction, 0, Route.Num() - 1);
+        WaitSeconds = .8f; StuckSeconds = 0;
+    }
 }
 
 ANeivaCar::ANeivaCar()
@@ -555,6 +704,7 @@ ANeivaCar::ANeivaCar()
     Arm->SetRelativeRotation(FRotator(-18,0,0));
     Arm->SocketOffset = FVector(0,0,240);
     Arm->bEnableCameraLag = true;
+    Arm->bUsePawnControlRotation = true;
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camara"));
     Camera->SetupAttachment(Arm);
 }
@@ -576,51 +726,76 @@ void ANeivaCar::BeginPlay()
     Visual->SetRelativeScale3D(FVector(Scale));
     Visual->SetRelativeLocation(-Bounds.Origin * Scale + FVector(0, 0,
         Bounds.BoxExtent.Z * Scale - Collision->GetUnscaledBoxExtent().Z));
+    MotionState.Yaw = FMath::DegreesToRadians(GetActorRotation().Yaw);
 }
 void ANeivaCar::SetupPlayerInputComponent(UInputComponent* Input)
 {
     Super::SetupPlayerInputComponent(Input);
     Input->BindAxis(TEXT("Forward"), this, &ANeivaCar::Throttle);
     Input->BindAxis(TEXT("Right"), this, &ANeivaCar::Steer);
+    Input->BindAxis(TEXT("LookYaw"), this, &ANeivaCar::LookYaw);
+    Input->BindAxis(TEXT("LookPitch"), this, &ANeivaCar::LookPitch);
     Input->BindAction(TEXT("Jump"), IE_Pressed, this, &ANeivaCar::BrakeOn);
     Input->BindAction(TEXT("Jump"), IE_Released, this, &ANeivaCar::BrakeOff);
     Input->BindAction(TEXT("Interact"), IE_Pressed, this, &ANeivaCar::Exit);
     Input->BindAction(TEXT("Reset"), IE_Pressed, this, &ANeivaCar::ResetPosition);
     Input->BindAction(TEXT("TouchControls"), IE_Pressed, this, &ANeivaCar::ToggleTouchControls);
+    Input->BindAction(TEXT("Shirt"), IE_Pressed, this, &ANeivaCar::CycleShirt);
+    Input->BindAction(TEXT("Trousers"), IE_Pressed, this, &ANeivaCar::CycleTrousers);
 }
 void ANeivaCar::Throttle(float V) { ThrottleInput = V; }
 void ANeivaCar::Steer(float V) { SteeringInput = V; }
 void ANeivaCar::BrakeOn() { bBrake = true; }
 void ANeivaCar::BrakeOff() { bBrake = false; }
+void ANeivaCar::LookYaw(float V) { AddControllerYawInput(V); }
+void ANeivaCar::LookPitch(float V) { AddControllerPitchInput(V); }
+void ANeivaCar::CycleShirt() { if (Passenger) Passenger->CycleShirt(); }
+void ANeivaCar::CycleTrousers() { if (Passenger) Passenger->CycleTrousers(); }
 void ANeivaCar::ToggleTouchControls() { Neiva::Touch(Cast<APlayerController>(Controller)); }
 void ANeivaCar::ResetPosition()
 {
-    if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld())) SetActorLocation(City->CarPoint);
-    Speed = 0;
+    if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
+        SetActorLocationAndRotation(City->CarPoint, FRotator(0, City->CarYaw, 0), false, nullptr, ETeleportType::TeleportPhysics);
+    Speed = ThrottleInput = SteeringInput = 0; bBrake = false;
+    MotionState = {}; MotionState.Yaw = FMath::DegreesToRadians(GetActorRotation().Yaw); MotionClock.Reset();
 }
 void ANeivaCar::Tick(float DT)
 {
     Super::Tick(DT);
-    DT = FMath::Min(DT, .05f);
-    const float Target = Passenger ? ThrottleInput * (ThrottleInput < 0 ? 650 : 1850) : 0;
-    Speed = FMath::FInterpTo(Speed, bBrake ? 0 : Target, DT, bBrake ? 5.5f : 1.0f);
-    if (FMath::Abs(Speed) < 1) return;
-    AddActorWorldRotation(FRotator(0, SteeringInput * 58 * DT * FMath::Clamp(Speed / 750, -1.0f, 1.0f), 0));
-    FHitResult Hit;
-    AddActorWorldOffset(GetActorForwardVector() * Speed * DT, true, &Hit);
-    if (Hit.IsValidBlockingHit()) Speed = 0;
+    MotionClock.Advance(DT, [this](double StepSeconds)
+    {
+        const double PreviousYaw = MotionState.Yaw;
+        const auto Delta = NeivaMotion::Step(MotionState,
+            {Passenger ? ThrottleInput : 0, Passenger ? SteeringInput : 0, bBrake}, StepSeconds);
+        const FRotator Rotation(0, FMath::RadiansToDegrees(MotionState.Yaw), 0);
+        FCollisionQueryParams Query; Query.AddIgnoredActor(this);
+        if (Passenger) Query.AddIgnoredActor(Passenger);
+        if (GetWorld()->OverlapBlockingTestByChannel(GetActorLocation(), Rotation.Quaternion(), ECC_Pawn,
+            FCollisionShape::MakeBox(Collision->GetScaledBoxExtent()), Query))
+        { MotionState.Yaw = PreviousYaw; MotionState.Speed = 0; return; }
+        SetActorRotation(Rotation);
+        FHitResult Hit;
+        AddActorWorldOffset(FVector(Delta.X * 100, Delta.Y * 100, 0), true, &Hit);
+        if (Hit.IsValidBlockingHit()) MotionState.Speed = 0;
+    });
+    Speed = MotionState.Speed * 100;
 }
 void ANeivaCar::Enter(ANeivaCharacter* Character)
 {
-    if (!Character || Passenger) return;
+    if (!Character || Passenger || FVector::Dist2D(Character->GetActorLocation(), GetActorLocation()) > 450) return;
     APlayerController* PC = Cast<APlayerController>(Character->GetController());
     if (!PC) return;
     Passenger = Character;
     Passenger->GetCharacterMovement()->StopMovementImmediately();
+    Passenger->GetCharacterMovement()->DisableMovement();
     Passenger->SetActorEnableCollision(false);
     Passenger->SetActorHiddenInGame(true);
+    Passenger->SetActorTickEnabled(false);
     Passenger->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
     PC->Possess(this);
+    PC->SetControlRotation(FRotator(-15, GetActorRotation().Yaw, 0));
+    Speed = ThrottleInput = SteeringInput = 0; bBrake = false;
+    MotionState = {}; MotionState.Yaw = FMath::DegreesToRadians(GetActorRotation().Yaw); MotionClock.Reset();
 }
 void ANeivaCar::Exit()
 {
@@ -633,16 +808,23 @@ void ANeivaCar::Exit()
     bool Found = false;
     for (const float Side : {-1.0f, 1.0f})
     {
-        ExitPoint = GetActorLocation() + GetActorRightVector() * 230 * Side + FVector(0,0,70);
-        if (!GetWorld()->OverlapBlockingTestByChannel(ExitPoint, FQuat::Identity, ECC_Pawn,
-            FCollisionShape::MakeCapsule(36, 92), Query)) { Found = true; break; }
+        for (const float Distance : {230.f, 340.f, 480.f})
+            if (Neiva::GroundedCapsule(GetWorld(), GetActorLocation() + GetActorRightVector() * Distance * Side,
+                Passenger->GetCapsuleComponent()->GetScaledCapsuleRadius(),
+                Passenger->GetCapsuleComponent()->GetScaledCapsuleHalfHeight(), Query, ExitPoint))
+            { Found = true; break; }
+        if (Found) break;
     }
     if (!Found) { Neiva::Message(TEXT("Salida bloqueada. Mueve el carro a un lugar abierto.")); return; }
     Speed = ThrottleInput = SteeringInput = 0;
+    MotionState.Speed = 0; MotionClock.Reset(); bBrake = false;
     Passenger->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
     Passenger->SetActorLocation(ExitPoint, false, nullptr, ETeleportType::TeleportPhysics);
     Passenger->SetActorHiddenInGame(false);
     Passenger->SetActorEnableCollision(true);
+    Passenger->SetActorTickEnabled(true);
+    Passenger->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+    Passenger->GetCharacterMovement()->MaxWalkSpeed = 200;
     PC->Possess(Passenger);
     Passenger = nullptr;
 }
@@ -692,6 +874,24 @@ void ANeivaGameMode::StartPlay()
         if (ANeivaCharacter* Character = Cast<ANeivaCharacter>(PC->GetPawn())) Character->ResetPosition();
         PC->SetControlRotation(FRotator(-12, 20, 0));
     }
+    if (!Neiva::Find<ANeivaPedestrian>(GetWorld()))
+    {
+        const int32 Requested = FMath::Clamp(GetDefault<UNeivaVisualSettings>()->PedestrianCount, 0, 24);
+        for (const auto& Route : City->PedestrianRoutes)
+        {
+            if (City->ActivePedestrians >= Requested) break;
+            FVector Position;
+            FCollisionQueryParams Query;
+            if (!Neiva::GroundedCapsule(GetWorld(), Route[0], 36, 92, Query, Position)) continue;
+            FActorSpawnParameters Params;
+            Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
+            if (auto* Person = GetWorld()->SpawnActor<ANeivaPedestrian>(Position, FRotator::ZeroRotator, Params))
+                Person->SetRoute(Route, City->ActivePedestrians++);
+        }
+        City->Status += FString::Printf(TEXT(" / %d peatones en caminos OSM"), City->ActivePedestrians);
+        UE_LOG(LogTemp, Display, TEXT("Neiva: spawned %d/%d pedestrians on %d candidate paths; blocked spawn points skipped."),
+            City->ActivePedestrians, Requested, City->PedestrianRoutes.Num());
+    }
 }
 
 void ANeivaHUD::DrawHUD()
@@ -712,6 +912,9 @@ void ANeivaHUD::DrawHUD()
         }
     }
     const bool Driving = PlayerOwner && Cast<ANeivaCar>(PlayerOwner->GetPawn());
+    ANeivaCharacter* Avatar = PlayerOwner ? Cast<ANeivaCharacter>(PlayerOwner->GetPawn()) : nullptr;
+    if (Driving) Avatar = Cast<ANeivaCar>(PlayerOwner->GetPawn())->GetPassenger();
+    if (Avatar) DrawText(Avatar->AppearanceLabel(), FColor(182,211,191), 24, Canvas->ClipY - 96, nullptr, .73f*S);
     DrawText(Driving ? TEXT("WASD conducir | Espacio frenar | E salir | R reiniciar | T controles tactiles") :
         TEXT("WASD caminar | mouse mirar | Shift correr | Espacio saltar | E interactuar | R volver | T tactil"),
         FColor::White, 24, Canvas->ClipY - 65, nullptr, .87f*S);
@@ -721,11 +924,23 @@ void ANeivaHUD::DrawHUD()
     DrawRect(FLinearColor(.05,.43,.39,.94), Button.X, Button.Y, 152*S, 58*S);
     DrawText(Driving ? TEXT("SALIR") : TEXT("INTERACTUAR"), FColor::White, Button.X + 12*S, Button.Y + 20*S, nullptr, S);
     AddHitBox(Button, FVector2D(152*S,58*S), TEXT("Interact"), true);
+    for (int32 Row = 0; Row < 2; ++Row)
+    {
+        const FVector2D Position(Button.X, Button.Y - (2 - Row) * 54*S);
+        DrawRect(FLinearColor(.04,.16,.14,.94), Position.X, Position.Y, 152*S, 46*S);
+        DrawText(Row ? TEXT("PANTALON / V") : TEXT("CAMISETA / C"), FColor::White,
+            Position.X + 10*S, Position.Y + 15*S, nullptr, .8f*S);
+        AddHitBox(Position, FVector2D(152*S,46*S), Row ? TEXT("Trousers") : TEXT("Shirt"), true);
+    }
 }
 void ANeivaHUD::NotifyHitBoxClick(FName BoxName)
 {
     Super::NotifyHitBoxClick(BoxName);
-    if (BoxName != TEXT("Interact") || !PlayerOwner) return;
-    if (ANeivaCharacter* Character = Cast<ANeivaCharacter>(PlayerOwner->GetPawn())) Character->Interact();
-    else if (ANeivaCar* Car = Cast<ANeivaCar>(PlayerOwner->GetPawn())) Car->Exit();
+    if (!PlayerOwner) return;
+    ANeivaCar* Car = Cast<ANeivaCar>(PlayerOwner->GetPawn());
+    ANeivaCharacter* Character = Car ? Car->GetPassenger() : Cast<ANeivaCharacter>(PlayerOwner->GetPawn());
+    if (BoxName == TEXT("Shirt") && Character) Character->CycleShirt();
+    else if (BoxName == TEXT("Trousers") && Character) Character->CycleTrousers();
+    else if (BoxName == TEXT("Interact"))
+    { if (Car) Car->Exit(); else if (Character) Character->Interact(); }
 }

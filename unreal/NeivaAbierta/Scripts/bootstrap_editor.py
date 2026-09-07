@@ -58,7 +58,7 @@ def property_link(node, output, prop):
         raise RuntimeError(f"Invalid material property connection: {prop}")
 
 
-def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False):
+def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False, clothing_mask=None, landmark=False):
     path = f"{ROOT}/Materials/{name}"
     material = unreal.load_asset(path) if editor.does_asset_exist(path) else assets.create_asset(
         name, ROOT + "/Materials", unreal.Material, unreal.MaterialFactoryNew())
@@ -66,7 +66,7 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
         raise RuntimeError(f"Cannot create {path}")
     # Explicitly generated namespace. Author custom overrides outside this folder.
     library.delete_all_material_expressions(material)
-    material.set_editor_property("two_sided", masked)
+    material.set_editor_property("two_sided", masked or landmark)
     material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_MASKED if masked else unreal.BlendMode.BLEND_OPAQUE)
     if masked:
         material.set_editor_property("opacity_mask_clip_value", .45)
@@ -87,7 +87,38 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
             if channel == "color" else unreal.MaterialSamplerType.SAMPLERTYPE_LINEAR_COLOR)
         connect(uv, "", node, "UVs")
         outputs[channel] = node
-    property_link(outputs["color"], "RGB", unreal.MaterialProperty.MP_BASE_COLOR)
+    color_node, color_output = outputs["color"], "RGB"
+    if clothing_mask:
+        texture = import_texture(clothing_mask, "mask")
+        # Audited cloth/skin boundaries must not bleed across the UV islands.
+        texture.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_VECTOR_DISPLACEMENTMAP)
+        texture.set_editor_property("mip_gen_settings", unreal.TextureMipGenSettings.TMGS_NO_MIPMAPS)
+        texture.set_editor_property("filter", unreal.TextureFilter.TF_NEAREST)
+        editor.save_loaded_asset(texture)
+        mask = expression(material, unreal.MaterialExpressionTextureSampleParameter2D, -500, 1000)
+        mask.set_editor_property("parameter_name", "ClothingMask")
+        mask.set_editor_property("texture", texture)
+        mask.set_editor_property("sampler_type", unreal.MaterialSamplerType.SAMPLERTYPE_LINEAR_COLOR)
+        connect(uv, "", mask, "UVs")
+        for index, (channel, parameter) in enumerate([("R", "ShirtTint"), ("G", "ShortsTint"), ("B", "ShoesTint")]):
+            tint = expression(material, unreal.MaterialExpressionVectorParameter, -200, 900 + index * 170)
+            tint.set_editor_property("parameter_name", parameter)
+            tint.set_editor_property("default_value", unreal.LinearColor(1, 1, 1, 1))
+            multiply = expression(material, unreal.MaterialExpressionMultiply, 60, 850 + index * 180)
+            connect(outputs["color"], "RGB", multiply, "A")
+            connect(tint, "", multiply, "B")
+            mix = expression(material, unreal.MaterialExpressionLinearInterpolate, 280 + index * 180, 200)
+            connect(color_node, color_output, mix, "A")
+            connect(multiply, "", mix, "B")
+            connect(mask, channel, mix, "Alpha")
+            color_node, color_output = mix, ""
+    if landmark:
+        vertex = expression(material, unreal.MaterialExpressionVertexColor, -150, -240)
+        multiply = expression(material, unreal.MaterialExpressionMultiply, 250, -120)
+        connect(color_node, color_output, multiply, "A")
+        connect(vertex, "RGB", multiply, "B")
+        color_node, color_output = multiply, ""
+    property_link(color_node, color_output, unreal.MaterialProperty.MP_BASE_COLOR)
     if "normal" in outputs:
         property_link(outputs["normal"], "RGB", unreal.MaterialProperty.MP_NORMAL)
     if masked:
@@ -95,7 +126,16 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
     if "arm" in outputs:
         for channel, prop in [("R", unreal.MaterialProperty.MP_AMBIENT_OCCLUSION),
                               ("G", unreal.MaterialProperty.MP_ROUGHNESS), ("B", unreal.MaterialProperty.MP_METALLIC)]:
-            property_link(outputs["arm"], channel, prop)
+            if landmark and channel == "G":
+                scale = expression(material, unreal.MaterialExpressionScalarParameter, -140, 650)
+                scale.set_editor_property("parameter_name", "RoughnessScale")
+                scale.set_editor_property("default_value", 1.0)
+                multiply = expression(material, unreal.MaterialExpressionMultiply, 160, 650)
+                connect(outputs["arm"], channel, multiply, "A")
+                connect(scale, "", multiply, "B")
+                property_link(multiply, "", prop)
+            else:
+                property_link(outputs["arm"], channel, prop)
     else:
         node = expression(material, unreal.MaterialExpressionConstant, -200, 600)
         node.set_editor_property("r", roughness)
@@ -103,6 +143,29 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
     library.recompile_material(material)
     editor.save_loaded_asset(material)
     return material
+
+
+def landmark_solid_material():
+    name = "M_LandmarkSolid"
+    path = ROOT + "/Materials/" + name
+    material = unreal.load_asset(path) if editor.does_asset_exist(path) else assets.create_asset(
+        name, ROOT + "/Materials", unreal.Material, unreal.MaterialFactoryNew())
+    if material is None:
+        raise RuntimeError("Cannot create solid landmark material")
+    library.delete_all_material_expressions(material)
+    material.set_editor_property("two_sided", True)
+    material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
+    vertex = expression(material, unreal.MaterialExpressionVertexColor, -300, 0)
+    property_link(vertex, "RGB", unreal.MaterialProperty.MP_BASE_COLOR)
+    for row, (parameter, default, prop) in enumerate([
+        ("RoughnessScale", .8, unreal.MaterialProperty.MP_ROUGHNESS),
+        ("Metalness", 0.0, unreal.MaterialProperty.MP_METALLIC)]):
+        node = expression(material, unreal.MaterialExpressionScalarParameter, -300, 160 + row * 160)
+        node.set_editor_property("parameter_name", parameter)
+        node.set_editor_property("default_value", default)
+        property_link(node, "", prop)
+    library.recompile_material(material)
+    editor.save_loaded_asset(material)
 
 
 def water_material():
@@ -201,6 +264,12 @@ def main():
     plan = build_plan()  # Validate all local sources before asset mutations.
     for spec in plan["materials"]:
         pbr_material(spec["name"], spec["maps"], spec["tileMeters"], spec["normalOpenGL"])
+        if spec["name"] in ("M_Brick", "M_Plaster", "M_Roof", "M_Pavement"):
+            # Landmark UVs arrive already divided by the exported physical tile.
+            pbr_material("M_Landmark_" + spec["key"], spec["maps"], landmark=True)
+        if spec["name"] == "M_Plaster":
+            pbr_material("M_Studio", spec["maps"], spec["tileMeters"], landmark=True)
+    landmark_solid_material()
     water_material()
     import_texture(plan["environment"], "hdr", "Environment")
     character = import_fbx(plan["models"][0])
@@ -212,7 +281,8 @@ def main():
                 raise RuntimeError(f"Animation skeleton mismatch: {record['name']}")
     character_materials = {part: pbr_material("M_Character" + part.capitalize(), maps,
         normal_opengl=os.environ.get("NEIVA_CHARACTER_NORMAL_OPENGL", "1") == "1",
-        roughness={"body": .88, "head": .72, "opacity": .94}[part], masked=part == "opacity")
+        roughness={"body": .88, "head": .72, "opacity": .94}[part], masked=part == "opacity",
+        clothing_mask=plan["clothingMask"] if part == "body" else None)
         for part, maps in plan["characterTextures"].items()}
     slots = character.get_editor_property("materials")
     for slot in slots:
@@ -231,7 +301,10 @@ def main():
             raise RuntimeError("Could not create /Game/Maps/Neiva")
         levels.save_current_level()
     report = {"schemaVersion": 1, "models": [model["destination"] for model in plan["models"]],
-              "materials": [material["destination"] for material in plan["materials"]],
+              "materials": [material["destination"] for material in plan["materials"]] +
+                  [ROOT + "/Materials/" + name for name in ("M_Landmark_brick", "M_Landmark_plaster",
+                   "M_Landmark_roof", "M_Landmark_pavement", "M_LandmarkSolid", "M_Water", "M_Studio",
+                   "M_CharacterBody", "M_CharacterHead", "M_CharacterOpacity")],
               "note": "Import completed in this editor. Compilation, playback and final rendering require separate validation."}
     destination = Path(unreal.Paths.project_saved_dir()) / "NeivaAssets-import.json"
     destination.parent.mkdir(parents=True, exist_ok=True)

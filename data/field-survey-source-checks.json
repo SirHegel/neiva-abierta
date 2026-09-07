@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "requestedSector": {
+    "longitude": -75.2778407,
+    "latitude": 2.9380357,
+    "origin": "User-provided URL, not a surveyed ground control point"
+  },
+  "checks": [
+    {
+      "id": "construction-schema",
+      "url": "https://mapas.igac.gov.co/server/rest/services/Dato_Fundamental_Catastro/MapServer/2?f=json",
+      "checkedAt": "2026-09-07T07:44:08.096121+00:00",
+      "httpStatus": 200,
+      "fields": [
+        "FID",
+        "Shape",
+        "CODIGO",
+        "TERRENO_CO",
+        "TIPO_CONST",
+        "TIPO_DOMIN",
+        "NUMERO_PIS",
+        "NUMERO_SOT",
+        "NUMERO_MEZ",
+        "NUMERO_SEM",
+        "ETIQUETA",
+        "IDENTIFICA",
+        "CODIGO_EDI",
+        "CODIGO_ANT",
+        "GLOBALID_S",
+        "SHAPE_Leng",
+        "SHAPE_Area",
+        "GlobalID"
+      ],
+      "hasZ": null,
+      "geometryType": "esriGeometryPolygon",
+      "sourceSpatialReference": {
+        "wkid": 4686,
+        "latestWkid": 4686,
+        "xyTolerance": 8.983152841195215e-09,
+        "zTolerance": 0.001,
+        "mTolerance": 0.001,
+        "falseX": -400,
+        "falseY": -400,
+        "xyUnits": 11258999068426.238,
+        "falseZ": -100000,
+        "zUnits": 10000,
+        "falseM": -100000,
+        "mUnits": 10000
+      },
+      "copyrightText": ""
+    },
+    {
+      "id": "requested-sector-count",
+      "url": "https://mapas.igac.gov.co/server/rest/services/Dato_Fundamental_Catastro/MapServer/2/query?f=json&geometry=-75.2789%2C2.9370%2C-75.2768%2C2.9391&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnCountOnly=true",
+      "checkedAt": "2026-09-07T07:44:08.096659+00:00",
+      "httpStatus": 200,
+      "count": 0,
+      "coverageConfirmed": false
+    },
+    {
+      "id": "neiva-ortho-index",
+      "url": "https://mapas2.igac.gov.co/server/rest/services/carto/productoscartograficosvigentes/MapServer/0/query?f=json&objectIds=7098&returnGeometry=false&outFields=FID%2CDIVIPOLA%2CProducto%2CFech_Insu%2CA%C3%B1o_Insum%2CTipo_PC%2CEscala_Ref%2CR_Espacial%2CArea%2Curl_Public",
+      "checkedAt": "2026-09-07T07:44:08.096994+00:00",
+      "httpStatus": 200,
+      "products": [
+        {
+          "FID": 7098,
+          "DIVIPOLA": "41001",
+          "Producto": "Orto10_41001000_20210513",
+          "Fech_Insu": 1620864000000,
+          "Año_Insum": "2021",
+          "Tipo_PC": "Ortoimagen",
+          "Escala_Ref": 1000,
+          "R_Espacial": 0.1,
+          "Area": 6053.76086435,
+          "url_Public": " "
+        }
+      ]
+    }
+  ],
+  "dataPolicy": "Schema and aggregate counts only; no individual cadastral properties or geometries copied."
+}

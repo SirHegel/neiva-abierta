@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-09-07T08:10:21.664058+00:00",
+  "scope": "Preparación del juego nativo Unreal; no existe ejecutable del juego validado.",
+  "engine": {
+    "requested": "Unreal Engine 5.5",
+    "installed": false,
+    "gameCompiled": false,
+    "packaged": false,
+    "runtimeValidated": false,
+    "gameplayCapture": null
+  },
+  "hardwareObserved": {
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "vramMiB": 6141,
+    "driver": "595.84",
+    "unrealFps": null
+  },
+  "checks": {
+    "nodeTestsPassed": 82,
+    "unrealSourceContractTestsPassed": 9,
+    "launcherContractTestsPassed": 26,
+    "stagedMapTestsPassed": 13,
+    "webBuildPassed": true,
+    "cppMotionKernelCompiledAndTested": true,
+    "cppMotionKernelIsTheGameExecutable": false
+  },
+  "streaming": {
+    "upstreamRevision": "c3e3abea6590a19e1c0ab4d2954efd6a1d949db3",
+    "infrastructureCompiled": true,
+    "playerHttpStatus": 200,
+    "websocketConfigReceived": true,
+    "streamerIds": [],
+    "videoReceived": false,
+    "linuxChildCleanupVerified": true,
+    "windowsExecutionVerified": false
+  },
+  "city": {
+    "baseChanged": false,
+    "nativeStagedBuildings": 35873,
+    "nativeStagedRoads": 6141,
+    "detailedLandmarks": 4,
+    "detailedMeshSections": 45,
+    "trianglesInLandmarks": 110618,
+    "newPhysicallyMeasuredDimensions": 0,
+    "wholeCityScannedOrVerified": false
+  },
+  "firefox": {
+    "sharedWindowObserved": true,
+    "viewerAddress": "1760 Cra. 21, Neiva, Huila",
+    "imageYearObserved": "2024",
+    "panoramaIdFromUserUrl": "CIC3DQzywCxaSxfLXZIXOA",
+    "keyboardAndPointerGranted": false,
+    "lastInputRequest": "cancelled",
+    "viewCount": 1
+  },
+  "distribution": {
+    "githubExecutableRelease": null,
+    "siteNativeDownload": null,
+    "epicSubmission": null
+  },
+  "evidence": [
+    "docs/DISTRIBUCION.md",
+    "docs/UNREAL.md",
+    "docs/FIDELIDAD.md",
+    "data/field-survey.json",
+    "artifacts/unreal-native/streaming-browser-audit.json",
+    "artifacts/unreal-native/streaming-process-audit-fixed.json"
+  ]
+}

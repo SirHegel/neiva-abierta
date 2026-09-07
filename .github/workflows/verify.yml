@@ -20,4 +20,7 @@ jobs:
           python3 unreal/NeivaAbierta/Scripts/prepare_project.py
           python3 unreal/NeivaAbierta/Scripts/asset_plan.py --check
           python3 -m unittest discover -s unreal/NeivaAbierta/Scripts/tests -v
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
           python3 -m py_compile unreal/NeivaAbierta/Scripts/*.py
+          python3 -m py_compile scripts/unreal.py scripts/field-survey-source-check.py
+          node --check scripts/pixel-streaming-local.mjs

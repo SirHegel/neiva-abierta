@@ -145,3 +145,70 @@ El geoportal municipal vigente usa un fondo denominado Google Satellite: ese fon
 La [Resolución IGAC 616 de 2020](https://redgeodesica.igac.gov.co/documentos/resolucion_616_de_2020.pdf) adopta CC-BY 4.0 para sus datos abiertos. No concede automáticamente derechos sobre toda imagen de terceros registrada por el IGAC ni sobre los archivos municipales. Por ello la nueva cartografía catastral queda como fuente investigada, pendiente de licencia y metadatos, sin sustituir las huellas del juego.
 
 **Estado dimensional:** no hay alturas de campo verificadas en este proyecto. Existen huellas con coordenadas, un pequeño grupo de referencias arquitectónicas y correcciones semánticas comprobables. Para afirmar dimensiones físicas exactas faltarían una fuente métrica con precisión/fecha documentadas y cobertura de los objetos, o un levantamiento independiente. Consultar más panoramas no convierte los 5,8 m genéricos en mediciones.
+
+## Registro de levantamiento por edificio, 7 de septiembre de 2026
+
+El nuevo [`data/field-survey.json`](../data/field-survey.json) es una **cola de trabajo independiente**, no una corrección aplicada al juego. Comienza en la coordenada del nuevo enlace del usuario, longitud/latitud `[-75.2778407,2.9380357]`. Selecciona los centros cartográficos aproximados de huellas dentro de 75 m: **13 registros**, 11 Microsoft y 2 Google Open Buildings. Las 13 alturas heredadas son **5,8 m estimados por el juego**. Tiene cero edificios revisados, cero fachadas revisadas y cero dimensiones físicas confirmadas. La cercanía al punto no establece qué edificio aparece en la cámara. La selección tampoco es un censo de las construcciones existentes en ese sector.
+
+Se conserva el [enlace de Street View aportado](https://www.google.com/maps/place/Neiva,+HU/@2.9380357,-75.2778407,3a,75y,87.02h,88.41t/data=!3m7!1e1!3m5!1svUrym1tkh_ZzYiF4dc_vwg!2e0!7i16384!8i8192?hl=es) como referencia pendiente de revisión, con fecha de imagen desconocida. Este pipeline no abre el navegador, inspecciona Firefox ni descarga contenido de Google. El registro inicial no incorpora las observaciones de otra revisión del visor hasta que se documente su alcance por separado.
+
+En una revisión posterior se recibió la imagen de la ventana Firefox que dejó
+el usuario, con Street View en **1760 Carrera 21** y fecha visible de **2024**.
+El nuevo enlace sitúa la cámara en `2.9373287,-75.2766957`. Se registraron la
+calzada de concreto, sus juntas, los desniveles de andenes y los colores y
+cerramientos visibles como notas de comparación en `references[]`. No se
+identificó de forma inequívoca cada fachada con una huella, ni se midieron
+anchos o alturas. El portal de Ubuntu concedió imagen, pero rechazó eventos
+de teclado y mouse; otra solicitud de control terminó cancelada. **Se observó
+un encuadre, no se recorrió ni se escaneó toda la ciudad.** No se distribuyen
+capturas o texturas del visor con el juego.
+
+### Qué permite comprobar Google y qué licencia se encontró
+
+- Las [condiciones del visor Google Maps, modificadas el 27/01/2026](https://www.google.com/help/terms_maps/), permiten consultar mapas y enlazan sus reglas de uso. Prohíben, entre otras cosas, redistribuir el contenido o crear un nuevo producto basado en Maps. Consultar una calle no concede por sí mismo derechos de reconstrucción.
+- Las [directrices oficiales de Street View](https://about.google/brand-resource-center/products-and-services/geo-guidelines/) permiten enlaces o inserciones oficiales. Su sección de restricciones excluye crear datos mediante digitalización/trazado de imágenes, usar aplicaciones para extraer información, descargar panoramas separados y unirlos; se aplica también a proyectos académicos y sin ánimo de lucro. No se presupone una excepción por hacer el proceso manualmente o por publicar un juego gratuito. La guía tampoco permite separar capturas de Street View para reutilizarlas como texturas.
+- Para una integración mediante API, las [condiciones de Maps Platform, §3.2.3](https://cloud.google.com/maps-platform/terms) añaden restricciones contra extracción, almacenamiento y creación de contenido derivado. Entre sus ejemplos están modelos de edificios y un índice de árboles obtenido de Street View. Una clave de API permite solicitar el servicio bajo esas condiciones; no compra una licencia de exportación de la ciudad.
+- La [API oficial de metadatos de Street View](https://developers.google.com/maps/documentation/streetview/metadata) devuelve disponibilidad, ubicación del panorama, identificador, fecha y copyright. La fecha puede limitarse al año/mes o faltar, y los IDs pueden cambiar. Esos campos **no incluyen altura de fachadas, distancias a objetos ni una nube de puntos**. No se solicitaron claves ni se activó facturación.
+- La herramienta [Medir distancia de Maps](https://support.google.com/maps/answer/1628031) mide entre puntos elegidos sobre el mapa. No proporciona con ello una altura exterior medida ni una precisión topográfica documentada de cada edificio.
+
+Estas restricciones son una lectura operativa de las fuentes primarias para este proyecto; no se supone una licencia adicional ni una excepción jurídica. El juego mantiene sus fuentes cartográficas abiertas separadas. La revisión visual puede orientar la búsqueda de evidencia independiente y detectar qué casos deben comprobarse, pero no se convierte aquí en un inventario de fachadas o dimensiones extraídas de Street View.
+
+### Nueva consulta dimensional oficial en el sector solicitado
+
+[`scripts/field-survey-source-check.py`](../scripts/field-survey-source-check.py) realizó tres solicitudes públicas limitadas el **07/09/2026, 07:44 UTC**; el resultado está en [`data/field-survey-source-checks.json`](../data/field-survey-source-checks.json). El esquema nacional IGAC `U_CONSTRUCCION` respondió HTTP 200 y sigue incluyendo `NUMERO_PIS`. Esta vez el conteo del rectángulo `[-75.2789,2.9370,-75.2768,2.9391]`, alrededor de la ubicación solicitada, también respondió HTTP 200: **cero registros**. Esto confirma ausencia de resultados en esa consulta/capa/recorte, no ausencia de edificios ni inexistencia del catastro municipal. No se obtuvo ningún número de pisos para esos 13 objetos. No se copiaron identificadores catastrales, propiedades individuales ni geometrías municipales.
+
+El índice IGAC volvió a confirmar `Orto10_41001000_20210513`, 0,10 m/píxel, insumo de 2021 y `url_Public` vacío. Sigue sin resolverse la descarga licenciada de los píxeles o una fuente 3D métrica. La descripción anterior del geoportal municipal se mantiene: huellas 2D y área, sin pisos/altura observados ni licencia del conjunto confirmada. No se deduce una altura multiplicando pisos ni se usa el tamaño de píxel como exactitud física.
+
+### Contrato y trabajo reproducible
+
+Cada registro mantiene el ID cartográfico, hash del archivo base, posición calculada, proveedor, área de la huella, altura heredada y un espacio de revisión para **cada borde exterior**. Longitudes y áreas están rotuladas como cartográficas; no son medidas físicas certificadas. Un borde del polígono puede simplificar varios planos reales o no estar visible. No se inventa una fachada observada para completarlo.
+
+Las nuevas `dimensions[]` distinguen `estimated`, `source_declared` y `confirmed`. Una medida confirmada requiere método métrico —estación total, cinta, distanciómetro o nube de puntos licenciada—, fecha real de levantamiento, definición de extremos, datum/referencia, incertidumbre con su fundamento, evidencia y fecha de revisión. Un plano oficial, un tag OSM, niveles contados o una proporción fotográfica conservan su carácter declarado/estimado salvo contraste métrico independiente. El validador comprueba la documentación mínima; **no autentica por sí solo el levantamiento ni certifica sus resultados**.
+
+Las fuentes separan fecha de consulta y fecha de captura; lo desconocido se deja `null`. `rights.derivativeUse` debe ser `permitted` con licencia o permiso documentado para aportar observaciones de fachada o medidas al registro. Las fuentes `reference_only`, las de licencia desconocida y los enlaces Google Maps no pueden fundamentar una nueva dimensión. No se guarda nombre de propietario, cédula, NPN, teléfono, correo ni datos de contacto. El validador rechaza esos nombres de campos; las notas también deben revisarse para no incluirlos en texto libre.
+
+Uso, siempre sin red y sin alterar el juego:
+
+```sh
+# Validar o resumir la cola actual.
+node scripts/field-survey.mjs validate
+node scripts/field-survey.mjs report
+
+# Crear otro sector independiente, sin sobreescribir un archivo existente.
+node scripts/field-survey.mjs queue --center=-75.2778407,2.9380357 --radius=75 --out=/tmp/sector-neiva.json
+
+# Una entrada contiene {sources:[...], record:{...}} con el registro completo revisado.
+# Se escribe una propuesta nueva para comparar; no cambia el archivo base ni el runtime.
+node scripts/field-survey.mjs import --entry=/tmp/medicion-edificio.json --out=/tmp/levantamiento-propuesto.json
+node --test tests/field-survey.test.mjs
+```
+
+Para aportar una entrada, se copia el registro del edificio desde la cola, se añaden fuentes propias o licenciadas, observaciones a sus `facades[]` y medidas a `dimensions[]`. Se conserva `baseline` sin modificar: así siempre puede compararse la estimación anterior con la evidencia nueva. Las pruebas usan medidas **sintéticas sólo dentro de sus fixtures**; no se incorporan al registro real. Comprueban el rechazo de falsas confirmaciones, datos personales estructurados, fuentes restringidas, bases modificadas y revisiones completas sin evidencia, además de la importación sin mutaciones.
+
+### Siguiente evidencia necesaria para dimensiones reales
+
+1. Obtener del titular municipal/IGAC una licencia explícita de la capa concreta, fecha de levantamiento, sistema de referencia, significado de áreas/niveles y documentación de precisión. Solicitar el producto de ortofoto por su identificador; un índice público no equivale a recibir los píxeles o sus derechos. No se envió ninguna solicitud externa en esta sesión.
+2. Usar fotografías propias o cedidas para este uso, planos de obra ejecutada autorizados o una nube de puntos licenciada, identificados por edificio. Registrar qué lados y cubierta están realmente observados y qué partes quedan ocultas. Ni una sola vista frontal ni el número de niveles resuelven toda la geometría.
+3. Medir frentes, retranqueos, base y remates con control geodésico/local documentado y comprobaciones independientes. Conservar método, fecha, incertidumbre y datum; contrastar alineación de huellas y alturas antes de sustituir el modelo. Un sensor de teléfono o una foto sin escala no recibe categoría confirmada sólo por producir números.
+
+El resultado se entregaría por sectores y por edificio, con cobertura explícita. Hasta disponer de esa evidencia, una réplica de dimensiones idénticas para toda Neiva no está respaldada por los datos obtenidos.

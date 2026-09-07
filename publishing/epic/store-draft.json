@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "status": "local-draft-not-submitted",
+  "product": {
+    "title": "Neiva Abierta",
+    "developer": "Jhon Steven Álvarez Ruiz",
+    "engine": "Unreal Engine 5.5",
+    "intendedPrice": 0,
+    "priceStatus": "requested-by-owner-not-configured-in-store",
+    "language": "es",
+    "requestedPlatforms": ["Windows"],
+    "genres": ["Exploración"],
+    "shortDescriptionDraft": "Recorre una interpretación de Neiva, Huila, con un personaje anónimo, exploración a pie y un vehículo conducible.",
+    "descriptionDraft": "Neiva Abierta es un proyecto de exploración urbana inspirado en Neiva, Colombia. Su cartografía conserva calles y huellas de edificios de fuentes abiertas. Las alturas, fachadas y detalles sin levantamiento son interpretaciones. El pequeño estudio de servicios de desarrollo es ficticio. El proyecto no constituye una reconstrucción idéntica ni un levantamiento completo de la ciudad.",
+    "descriptionRequiresReviewAgainstPackagedBuild": true
+  },
+  "release": {
+    "date": null,
+    "windowsExecutable": null,
+    "linuxExecutable": null,
+    "downloadUrl": null,
+    "sha256": null,
+    "minimumRequirements": null,
+    "recommendedRequirements": null,
+    "unrealGameplayScreenshots": [],
+    "unrealGameplayVideo": null,
+    "ratings": null,
+    "submissionId": null
+  },
+  "unresolved": [
+    "Instalación autenticada de Unreal Engine",
+    "Compilación, importación y ejecución real",
+    "Pruebas y medición de requisitos en el paquete final",
+    "Capturas y vídeo del ejecutable Unreal",
+    "Identidad y organización del desarrollador en Epic",
+    "Acuerdos, datos de registro y cuota de publicación de Epic",
+    "Revisión de la tienda",
+    "Levantamiento y modelado de las fachadas y dimensiones reales faltantes"
+  ],
+  "evidenceRules": {
+    "webScreenshotsAreUnrealEvidence": false,
+    "referenceGameImagesAreOwnGameplay": false,
+    "sourceTestsProveUnrealCompilation": false,
+    "wholeCityIsVerifiedReplica": false
+  },
+  "sources": [
+    "https://store.epicgames.com/distribution?lang=es-ES",
+    "https://www.unrealengine.com/linux"
+  ]
+}

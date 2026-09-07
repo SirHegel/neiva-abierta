@@ -35,7 +35,7 @@ class ArtContractTests(unittest.TestCase):
         self.manifest["files"].append({"path": "sky.hdr", "sha256": hashlib.sha256(b"fixture sky").hexdigest()})
         character = self.repo / "public/models/character"
         character.mkdir(parents=True)
-        for name in ("character.fbx", "idle.fbx", "walk.fbx"):
+        for name in ("character.fbx", "idle.fbx", "walk.fbx", "run.fbx"):
             (character / name).write_bytes(b"Kaydara FBX Binary fixture")
         for part in ("head", "body"):
             for channel in ("color", "normal"):
@@ -44,6 +44,10 @@ class ArtContractTests(unittest.TestCase):
         car = self.repo / "public/models/car"
         car.mkdir(parents=True)
         (car / "car.glb").write_bytes(b"glTF fixture")
+        mask_dir = self.repo / "unreal/NeivaAbierta/SourceArt"
+        mask_dir.mkdir(parents=True)
+        (mask_dir / "rocketbox_clothing_mask.png").write_bytes(b"fixture mask")
+        (mask_dir / "clothing-mask-audit.json").write_text(json.dumps({"maskSHA256":hashlib.sha256(b"fixture mask").hexdigest()}))
         self.save_manifest()
 
     def save_manifest(self):
@@ -51,9 +55,14 @@ class ArtContractTests(unittest.TestCase):
 
     def test_original_jpeg_contract_does_not_require_webp_runtime_variants(self):
         result = plan_module.build_plan(self.repo)
-        self.assertEqual(len(result["models"]), 4)
+        self.assertEqual(len(result["models"]), 5)
         self.assertTrue(all(Path(source).suffix == ".jpg" for material in result["materials"] for source in material["maps"].values()))
         self.assertTrue(all(model["destination"].startswith("/Game/NeivaAssets/") for model in result["models"]))
+
+    def test_modified_clothing_mask_fails_before_import(self):
+        (self.repo / "unreal/NeivaAbierta/SourceArt/rocketbox_clothing_mask.png").write_bytes(b"changed")
+        with self.assertRaisesRegex(ValueError, "Clothing mask checksum"):
+            plan_module.build_plan(self.repo)
 
     def test_modified_texture_stops_before_any_editor_import(self):
         (self.texture_dir / "asphalt_color_1k.jpg").write_bytes(b"corrupt download")

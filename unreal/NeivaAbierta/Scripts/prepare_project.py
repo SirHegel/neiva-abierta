@@ -5,6 +5,7 @@ import json
 import math
 from pathlib import Path
 import shutil
+from stage_map import stage_map, validate_landmarks
 
 PROJECT = Path(__file__).resolve().parents[1]
 REPO = PROJECT.parents[1]
@@ -43,19 +44,42 @@ def validate(data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=REPO / "public/data/neiva.json")
+    parser.add_argument("--landmarks", type=Path, default=PROJECT / "SourceArt/landmarks/neiva-landmarks.json")
     parser.add_argument("--check", action="store_true", help="Validate without copying")
     args = parser.parse_args()
     with args.data.open(encoding="utf-8") as source:
         data = json.load(source)
     validate(data)
+    data = stage_map(data, REPO)
+    validate(data)
+    landmarks = json.loads(args.landmarks.read_text(encoding="utf-8"))
+    validate_landmarks(landmarks, data)
     if not args.check:
         destination = PROJECT / "Content/Data/neiva.json"
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(args.data, destination)
-        print(f"Map copied to {destination}")
+        destination.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+        shutil.copyfile(args.landmarks, destination.with_name("neiva-landmarks.json"))
+        licenses = destination.parent / "Licenses"
+        for relative in ("LICENSE", "public/models/ATTRIBUTION.txt", "public/models/sources.json",
+                         "public/models/character/LICENSE-ROCKETBOX.txt", "public/models/car/LICENSE-CAR.txt",
+                         "public/models/car/LICENSE-KHRONOS-MARKS.txt", "public/textures/manifest.json"):
+            source = REPO / relative
+            target = licenses / relative.removeprefix("public/")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+        (licenses / "NATIVE-NOTES.txt").write_text(
+            "Neiva Abierta / native Unreal source preparation. Original game code MIT; Unreal Engine licensed separately.\n"
+            "OpenStreetMap/Overture: ODbL. See neiva.json meta.sources, survey and corrections for sources and estimates.\n"
+            "Car Concept: Eric Chadwick / Darmstadt Graphics Group GmbH, 2024, CC BY 4.0; Khronos marks licensed separately.\n"
+            "Native car changes: combined static hierarchy, scale normalization; wheels remain fixed to this imported mesh.\n"
+            "Microsoft Rocketbox: MIT. Native character changes: scale, root lock, PBR and audited cloth-only tint mask.\n"
+            "Poly Haven texture originals: CC0. Landmark geometry: interpreted cartographic derivative, ODbL, not photogrammetry.\n",
+            encoding="utf-8")
+        print(f"Reviewed map and detailed landmarks staged in {destination.parent}")
     print(f"Valid map: {len(data['roads'])} roads, {len(data['buildings'])} buildings; snapshot {data['meta'].get('timestamp')}")
     holes = sum(bool(building.get("holes")) for building in data["buildings"])
     print(f"Unreal imports all buildings by default. {holes} footprints have interior rings; this importer currently renders their exterior only.")
+    print(f"Detailed landmarks: {len(landmarks['meshes'])} mesh sections; {len(landmarks['replacesBuildingIds'])} mapped buildings replaced after runtime validation.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,199 @@
+{
+  "sourceTextureSHA256": "3fa20673db62ce37aec5d57ca1b8fcd3ba3d72f53dd022358161c96c5b31afa6",
+  "sourceFBXSHA256": "8d1edb51b4dc3427ae2456f4407fc105532c145dd019e53cd42bab31cc948a29",
+  "maskSHA256": "d12a2fd27858baee32b096b8013081f03d388e40b7bede46a014fa8a190c398e",
+  "resolution": [
+    2048,
+    2048
+  ],
+  "channels": [
+    "polo_and_sleeves",
+    "shorts",
+    "shoes"
+  ],
+  "bodyTriangles": 3939,
+  "selectedTriangles": [
+    663,
+    402,
+    530
+  ],
+  "maskedPixels": [
+    1068590,
+    451208,
+    121561
+  ],
+  "samples": {
+    "shirt_front": {
+      "imageUV": [
+        0.5,
+        0.3
+      ],
+      "maskRGB": [
+        255,
+        0,
+        0
+      ]
+    },
+    "shirt_sleeve": {
+      "imageUV": [
+        0.1,
+        0.55
+      ],
+      "maskRGB": [
+        255,
+        0,
+        0
+      ]
+    },
+    "shorts": {
+      "imageUV": [
+        0.1,
+        0.2
+      ],
+      "maskRGB": [
+        0,
+        255,
+        0
+      ]
+    },
+    "shoe": {
+      "imageUV": [
+        0.3,
+        0.95
+      ],
+      "maskRGB": [
+        0,
+        0,
+        255
+      ]
+    },
+    "bare_leg": {
+      "imageUV": [
+        0.1,
+        0.3
+      ],
+      "maskRGB": [
+        0,
+        0,
+        0
+      ]
+    },
+    "forearm": {
+      "imageUV": [
+        0.1,
+        0.7
+      ],
+      "maskRGB": [
+        0,
+        0,
+        0
+      ]
+    },
+    "hand": {
+      "imageUV": [
+        0.1,
+        0.9
+      ],
+      "maskRGB": [
+        0,
+        0,
+        0
+      ]
+    },
+    "ankle_in_shoe_island": {
+      "imageUV": [
+        0.3,
+        0.98
+      ],
+      "maskRGB": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "skinRegions": {
+    "left_bare_leg": {
+      "imageBounds": [
+        0.025,
+        0.26,
+        0.28,
+        0.428
+      ],
+      "skinPixelsChecked": 179568,
+      "masked": 0
+    },
+    "right_bare_leg": {
+      "imageBounds": [
+        0.72,
+        0.26,
+        0.975,
+        0.428
+      ],
+      "skinPixelsChecked": 179568,
+      "masked": 0
+    },
+    "left_forearm": {
+      "imageBounds": [
+        0.04,
+        0.64,
+        0.205,
+        0.83
+      ],
+      "skinPixelsChecked": 131482,
+      "masked": 0
+    },
+    "right_forearm": {
+      "imageBounds": [
+        0.795,
+        0.64,
+        0.96,
+        0.83
+      ],
+      "skinPixelsChecked": 131482,
+      "masked": 0
+    },
+    "left_hand": {
+      "imageBounds": [
+        0.035,
+        0.9,
+        0.205,
+        0.99
+      ],
+      "skinPixelsChecked": 64032,
+      "masked": 0
+    },
+    "right_hand": {
+      "imageBounds": [
+        0.795,
+        0.9,
+        0.965,
+        0.99
+      ],
+      "skinPixelsChecked": 64032,
+      "masked": 0
+    },
+    "left_ankle": {
+      "imageBounds": [
+        0.28,
+        0.978,
+        0.34,
+        0.999
+      ],
+      "skinPixelsChecked": 5289,
+      "masked": 0
+    },
+    "right_ankle": {
+      "imageBounds": [
+        0.66,
+        0.978,
+        0.72,
+        0.999
+      ],
+      "skinPixelsChecked": 5289,
+      "masked": 0
+    }
+  },
+  "warmSkinVetoPixelsMasked": 0,
+  "unrealValidated": false
+}
