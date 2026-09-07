@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-09-07T07:58:26.975Z",
+  "checkedAt": "2026-09-07T08:28:31.109325+00:00",
   "base": {
     "path": "public/data/neiva.json",
     "sha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
@@ -96,7 +96,36 @@
         "Poste de concreto junto al andén y árboles visibles al fondo."
       ],
       "physicalMeasurements": [],
-      "geometryChangesApplied": false
+      "geometryChangesApplied": false,
+      "independentReview": {
+        "viewedAt": "2026-09-07T08:28:31.109325+00:00",
+        "browser": "Firefox 154.0.1 headless, perfil nuevo",
+        "inputMethod": "WebDriver BiDi; eventos dentro del navegador independiente",
+        "personalDesktopInputUsed": false,
+        "imageMonthObserved": "2024-08",
+        "positionsObserved": [
+          {
+            "viewerAddress": "1734 Cra. 21, Neiva, Huila",
+            "panoramaId": "1lBbr3cVyv7e16yg1e55Iw",
+            "cameraDeclaredByViewer": {
+              "latitude": 2.9372262,
+              "longitude": -75.2766829
+            }
+          },
+          {
+            "viewerAddress": "1760 Cra. 21, Neiva, Huila",
+            "panoramaId": "CIC3DQzywCxaSxfLXZIXOA",
+            "cameraDeclaredByViewer": {
+              "latitude": 2.9373287,
+              "longitude": -75.2766957
+            }
+          }
+        ],
+        "matchesLastUserPanorama": true,
+        "scope": "Dos posiciones próximas de la cuadra y giro de cámara; no es levantamiento métrico ni revisión exhaustiva.",
+        "physicalMeasurements": [],
+        "geometryChangesApplied": false
+      }
     }
   ],
   "records": [

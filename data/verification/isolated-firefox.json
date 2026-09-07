@@ -1,0 +1,118 @@
+{
+  "checkedAt": "2026-09-07T08:31:43.738119+00:00",
+  "scope": "Navegación visual por controles virtuales; no es captura del juego ni escaneo 3D.",
+  "browser": "Firefox 154.0.1",
+  "transport": "WebDriver BiDi vía puppeteer-core 25.10.0",
+  "headless": true,
+  "freshExclusiveProfile": true,
+  "personalProfileCopied": false,
+  "desktopInputUsed": false,
+  "desktopEnvironmentAbsent": [
+    "DISPLAY",
+    "WAYLAND_DISPLAY",
+    "XAUTHORITY",
+    "DBUS_SESSION_BUS_ADDRESS"
+  ],
+  "processEnvironmentInspected": true,
+  "streetView": {
+    "rendered": true,
+    "viewerTitles": [
+      "1734 Cra. 21 - Google Maps",
+      "1760 Cra. 21 - Google Maps"
+    ],
+    "panoramasObserved": [
+      "1lBbr3cVyv7e16yg1e55Iw",
+      "CIC3DQzywCxaSxfLXZIXOA"
+    ],
+    "imageMonth": "2024-08",
+    "lastUserPanoramaMatched": true,
+    "virtualClickEnteredPanorama": true,
+    "virtualNavigationChangedPanorama": true,
+    "mouseDragChangedHeading": {
+      "beforeDegrees": 354.39,
+      "afterDegrees": 49.61
+    },
+    "originalUserHeadingRestoredByPublicViewerUrl": 186.21,
+    "wholeCityReviewed": false,
+    "physicalMeasurementsObtained": 0,
+    "geometryChangesApplied": false,
+    "imagesPublished": false,
+    "reusableControllerAlsoRendered": true,
+    "keyboardHeldChangedPanorama": {
+      "key": "ArrowUp",
+      "requestedDurationMs": 150,
+      "from": "CIC3DQzywCxaSxfLXZIXOA",
+      "to": "1lBbr3cVyv7e16yg1e55Iw"
+    }
+  },
+  "limitations": [
+    "Comparación visual de dos posiciones próximas de Carrera 21.",
+    "Las entradas están separadas; CPU, memoria y red del PC siguen compartidas.",
+    "No proporciona la sesión Epic ni instala Unreal."
+  ],
+  "evidence": [
+    "docs/NAVEGACION-AISLADA.md",
+    "data/field-survey.json",
+    "artifacts/isolated-browser/input-verification.json"
+  ],
+  "controllerVerification": {
+    "checkedAt": "2026-09-07T08:37:12.931754+00:00",
+    "sessions": [
+      {
+        "closeMethod": "quit",
+        "browser": "firefox/154.0.1",
+        "headless": true,
+        "desktopEnvironmentAbsent": true,
+        "pageInputObserved": {
+          "clicks": 1,
+          "text": "a",
+          "drag": true,
+          "keyDurationMs": 169
+        },
+        "invalidCommandsRejected": true,
+        "snapshotOverwriteRejected": true,
+        "exitCode": 0,
+        "browserExited": true,
+        "profileRemoved": true
+      },
+      {
+        "closeMethod": "eof",
+        "browser": "firefox/154.0.1",
+        "headless": true,
+        "desktopEnvironmentAbsent": true,
+        "exitCode": 0,
+        "browserExited": true,
+        "profileRemoved": true
+      },
+      {
+        "closeMethod": "sigterm",
+        "browser": "firefox/154.0.1",
+        "headless": true,
+        "desktopEnvironmentAbsent": true,
+        "exitCode": 143,
+        "browserExited": true,
+        "profileRemoved": true
+      },
+      {
+        "closeMethod": "sighup",
+        "browser": "firefox/154.0.1",
+        "headless": true,
+        "desktopEnvironmentAbsent": true,
+        "exitCode": 129,
+        "browserExited": true,
+        "profileRemoved": true
+      },
+      {
+        "closeMethod": "epipe",
+        "browser": "firefox/154.0.1",
+        "headless": true,
+        "desktopEnvironmentAbsent": true,
+        "exitCode": 1,
+        "browserExited": true,
+        "profileRemoved": true
+      }
+    ],
+    "script": "scripts/isolated-firefox.mjs",
+    "sha256": "b9d58c5aa3dab298af20a09560d4677581699347c50d3dfd81930c49e1e98d5b"
+  }
+}

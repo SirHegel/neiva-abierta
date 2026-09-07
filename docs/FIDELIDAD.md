@@ -2,7 +2,7 @@
 
 La revisión iniciada el **6 de septiembre de 2026**, ampliada el **7 de septiembre**, hora de Colombia, distingue cartografía, observación visual e interpretación del modelo. El registro aplicable está en [`public/data/neiva-survey.json`](../public/data/neiva-survey.json). Conserva los identificadores y las huellas de la exportación original; las sustituciones deben aplicarse como una capa separada antes de construir gráficos y colisiones.
 
-No se ha recorrido manualmente toda Neiva. Se inspeccionó una vista pública de Google Street View del enlace aportado, la captura de Carrera 4 del usuario y fotografías institucionales del centro. Se ejecutaron comprobaciones geométricas sobre las 35.875 huellas del archivo. Son alcances distintos.
+No se ha recorrido manualmente toda Neiva. Se inspeccionaron una vista pública de Google Street View del centro, la captura de Carrera 4 del usuario, fotografías institucionales y dos posiciones próximas de Carrera 21. Se ejecutaron comprobaciones geométricas sobre las 35.875 huellas del archivo. Son alcances distintos.
 
 ## Evidencia y fechas
 
@@ -162,6 +162,22 @@ anchos o alturas. El portal de Ubuntu concedió imagen, pero rechazó eventos
 de teclado y mouse; otra solicitud de control terminó cancelada. **Se observó
 un encuadre, no se recorrió ni se escaneó toda la ciudad.** No se distribuyen
 capturas o texturas del visor con el juego.
+
+Tras la instrucción de trabajar sin interferir con el teclado y mouse del
+usuario, se abrió **otro Firefox sin ventana, con un perfil nuevo**. Sus eventos
+se envían por WebDriver BiDi; no se controla el escritorio ni se reutiliza la
+sesión personal. Desde las líneas azules del visor se entró en **1734 Cra. 21**
+(`1lBbr3cVyv7e16yg1e55Iw`) y se avanzó a **1760 Cra. 21**
+(`CIC3DQzywCxaSxfLXZIXOA`), el panorama exacto del último enlace del usuario.
+Ambas imágenes indican **agosto de 2024**. Se comprobó también el giro mediante
+arrastre virtual. La advertencia de vista limitada apareció, pero no impidió
+esa navegación ordinaria de Street View.
+
+Esta revisión añade acceso independiente y comparación visual de dos posiciones
+de la misma cuadra. No identifica todas sus fachadas con huellas, no aporta
+mediciones físicas y no cambia geometría del juego. La cola de 13 registros
+mantiene su centro anterior; no se la presenta como edificios reconocidos en
+estos panoramas. [Uso del navegador independiente](NAVEGACION-AISLADA.md).
 
 ### Qué permite comprobar Google y qué licencia se encontró
 

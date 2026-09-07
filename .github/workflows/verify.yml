@@ -24,3 +24,4 @@ jobs:
           python3 -m py_compile unreal/NeivaAbierta/Scripts/*.py
           python3 -m py_compile scripts/unreal.py scripts/field-survey-source-check.py
           node --check scripts/pixel-streaming-local.mjs
+          node --check scripts/isolated-firefox.mjs

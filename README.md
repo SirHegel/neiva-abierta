@@ -5,7 +5,8 @@
 y visualización local mediante Pixel Streaming. No hay todavía motor instalado,
 compilación C++ ni ejecutable Unreal verificados. La web 0.4 de abajo es la edición
 anterior. [Construcción, transmisión y publicación](docs/DISTRIBUCION.md) ·
-[Proyecto Unreal](docs/UNREAL.md).
+[Proyecto Unreal](docs/UNREAL.md) ·
+[Revisar referencias sin usar el teclado o mouse del escritorio](docs/NAVEGACION-AISLADA.md).
 
 Una interpretación jugable de Neiva, Huila, Colombia. Acceso gratuito, personaje
 sin nombre, caminata en tercera persona, un carro conducible, tráfico ambiental,

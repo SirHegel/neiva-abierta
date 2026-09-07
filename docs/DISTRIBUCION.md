@@ -20,6 +20,12 @@ imagen de su ventana Firefox: Street View en 1760 Carrera 21. Las llamadas de
 control de puntero y teclado fueron denegadas por el portal; compartir la imagen
 no concedió control. La vista y sus límites constan en `data/field-survey.json`.
 
+Posteriormente se resolvió la navegación sin usar controles del escritorio:
+un Firefox independiente, sin ventana y con perfil nuevo, permite clics, giro
+y avance en Street View mediante eventos virtuales. Se llegó al panorama exacto
+del enlace del usuario en 1760 Carrera 21. Ese navegador no comparte la sesión
+Epic ni las cookies del Firefox personal. [Navegación independiente](NAVEGACION-AISLADA.md).
+
 Por tanto, **no hay compilación C++, paquete ejecutable ni vídeo de Unreal
 validados**. El código de preparación, las pruebas sin motor y la señalización
 se validan por separado. No se publica una captura Three.js como captura Unreal.

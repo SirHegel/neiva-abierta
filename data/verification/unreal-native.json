@@ -51,7 +51,8 @@
     "panoramaIdFromUserUrl": "CIC3DQzywCxaSxfLXZIXOA",
     "keyboardAndPointerGranted": false,
     "lastInputRequest": "cancelled",
-    "viewCount": 1
+    "viewCount": 1,
+    "independentSessionVerification": "data/verification/isolated-firefox.json"
   },
   "distribution": {
     "githubExecutableRelease": null,
