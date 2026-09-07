@@ -12,3 +12,4 @@ unreal/**/DerivedDataCache/
 
 __pycache__/
 *.pyc
+.vercel
