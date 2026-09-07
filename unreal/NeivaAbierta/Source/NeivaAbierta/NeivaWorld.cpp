@@ -1,4 +1,5 @@
 #include "NeivaWorld.h"
+#include "NeivaPlayerController.h"
 
 #include "Algo/Reverse.h"
 #include "Animation/AnimSequence.h"
@@ -10,6 +11,7 @@
 #include "Components/DirectionalLightComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SkyLightComponent.h"
+#include "Components/SkyAtmosphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -17,8 +19,8 @@
 #include "Engine/Canvas.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/Engine.h"
+#include "Engine/PostProcessVolume.h"
 #include "Engine/SkyLight.h"
-#include "Engine/SkyAtmosphere.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/TextureCube.h"
@@ -37,7 +39,7 @@
 #include "Misc/Parse.h"
 #include "Misc/Paths.h"
 #include "ProceduralMeshComponent.h"
-#include "KismetProceduralMeshLibrary.h"
+#include "NeivaProceduralTangents.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
@@ -45,7 +47,7 @@ namespace Neiva
 {
     const TCHAR* ContactURL = TEXT("mailto:alvarezruizj289@gmail.com?subject=Desarrollo%20desde%20Neiva%20Abierta");
 
-    struct FGeometry
+    struct FMapGeometry
     {
         TArray<FVector> Vertices;
         TArray<int32> Indices;
@@ -57,9 +59,14 @@ namespace Neiva
         {
             const FVector Normal = FVector::CrossProduct(B - A, C - A).GetSafeNormal();
             if (Normal.IsNearlyZero()) return;
+            const int32 Base = Vertices.Num();
+            // PMC uses clockwise front faces, as in GenerateBoxMesh. The
+            // authored normal stays outward; only the triangle indices change.
+            // PMC flips collision normals when cooking, so CCW input otherwise
+            // leaves flat pavement with an inward-facing collision surface.
+            Indices.Append({Base, Base + 2, Base + 1});
             for (const FVector& P : {A, B, C})
             {
-                Indices.Add(Vertices.Num());
                 Vertices.Add(P);
                 Normals.Add(Normal);
                 // Dominant-plane UVs: 1 UV = 1 metre, including vertical walls.
@@ -82,7 +89,7 @@ namespace Neiva
         {
             if (Vertices.IsEmpty()) return;
             TArray<FProcMeshTangent> Tangents;
-            UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Indices, UVs, Normals, Tangents);
+            CalculateTangents(Vertices, Indices, UVs, Normals, Tangents);
             Mesh->CreateMeshSection_LinearColor(Index, Vertices, Indices, Normals, UVs,
                 Colors, Tangents, Collision);
             if (Material) Mesh->SetMaterial(Index, Material);
@@ -128,7 +135,7 @@ namespace Neiva
         return (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X);
     }
 
-    void Face(FGeometry& G, TArray<FVector> P, FLinearColor Color)
+    void Face(FMapGeometry& G, TArray<FVector> P, FLinearColor Color)
     {
         if (P.Num() < 3) return;
         double Area = 0;
@@ -171,7 +178,7 @@ namespace Neiva
         }
     }
 
-    void Extrude(FGeometry& G, TArray<FVector> P, double Height, FLinearColor Color, FGeometry* Roof = nullptr)
+    void Extrude(FMapGeometry& G, TArray<FVector> P, double Height, FLinearColor Color, FMapGeometry* Roof = nullptr)
     {
         if (P.Num() < 3) return;
         double Area = 0;
@@ -191,7 +198,7 @@ namespace Neiva
         Face(Roof ? *Roof : G, P, Color);
     }
 
-    void Ribbon(FGeometry& G, const TArray<FVector>& P, double Width, FLinearColor Color)
+    void Ribbon(FMapGeometry& G, const TArray<FVector>& P, double Width, FLinearColor Color)
     {
         for (int32 I = 1; I < P.Num(); ++I)
         {
@@ -202,7 +209,7 @@ namespace Neiva
         }
     }
 
-    bool Canopy(const TSharedPtr<FJsonObject>& O, FGeometry& Supports, FGeometry& Roofs, double Height)
+    bool Canopy(const TSharedPtr<FJsonObject>& O, FMapGeometry& Supports, FMapGeometry& Roofs, double Height)
     {
         const TSharedPtr<FJsonObject>* Structure = nullptr;
         if (!O->TryGetObjectField(TEXT("structure"), Structure)) return false;
@@ -212,7 +219,7 @@ namespace Neiva
         Thickness = FMath::Clamp(Thickness, .08, Height);
         const auto Base = Points(O, (Height - Thickness) * 100);
         Extrude(Roofs, Base, Thickness * 100, FLinearColor::White);
-        FGeometry Underside; Face(Underside, Base, FLinearColor::White);
+        FMapGeometry Underside; Face(Underside, Base, FLinearColor::White);
         for (int32 I = 0; I + 2 < Underside.Vertices.Num(); I += 3)
             Roofs.Triangle(Underside.Vertices[I + 2], Underside.Vertices[I + 1], Underside.Vertices[I], FLinearColor::White);
         const TArray<TSharedPtr<FJsonValue>>* Columns = nullptr;
@@ -281,6 +288,10 @@ ANeivaCity::ANeivaCity()
     Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("Geografia"));
     SetRootComponent(Mesh);
     Mesh->SetMobility(EComponentMobility::Static);
+    // The flat map spans 24 km. It receives shadows, but submitting those bounds
+    // as a VSM caster overflows the non-Nanite marking queue. Buildings and the
+    // studio have their own shadow-casting components.
+    Mesh->SetCastShadow(false);
     Mesh->bUseAsyncCooking = false; // collision must exist before the player is placed
     Mesh->bUseComplexAsSimpleCollision = true;
 }
@@ -357,7 +368,7 @@ void ANeivaCity::BuildCity()
     }
     using namespace Neiva;
     const TSet<FString> LandmarkIds = bGenerateMapGeometry ? BuildLandmarks(Data) : TSet<FString>();
-    FGeometry Terrain, Streets, Pavement, Water, Green, Studio;
+    FMapGeometry Terrain, Streets, Pavement, Water, Green, Studio;
     FParse::Value(FCommandLine::Get(), TEXT("NeivaBuildingRadius="), BuildingRadiusMeters);
     BuildingRadiusMeters = FMath::Max(0.f, BuildingRadiusMeters);
     BuildingTileSizeMeters = FMath::Clamp(BuildingTileSizeMeters, 100.f, 2000.f);
@@ -402,7 +413,7 @@ void ANeivaCity::BuildCity()
             Sectors.FindOrAdd(Key).Add(O);
         }
         int32 Chunk = 0;
-        auto Flush = [this, &Chunk](FGeometry& Geometry, FGeometry& Roofs, FGeometry& UpperWalls)
+        auto Flush = [this, &Chunk](FMapGeometry& Geometry, FMapGeometry& Roofs, FMapGeometry& UpperWalls)
         {
             if (Geometry.Vertices.IsEmpty() && UpperWalls.Vertices.IsEmpty()) return;
             auto* Sector = NewObject<UProceduralMeshComponent>(this,
@@ -417,13 +428,13 @@ void ANeivaCity::BuildCity()
             Geometry.Upload(Sector, 0, Surface, true);
             Roofs.Upload(Sector, 1, RoofMaterial, true);
             UpperWalls.Upload(Sector, 2, UpperSurface, true);
-            Geometry = FGeometry();
-            Roofs = FGeometry();
-            UpperWalls = FGeometry();
+            Geometry = FMapGeometry();
+            Roofs = FMapGeometry();
+            UpperWalls = FMapGeometry();
         };
         for (const auto& Sector : Sectors)
         {
-            FGeometry Geometry, Roofs, UpperWalls;
+            FMapGeometry Geometry, Roofs, UpperWalls;
             for (const auto& O : Sector.Value)
             {
                 double Height = 6;
@@ -454,7 +465,7 @@ void ANeivaCity::BuildCity()
             O->TryGetBoolField(TEXT("polygon"), Polygon);
             const auto P = Points(O, IsWater ? 4 : -3);
             const FLinearColor Color = IsWater ? FLinearColor(0.035f, 0.24f, 0.29f) : FLinearColor(0.14f, 0.29f, 0.15f);
-            FGeometry& G = IsWater ? Water : Green;
+            FMapGeometry& G = IsWater ? Water : Green;
             if (Polygon) Face(G, P, Color);
             else
             {
@@ -480,7 +491,14 @@ void ANeivaCity::BuildCity()
         Water.Upload(Mesh, 3, WaterMaterial, false);
         Green.Upload(Mesh, 4, GrassMaterial, false);
     }
-    Studio.Upload(Mesh, 5, Neiva::Material(TEXT("M_Studio")), true);
+    auto* StudioMesh = NewObject<UProceduralMeshComponent>(this, TEXT("EstudioGeometria"));
+    StudioMesh->SetupAttachment(Mesh);
+    StudioMesh->SetMobility(EComponentMobility::Static);
+    StudioMesh->bUseAsyncCooking = false;
+    StudioMesh->bUseComplexAsSimpleCollision = true;
+    AddInstanceComponent(StudioMesh);
+    StudioMesh->RegisterComponent();
+    Studio.Upload(StudioMesh, 0, Neiva::Material(TEXT("M_Studio")), true);
     UTextRenderComponent* Sign = NewObject<UTextRenderComponent>(this, TEXT("EstudioFicticio"));
     Sign->SetupAttachment(Mesh);
     Sign->SetRelativeLocation(StudioPoint + FVector(0, -240, 285));
@@ -589,6 +607,12 @@ void ANeivaCharacter::LookYaw(float V) { AddControllerYawInput(V); }
 void ANeivaCharacter::LookPitch(float V) { AddControllerPitchInput(V); }
 void ANeivaCharacter::SprintOn() { GetCharacterMovement()->MaxWalkSpeed = 540; }
 void ANeivaCharacter::SprintOff() { GetCharacterMovement()->MaxWalkSpeed = 200; }
+void ANeivaCharacter::ResetControlInput()
+{
+    SprintOff();
+    StopJumping();
+    ConsumeMovementInputVector();
+}
 void ANeivaCharacter::SetAppearance(int32 Shirt, int32 Trousers, bool bPersist)
 {
     static const FLinearColor Shirts[] = {FLinearColor::White, FLinearColor(.16,.37,.65), FLinearColor(.21,.42,.26), FLinearColor(.5,.16,.13)};
@@ -617,8 +641,40 @@ void ANeivaCharacter::ResetPosition()
 {
     if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
     {
+        const FVector Requested = City->SpawnPoint;
+        const float Radius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+        const float HalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+        FCollisionQueryParams Query;
+        Query.AddIgnoredActor(this);
+        FVector Placed;
+        bool bFound = !Requested.ContainsNaN() && Neiva::GroundedCapsule(
+            GetWorld(), Requested, Radius, HalfHeight, Query, Placed);
+        // Preserve the requested map point when it is free. Otherwise inspect
+        // nearby rings, at most six metres away, before moving the character.
+        for (int32 Ring = 1; !bFound && Ring <= 6; ++Ring)
+        {
+            for (int32 Step = 0; !bFound && Step < 16; ++Step)
+            {
+                const float Angle = 2.f * PI * Step / 16.f;
+                const FVector Candidate = Requested + FVector(
+                    FMath::Cos(Angle) * Ring * 100.f, FMath::Sin(Angle) * Ring * 100.f, 0);
+                bFound = !Candidate.ContainsNaN() && Neiva::GroundedCapsule(
+                    GetWorld(), Candidate, Radius, HalfHeight, Query, Placed);
+            }
+        }
+        if (!bFound)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("NeivaSpawn: no free grounded capsule within 600cm; requested_cm=%s unchanged_cm=%s radius_cm=%.3f half_height_cm=%.3f"),
+                *Requested.ToString(), *GetActorLocation().ToString(), Radius, HalfHeight);
+            Neiva::Message(TEXT("No se encontro un punto libre cerca del inicio. La posicion actual se conserva."));
+            return;
+        }
+        ResetControlInput();
         GetCharacterMovement()->StopMovementImmediately();
-        SetActorLocation(City->SpawnPoint, false, nullptr, ETeleportType::TeleportPhysics);
+        const bool bMoved = SetActorLocation(Placed, false, nullptr, ETeleportType::TeleportPhysics);
+        UE_LOG(LogTemp, Display, TEXT("NeivaSpawn: requested_cm=%s placed_cm=%s actual_cm=%s moved=%d offset_xy_cm=%.3f radius_cm=%.3f half_height_cm=%.3f"),
+            *Requested.ToString(), *Placed.ToString(), *GetActorLocation().ToString(), bMoved,
+            FVector::Dist2D(Requested, Placed), Radius, HalfHeight);
     }
 }
 void ANeivaCharacter::Interact()
@@ -677,7 +733,8 @@ void ANeivaPedestrian::Tick(float DT)
         GetActorLocation() + Desired * 110, FQuat::Identity, ECC_Pawn,
         FCollisionShape::MakeCapsule(42, 86), Query) && Hit.ImpactNormal.Z < .5f;
     if (!Blocked) AddMovementInput(Desired, 1, true);
-    if (Blocked || FVector::DistSquared2D(GetActorLocation(), PreviousLocation) < 1) StuckSeconds += DT;
+    if (Blocked || !NeivaMotion::HasPedestrianProgress(
+        FVector::DistSquared2D(GetActorLocation(), PreviousLocation), DT)) StuckSeconds += DT;
     else StuckSeconds = 0;
     PreviousLocation = GetActorLocation();
     if (StuckSeconds > 2)
@@ -691,6 +748,11 @@ void ANeivaPedestrian::Tick(float DT)
 ANeivaCar::ANeivaCar()
 {
     PrimaryActorTick.bCanEverTick = true;
+    // Looking rotates the spring arm. Vehicle yaw belongs exclusively to the
+    // integrator, whose rotations are checked for collision before applying.
+    bUseControllerRotationYaw = false;
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationRoll = false;
     Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Colision"));
     Collision->SetBoxExtent(FVector(205, 95, 60));
     Collision->SetCollisionProfileName(TEXT("Pawn"));
@@ -747,6 +809,11 @@ void ANeivaCar::Throttle(float V) { ThrottleInput = V; }
 void ANeivaCar::Steer(float V) { SteeringInput = V; }
 void ANeivaCar::BrakeOn() { bBrake = true; }
 void ANeivaCar::BrakeOff() { bBrake = false; }
+void ANeivaCar::ResetControlInput()
+{
+    ThrottleInput = SteeringInput = 0;
+    bBrake = false;
+}
 void ANeivaCar::LookYaw(float V) { AddControllerYawInput(V); }
 void ANeivaCar::LookPitch(float V) { AddControllerPitchInput(V); }
 void ANeivaCar::CycleShirt() { if (Passenger) Passenger->CycleShirt(); }
@@ -785,6 +852,17 @@ void ANeivaCar::Enter(ANeivaCharacter* Character)
     if (!Character || Passenger || FVector::Dist2D(Character->GetActorLocation(), GetActorLocation()) > 450) return;
     APlayerController* PC = Cast<APlayerController>(Character->GetController());
     if (!PC) return;
+    const float ReachHeight = Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()
+        + Collision->GetScaledBoxExtent().Z;
+    FCollisionQueryParams Query; Query.AddIgnoredActor(this); Query.AddIgnoredActor(Character);
+    FHitResult Obstruction;
+    if (FMath::Abs(Character->GetActorLocation().Z - GetActorLocation().Z) > ReachHeight ||
+        GetWorld()->LineTraceSingleByChannel(Obstruction, Character->GetActorLocation(),
+            GetActorLocation(), ECC_Pawn, Query))
+    {
+        Neiva::Message(TEXT("Acercate al carro por un lado libre, en la misma calle."));
+        return;
+    }
     Passenger = Character;
     Passenger->GetCharacterMovement()->StopMovementImmediately();
     Passenger->GetCharacterMovement()->DisableMovement();
@@ -796,6 +874,7 @@ void ANeivaCar::Enter(ANeivaCharacter* Character)
     PC->SetControlRotation(FRotator(-15, GetActorRotation().Yaw, 0));
     Speed = ThrottleInput = SteeringInput = 0; bBrake = false;
     MotionState = {}; MotionState.Yaw = FMath::DegreesToRadians(GetActorRotation().Yaw); MotionClock.Reset();
+    UE_LOG(LogTemp, Display, TEXT("Neiva: entered vehicle at %s cm."), *GetActorLocation().ToCompactString());
 }
 void ANeivaCar::Exit()
 {
@@ -806,13 +885,26 @@ void ANeivaCar::Exit()
     Query.AddIgnoredActor(Passenger);
     FVector ExitPoint;
     bool Found = false;
+    const float Radius = Passenger->GetCapsuleComponent()->GetScaledCapsuleRadius();
+    const float HalfHeight = Passenger->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+    const double CarFloor = GetActorLocation().Z - Collision->GetScaledBoxExtent().Z;
     for (const float Side : {-1.0f, 1.0f})
     {
         for (const float Distance : {230.f, 340.f, 480.f})
-            if (Neiva::GroundedCapsule(GetWorld(), GetActorLocation() + GetActorRightVector() * Distance * Side,
-                Passenger->GetCapsuleComponent()->GetScaledCapsuleRadius(),
-                Passenger->GetCapsuleComponent()->GetScaledCapsuleHalfHeight(), Query, ExitPoint))
-            { Found = true; break; }
+        {
+            if (!Neiva::GroundedCapsule(GetWorld(), GetActorLocation() + GetActorRightVector() * Distance * Side,
+                Radius, HalfHeight, Query, ExitPoint)) continue;
+            const double ExitFloor = ExitPoint.Z - HalfHeight - 3;
+            if (FMath::Abs(ExitFloor - CarFloor) > Passenger->GetCharacterMovement()->MaxStepHeight) continue;
+            // A clear destination alone can be on the other side of a wall.
+            // Check the whole capsule's route, ignoring only car and passenger.
+            FVector Start = GetActorLocation();
+            Start.Z = FMath::Max(ExitPoint.Z, CarFloor + HalfHeight + 3);
+            FHitResult Obstruction;
+            if (GetWorld()->SweepSingleByChannel(Obstruction, Start, ExitPoint, FQuat::Identity,
+                ECC_Pawn, FCollisionShape::MakeCapsule(Radius, HalfHeight), Query)) continue;
+            Found = true; break;
+        }
         if (Found) break;
     }
     if (!Found) { Neiva::Message(TEXT("Salida bloqueada. Mueve el carro a un lugar abierto.")); return; }
@@ -827,11 +919,14 @@ void ANeivaCar::Exit()
     Passenger->GetCharacterMovement()->MaxWalkSpeed = 200;
     PC->Possess(Passenger);
     Passenger = nullptr;
+    UE_LOG(LogTemp, Display, TEXT("Neiva: exited vehicle at %s cm; car at %s cm."),
+        *ExitPoint.ToCompactString(), *GetActorLocation().ToCompactString());
 }
 
 ANeivaGameMode::ANeivaGameMode()
 {
     DefaultPawnClass = ANeivaCharacter::StaticClass();
+    PlayerControllerClass = ANeivaPlayerController::StaticClass();
     HUDClass = ANeivaHUD::StaticClass();
 }
 void ANeivaGameMode::StartPlay()
@@ -852,21 +947,74 @@ void ANeivaGameMode::StartPlay()
         Sun->GetLightComponent()->SetIntensity(75000.f);
         Sun->GetLightComponent()->SetLightColor(FLinearColor(1,.87,.73));
         if (auto* Directional = Cast<UDirectionalLightComponent>(Sun->GetLightComponent()))
+        {
             Directional->SetAtmosphereSunLight(true);
+            Directional->SetForwardShadingPriority(1);
+        }
     }
     if (!Neiva::Find<ASkyAtmosphere>(GetWorld())) GetWorld()->SpawnActor<ASkyAtmosphere>();
+    if (!Neiva::Find<APostProcessVolume>(GetWorld()))
+    {
+        auto* Exposure = GetWorld()->SpawnActor<APostProcessVolume>();
+        Exposure->bUnbound = true;
+        auto& Settings = Exposure->Settings;
+        Settings.bOverride_AutoExposureMethod = true;
+        Settings.AutoExposureMethod = AEM_Histogram;
+        // EV100, with the project's extended luminance range enabled. Bound
+        // adaptation for this outdoor daylight scene rather than amplifying a
+        // shaded frame until sunlit facades clip to white.
+        Settings.bOverride_AutoExposureMinBrightness = true;
+        Settings.bOverride_AutoExposureMaxBrightness = true;
+        Settings.AutoExposureMinBrightness = 12.f;
+        Settings.AutoExposureMaxBrightness = 16.f;
+        Settings.bOverride_AutoExposureBias = true;
+        Settings.AutoExposureBias = 0.f;
+        Settings.bOverride_BloomIntensity = true;
+        Settings.BloomIntensity = .15f;
+    }
     if (!Neiva::Find<ASkyLight>(GetWorld()))
     {
         ASkyLight* Sky = GetWorld()->SpawnActor<ASkyLight>();
         Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
         Sky->GetLightComponent()->SetIntensity(1.2f);
-        Sky->GetLightComponent()->SetLowerHemisphereColor(FLinearColor(.20,.27,.36));
-        if (UTextureCube* Environment = GetDefault<UNeivaVisualSettings>()->EnvironmentCube.LoadSynchronous())
+        // Capture the physically lit atmosphere. The imported photographic HDR
+        // has relative radiance; at intensity 1 it cannot fill shadows alongside
+        // a 75,000-lux sun. Atmospheric capture uses the same daylight scale.
+        Sky->GetLightComponent()->SourceType = SLS_CapturedScene;
+        Sky->GetLightComponent()->SetRealTimeCapture(true);
+    }
+    // Temporary art-directed fill for the procedural city: its runtime meshes
+    // do not have baked mesh distance fields for full Lumen lighting. These
+    // unshadowed diffuse lights keep shaded outdoor surfaces readable; they are
+    // not a physical sky/GI solution and can leak into enclosed spaces. Keep the
+    // sun and sky unchanged, and allow a repeatable comparison with FillLux=0.
+    float FillLux = 2000.f;
+    FParse::Value(FCommandLine::Get(), TEXT("NeivaFillLux="), FillLux);
+    FillLux = FMath::IsFinite(FillLux) ? FMath::Clamp(FillLux, 0.f, 6000.f) : 2000.f;
+    const FName FillTag(TEXT("NeivaProceduralAmbientFill"));
+    bool HasFill = false;
+    for (TActorIterator<ADirectionalLight> It(GetWorld()); It; ++It)
+        HasFill |= It->ActorHasTag(FillTag);
+    if (FillLux > 0 && !HasFill)
+    {
+        for (int32 Index = 0; Index < 3; ++Index)
         {
-            Sky->GetLightComponent()->SourceType = SLS_SpecifiedCubemap;
-            Sky->GetLightComponent()->SetCubemap(Environment);
+            ADirectionalLight* Fill = GetWorld()->SpawnActor<ADirectionalLight>(
+                FVector(0, 0, 20000), FRotator(-35, 20 + Index * 120, 0));
+            if (!Fill) continue;
+            Fill->Tags.Add(FillTag);
+            auto* Light = Cast<UDirectionalLightComponent>(Fill->GetLightComponent());
+            if (!Light) { Fill->Destroy(); continue; }
+            Light->SetMobility(EComponentMobility::Movable);
+            Light->SetAtmosphereSunLight(false);
+            Light->SetCastShadows(false);
+            Light->SetIntensity(FillLux);
+            Light->SetLightColor(FLinearColor(.86f, .92f, 1.f));
+            Light->SetSpecularScale(0.f);
+            Light->SetIndirectLightingIntensity(0.f);
+            Light->SetVolumetricScatteringIntensity(0.f);
         }
-        else Sky->GetLightComponent()->RecaptureSky();
+        UE_LOG(LogTemp, Display, TEXT("Neiva: approximate procedural ambient fill %.0f lux per direction; no shadows/specular/GI. NeivaFillLux=0 disables it."), FillLux);
     }
     Super::StartPlay();
     if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
@@ -874,6 +1022,11 @@ void ANeivaGameMode::StartPlay()
         PC->bEnableTouchEvents = true;
         if (ANeivaCharacter* Character = Cast<ANeivaCharacter>(PC->GetPawn())) Character->ResetPosition();
         PC->SetControlRotation(FRotator(-12, 20, 0));
+        if (APawn* Pawn = PC->GetPawn())
+            UE_LOG(LogTemp, Display, TEXT("NeivaStart: pawn=%s location_cm=%s actor_yaw=%.3f control_rotation=%s requested_spawn_cm=%s car_cm=%s car_yaw=%.3f"),
+                *Pawn->GetName(), *Pawn->GetActorLocation().ToString(), Pawn->GetActorRotation().Yaw,
+                *PC->GetControlRotation().ToString(), *City->SpawnPoint.ToString(),
+                *City->CarPoint.ToString(), City->CarYaw);
     }
     if (!Neiva::Find<ANeivaPedestrian>(GetWorld()))
     {
@@ -900,6 +1053,25 @@ void ANeivaHUD::DrawHUD()
     Super::DrawHUD();
     if (!Canvas) return;
     const float S = FMath::Clamp(Canvas->ClipX / 1300.f, .75f, 1.4f);
+    if (PlayerOwner && PlayerOwner->IsPaused())
+    {
+        DrawRect(FLinearColor(.012,.025,.03,.86), 0, 0, Canvas->ClipX, Canvas->ClipY);
+        const float W = FMath::Min(460.f, Canvas->ClipX - 40);
+        const float X = (Canvas->ClipX - W) * .5f;
+        const float Y = FMath::Max(30.f, (Canvas->ClipY - 310) * .5f);
+        DrawText(TEXT("NEIVA ABIERTA / PAUSA"), FColor::White, X, Y, nullptr, 1.65f*S);
+        DrawText(TEXT("Esc o P para continuar"), FColor(170,205,197), X, Y + 46, nullptr, S);
+        for (int32 Row = 0; Row < 2; ++Row)
+        {
+            const FVector2D Position(X, Y + 105 + Row * 76);
+            DrawRect(Row ? FLinearColor(.10,.15,.17,.98) : FLinearColor(.04,.39,.32,.98),
+                Position.X, Position.Y, W, 60);
+            DrawText(Row ? TEXT("SALIR DEL JUEGO") : TEXT("CONTINUAR"), FColor::White,
+                Position.X + 20, Position.Y + 20, nullptr, S);
+            AddHitBox(Position, FVector2D(W,60), Row ? TEXT("QuitGame") : TEXT("ResumeGame"), true);
+        }
+        return;
+    }
     DrawRect(FLinearColor(.018,.028,.035,.87), 18, 18, FMath::Min(Canvas->ClipX - 36, 720.f*S), 108*S);
     DrawText(TEXT("NEIVA ABIERTA"), FColor::White, 34, 29, nullptr, 1.65f*S);
     if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
@@ -913,12 +1085,19 @@ void ANeivaHUD::DrawHUD()
         }
     }
     const bool Driving = PlayerOwner && Cast<ANeivaCar>(PlayerOwner->GetPawn());
+    if (Driving)
+    {
+        const float Kmh = FMath::Abs(Cast<ANeivaCar>(PlayerOwner->GetPawn())->Speed) * .036f;
+        DrawText(FString::Printf(TEXT("%.0f km/h"), Kmh), FColor::White,
+            24, Canvas->ClipY - 135, nullptr, 1.6f*S);
+    }
     ANeivaCharacter* Avatar = PlayerOwner ? Cast<ANeivaCharacter>(PlayerOwner->GetPawn()) : nullptr;
     if (Driving) Avatar = Cast<ANeivaCar>(PlayerOwner->GetPawn())->GetPassenger();
     if (Avatar) DrawText(Avatar->AppearanceLabel(), FColor(182,211,191), 24, Canvas->ClipY - 96, nullptr, .73f*S);
     DrawText(Driving ? TEXT("WASD conducir | Espacio frenar | E salir | R reiniciar | T controles tactiles") :
         TEXT("WASD caminar | mouse mirar | Shift correr | Espacio saltar | E interactuar | R volver | T tactil"),
         FColor::White, 24, Canvas->ClipY - 65, nullptr, .87f*S);
+    DrawText(TEXT("Esc / P  PAUSA"), FColor(198,216,210), Canvas->ClipX - 150*S, 26, nullptr, .85f*S);
     DrawText(TEXT("Datos: OpenStreetMap y Overture Maps / ODbL. Cobertura parcial; huellas y alturas estimadas."),
         FColor(182,191,191), 24, Canvas->ClipY - 35, nullptr, .73f*S);
     const FVector2D Button(Canvas->ClipX - 178*S, Canvas->ClipY - 170*S);
@@ -938,6 +1117,15 @@ void ANeivaHUD::NotifyHitBoxClick(FName BoxName)
 {
     Super::NotifyHitBoxClick(BoxName);
     if (!PlayerOwner) return;
+    if (PlayerOwner->IsPaused())
+    {
+        if (auto* Controller = Cast<ANeivaPlayerController>(PlayerOwner))
+        {
+            if (BoxName == TEXT("ResumeGame")) Controller->ResumeGame();
+            else if (BoxName == TEXT("QuitGame")) Controller->QuitToDesktop();
+        }
+        return;
+    }
     ANeivaCar* Car = Cast<ANeivaCar>(PlayerOwner->GetPawn());
     ANeivaCharacter* Character = Car ? Car->GetPassenger() : Cast<ANeivaCharacter>(PlayerOwner->GetPawn());
     if (BoxName == TEXT("Shirt") && Character) Character->CycleShirt();

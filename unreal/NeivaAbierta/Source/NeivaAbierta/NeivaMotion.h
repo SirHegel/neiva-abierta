@@ -7,6 +7,17 @@
 
 namespace NeivaMotion
 {
+    // Compare speed, not distance per rendered frame: a walking NPC covers
+    // less than one centimetre per frame on displays above 125 Hz.
+    inline bool HasPedestrianProgress(double DistanceSquaredCm, double Elapsed)
+    {
+        if (!std::isfinite(DistanceSquaredCm) || !std::isfinite(Elapsed) ||
+            DistanceSquaredCm < 0 || Elapsed <= 0) return false;
+        constexpr double MinimumSpeedCmPerSecond = 10;
+        const double MinimumDistance = MinimumSpeedCmPerSecond * Elapsed;
+        return DistanceSquaredCm >= MinimumDistance * MinimumDistance;
+    }
+
     inline double Approach(double Value, double Target, double Amount)
     { return Value + std::clamp(Target - Value, -Amount, Amount); }
 

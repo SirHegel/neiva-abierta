@@ -7,11 +7,19 @@ import unittest
 
 
 class NativeMotionTests(unittest.TestCase):
-    def test_real_native_integrator_preserves_time_braking_reverse_and_debt(self):
+    def compile_and_run(self, code):
         compiler = shutil.which('g++') or shutil.which('clang++')
         if not compiler:
             self.skipTest('A C++17 compiler is required for the portable integration test')
         header = pathlib.Path(__file__).resolve().parents[2] / 'Source/NeivaAbierta/NeivaMotion.h'
+        with tempfile.TemporaryDirectory() as folder:
+            source = pathlib.Path(folder) / 'motion.cpp'
+            binary = pathlib.Path(folder) / 'motion-test'
+            source.write_text(code)
+            subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-I', str(header.parent), str(source), '-o', str(binary)], check=True)
+            subprocess.run([str(binary)], check=True)
+
+    def test_real_native_integrator_preserves_time_braking_reverse_and_debt(self):
         code = r'''
 #include "NeivaMotion.h"
 #include <cassert>
@@ -41,9 +49,25 @@ int main() {
  debt.Reset();assert(debt.Advance(std::numeric_limits<double>::infinity(),[](double){})==0);
 }
 '''
-        with tempfile.TemporaryDirectory() as folder:
-            source = pathlib.Path(folder) / 'motion.cpp'
-            binary = pathlib.Path(folder) / 'motion-test'
-            source.write_text(code)
-            subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-I', str(header.parent), str(source), '-o', str(binary)], check=True)
-            subprocess.run([str(binary)], check=True)
+        self.compile_and_run(code)
+
+    def test_pedestrian_progress_distinguishes_walking_from_stuck_at_high_fps(self):
+        self.compile_and_run(r'''
+#include "NeivaMotion.h"
+#include <cassert>
+#include <limits>
+int main() {
+ for (double fps : {10, 30, 60, 120, 144, 240}) {
+  const double dt = 1 / fps;
+  const double walking = 125 * dt;
+  const double jitter = 2 * dt;
+  assert(NeivaMotion::HasPedestrianProgress(walking * walking, dt));
+  assert(!NeivaMotion::HasPedestrianProgress(jitter * jitter, dt));
+  assert(!NeivaMotion::HasPedestrianProgress(0, dt));
+ }
+ assert(!NeivaMotion::HasPedestrianProgress(1, 0));
+ assert(!NeivaMotion::HasPedestrianProgress(-1, .01));
+ assert(!NeivaMotion::HasPedestrianProgress(std::numeric_limits<double>::infinity(), .01));
+ assert(!NeivaMotion::HasPedestrianProgress(1, std::numeric_limits<double>::quiet_NaN()));
+}
+''')

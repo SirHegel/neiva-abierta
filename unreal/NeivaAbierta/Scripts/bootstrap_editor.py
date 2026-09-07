@@ -76,7 +76,7 @@ def property_link(node, output, prop):
         raise RuntimeError(f"Invalid material property connection: {prop}")
 
 
-def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False, clothing_mask=None, landmark=False):
+def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False, clothing_mask=None, landmark=False, skeletal=False):
     path = f"{ROOT}/Materials/{name}"
     material = unreal.load_asset(path) if editor.does_asset_exist(path) else assets.create_asset(
         name, ROOT + "/Materials", unreal.Material, unreal.MaterialFactoryNew())
@@ -86,6 +86,10 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
     library.delete_all_material_expressions(material)
     material.set_editor_property("two_sided", masked or landmark)
     material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_MASKED if masked else unreal.BlendMode.BLEND_OPAQUE)
+    if skeletal:
+        # UE 5.5 only auto-enables usage in a non-game editor. Cook must retain
+        # skeletal vertex-factory shaders before -game or a packaged executable.
+        material.set_editor_property("used_with_skeletal_mesh", True)
     if masked:
         material.set_editor_property("opacity_mask_clip_value", .45)
     uv = expression(material, unreal.MaterialExpressionTextureCoordinate, -850, 0)
@@ -134,7 +138,9 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
         vertex = expression(material, unreal.MaterialExpressionVertexColor, -150, -240)
         multiply = expression(material, unreal.MaterialExpressionMultiply, 250, -120)
         connect(color_node, color_output, multiply, "A")
-        connect(vertex, "RGB", multiply, "B")
+        # VertexColor's first (RGB) output is unnamed in UE 5.5; TextureSample
+        # uses the named "RGB" pin, but reusing that name here fails the import.
+        connect(vertex, "", multiply, "B")
         color_node, color_output = multiply, ""
     property_link(color_node, color_output, unreal.MaterialProperty.MP_BASE_COLOR)
     if "normal" in outputs:
@@ -174,7 +180,7 @@ def landmark_solid_material():
     material.set_editor_property("two_sided", True)
     material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
     vertex = expression(material, unreal.MaterialExpressionVertexColor, -300, 0)
-    property_link(vertex, "RGB", unreal.MaterialProperty.MP_BASE_COLOR)
+    property_link(vertex, "", unreal.MaterialProperty.MP_BASE_COLOR)
     for row, (parameter, default, prop) in enumerate([
         ("RoughnessScale", .8, unreal.MaterialProperty.MP_ROUGHNESS),
         ("Metalness", 0.0, unreal.MaterialProperty.MP_METALLIC)]):
@@ -300,7 +306,7 @@ def main():
     character_materials = {part: pbr_material("M_Character" + part.capitalize(), maps,
         normal_opengl=os.environ.get("NEIVA_CHARACTER_NORMAL_OPENGL", "1") == "1",
         roughness={"body": .88, "head": .72, "opacity": .94}[part], masked=part == "opacity",
-        clothing_mask=plan["clothingMask"] if part == "body" else None)
+        clothing_mask=plan["clothingMask"] if part == "body" else None, skeletal=True)
         for part, maps in plan["characterTextures"].items()}
     slots = character.get_editor_property("materials")
     for slot in slots:

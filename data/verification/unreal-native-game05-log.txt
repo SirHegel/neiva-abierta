@@ -1,0 +1,64 @@
+# Neiva Abierta — selected native runtime evidence, game05
+# Source: artifacts/unreal-native/first-native-20260907T162729Z/editor-game-05.log
+# Source SHA-256: 3392fe043117ac65722b908ac72d9407767d662eb445d566d384bd0d9a2ec7c4
+# Timestamps are UTC. Prefix L refers to original source line number.
+# Only engine version, GPU model, city counts, application telemetry and codec state are included.
+# This is an UnrealEditor -game run; it does not attest a packaged executable.
+L302: LogInit: Engine Version: 5.5.4-40574608+++UE5+Release-5.5
+L928: [2026.09.07-17.28.56:367][  0]LogVulkanRHI: Display: - DeviceName: NVIDIA GeForce RTX 4050 Laptop GPU
+L1571: [2026.09.07-17.29.04:573][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 604 mesh chunks; preview radius 0 m (0=all); 3 exterior-only courtyard footprints.
+L1572: [2026.09.07-17.29.05:330][  0]LogTemp: Display: NeivaSpawn: requested_cm=X=-88670.000 Y=7880.000 Z=150.000 placed_cm=X=-88670.000 Y=7880.000 Z=100.500 actual_cm=X=-88670.000 Y=7880.000 Z=100.500 moved=1 offset_xy_cm=0.000 radius_cm=36.000 half_height_cm=92.000
+L1573: [2026.09.07-17.29.05:330][  0]LogTemp: Display: NeivaStart: pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=100.500 actor_yaw=0.000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 requested_spawn_cm=X=-88670.000 Y=7880.000 Z=150.000 car_cm=X=-87740.000 Y=8250.000 Z=70.000 car_yaw=21.679
+L1578: [2026.09.07-17.29.05:433][  0]LogPixelStreaming: PixelStreaming streamer ID: DefaultStreamer
+L1607: [2026.09.07-17.29.06:648][ 12]LogTemp: Display: NeivaState: world_seconds=1.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1608: [2026.09.07-17.29.06:648][ 12]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1609: [2026.09.07-17.29.06:648][ 12]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1610: [2026.09.07-17.29.07:644][ 42]LogTemp: Display: NeivaState: world_seconds=2.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1611: [2026.09.07-17.29.07:644][ 42]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1612: [2026.09.07-17.29.07:644][ 42]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1613: [2026.09.07-17.29.08:644][ 72]LogTemp: Display: NeivaState: world_seconds=3.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1614: [2026.09.07-17.29.08:644][ 72]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1615: [2026.09.07-17.29.08:644][ 72]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1616: [2026.09.07-17.29.09:644][102]LogTemp: Display: NeivaState: world_seconds=4.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1617: [2026.09.07-17.29.09:644][102]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1618: [2026.09.07-17.29.09:644][102]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1619: [2026.09.07-17.29.10:644][132]LogTemp: Display: NeivaState: world_seconds=5.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1620: [2026.09.07-17.29.10:644][132]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1621: [2026.09.07-17.29.10:644][132]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1622: [2026.09.07-17.29.11:644][162]LogTemp: Display: NeivaState: world_seconds=6.007 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1623: [2026.09.07-17.29.11:644][162]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1624: [2026.09.07-17.29.11:644][162]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1625: [2026.09.07-17.29.12:644][192]LogTemp: Display: NeivaState: world_seconds=7.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1626: [2026.09.07-17.29.12:644][192]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1627: [2026.09.07-17.29.12:644][192]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1628: [2026.09.07-17.29.13:644][222]LogTemp: Display: NeivaState: world_seconds=8.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1629: [2026.09.07-17.29.13:644][222]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1630: [2026.09.07-17.29.13:644][222]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1631: [2026.09.07-17.29.14:644][252]LogTemp: Display: NeivaState: world_seconds=9.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1632: [2026.09.07-17.29.14:644][252]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1633: [2026.09.07-17.29.14:644][252]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1634: [2026.09.07-17.29.15:644][282]LogTemp: Display: NeivaState: world_seconds=10.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1635: [2026.09.07-17.29.15:644][282]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1636: [2026.09.07-17.29.15:644][282]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1637: [2026.09.07-17.29.16:644][312]LogTemp: Display: NeivaState: world_seconds=11.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1638: [2026.09.07-17.29.16:644][312]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1639: [2026.09.07-17.29.16:644][312]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1640: [2026.09.07-17.29.17:644][342]LogTemp: Display: NeivaState: world_seconds=12.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1641: [2026.09.07-17.29.17:644][342]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1642: [2026.09.07-17.29.17:644][342]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1643: [2026.09.07-17.29.18:644][372]LogTemp: Display: NeivaState: world_seconds=13.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1644: [2026.09.07-17.29.18:644][372]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1645: [2026.09.07-17.29.18:644][372]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1646: [2026.09.07-17.29.19:644][402]LogTemp: Display: NeivaState: world_seconds=14.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1647: [2026.09.07-17.29.19:644][402]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1648: [2026.09.07-17.29.19:644][402]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1649: [2026.09.07-17.29.20:644][432]LogTemp: Display: NeivaState: world_seconds=15.008 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.660 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1650: [2026.09.07-17.29.20:644][432]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1651: [2026.09.07-17.29.20:644][432]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87740.000 Y=8250.000 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None
+L1664: [2026.09.07-17.29.45:420][175]LogPixelStreaming: [Application](Video Codec - VP8) = 1.000000
+L1665: [2026.09.07-17.29.45:424][176]LogPixelStreaming: OnIceConnectionChange (IceConnectionConnected)
+L2003: [2026.09.07-17.29.49:387][294]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm.
+L2292: [2026.09.07-17.29.52:887][399]LogTemp: Display: Neiva: exited vehicle at V(X=-87208.99, Y=8213.58, Z=96.00) cm; car at V(X=-87293.95, Y=8427.31, Z=70.00) cm.
+L3311: [2026.09.07-17.30.05:730][784]LogTemp: Display: NeivaState: world_seconds=60.092 pawn=NeivaCharacter_0 location_cm=X=-86755.874 Y=8393.699 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=0.000000 Y=21.678587 R=-0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L3312: [2026.09.07-17.30.05:730][784]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L3313: [2026.09.07-17.30.05:730][784]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87293.950 Y=8427.312 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None

@@ -1,26 +1,73 @@
 {
-  "checkedAt": "2026-09-07T08:10:21.664058+00:00",
-  "scope": "Preparación del juego nativo Unreal; no existe ejecutable del juego validado.",
+  "checkedAt": "2026-09-07T17:37:46.641Z",
+  "scope": "Ejecución nativa de UnrealEditor -game en Linux verificada con telemetría, capturas y vídeo Pixel Streaming. Ejecutable empaquetado pendiente de validación.",
   "engine": {
     "requested": "Unreal Engine 5.5",
-    "installed": false,
-    "gameCompiled": false,
+    "installed": true,
+    "installedVersion": "5.5.4",
+    "runtimeVersion": "5.5.4-40574608+++UE5+Release-5.5",
+    "gameCompiled": true,
+    "editorTargetCompiled": true,
+    "standaloneGameTargetCompiled": true,
+    "standaloneGameTargetCompilationEvidence": "Compilación UAT comunicada por el agente principal durante package-01; cook aún en curso al registrar esta evidencia.",
+    "imported": true,
     "packaged": false,
-    "runtimeValidated": false,
-    "gameplayCapture": null
+    "runtimeValidated": true,
+    "runtimeEditorVerified": true,
+    "runtimePackagedVerified": false,
+    "runtimeExecutable": "UnrealEditor",
+    "runtimeMode": "-game",
+    "platform": "Linux",
+    "renderingBackend": "Vulkan SM6",
+    "gameplayCapture": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
+    "evidence": {
+      "importReport": {
+        "path": "artifacts/unreal-native/first-native-20260907T162729Z/import-03-report.json",
+        "bytes": 3477,
+        "sha256": "b8096294c20f1b3194a4a26e67721a4508792be81936a12da4d6f7ea3c66b68d",
+        "publiclyHosted": false
+      },
+      "editorTargetBuildLog": {
+        "path": "artifacts/unreal-native/first-native-20260907T162729Z/build-06.log",
+        "bytes": 1002,
+        "sha256": "a5d0471e5d6900941964bd3e1abc0386d7316fdb17c178dafeca9d257b3c582a",
+        "publiclyHosted": false
+      },
+      "runtimeLog": {
+        "path": "artifacts/unreal-native/first-native-20260907T162729Z/editor-game-05.log",
+        "bytes": 361386,
+        "sha256": "3392fe043117ac65722b908ac72d9407767d662eb445d566d384bd0d9a2ec7c4",
+        "publiclyHosted": false
+      },
+      "publicLogExcerpt": {
+        "path": "data/verification/unreal-native-game05-log.txt",
+        "bytes": 11673,
+        "sha256": "5640339ff68d7ea62411520f22f5c865db2f19a711c1c0a293bc19647e286d5b",
+        "publiclyHosted": false,
+        "trackedForPublication": true
+      }
+    }
   },
   "hardwareObserved": {
     "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
     "vramMiB": 6141,
     "driver": "595.84",
-    "unrealFps": null
+    "unrealFps": null,
+    "nativeGpuFrameTimeBenchmarkCompleted": false,
+    "note": "La tasa RTP decodificada no es un benchmark de renderizado nativo ni una medición en otros equipos."
   },
   "checks": {
-    "nodeTestsPassed": 82,
-    "unrealSourceContractTestsPassed": 16,
-    "launcherContractTestsPassed": 26,
+    "nodeTestsPassed": 95,
+    "rootPythonTestsPassed": 57,
+    "launcherContractTestsPassed": 44,
     "stagedMapTestsPassed": 13,
+    "unrealScriptsTestsPassed": 22,
+    "totalTestsPassed": 174,
+    "countsRelation": "57 root Python = 44 launcher + 13 staged map. Total = 95 Node + 57 root Python + 22 Unreal Scripts.",
+    "runReportedBy": "Agente principal tras ejecutar la suite completa durante package-01.",
     "webBuildPassed": true,
+    "previousWebBuildPassed": true,
+    "webBuildStatus": "Revalidación pendiente en este registro; el agente principal completará el resultado.",
     "cppMotionKernelCompiledAndTested": true,
     "cppMotionKernelIsTheGameExecutable": false
   },
@@ -29,10 +76,83 @@
     "infrastructureCompiled": true,
     "playerHttpStatus": 200,
     "websocketConfigReceived": true,
-    "streamerIds": [],
-    "videoReceived": false,
+    "streamerIds": [
+      "DefaultStreamer"
+    ],
+    "videoReceived": true,
     "linuxChildCleanupVerified": true,
-    "windowsExecutionVerified": false
+    "windowsExecutionVerified": false,
+    "continuousVideoVerified": true,
+    "codec": "VP8",
+    "encoderType": "software",
+    "renderingGpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "browser": "Chrome/152.0.7977.64",
+    "connection": "connected",
+    "width": 1280,
+    "height": 720,
+    "decodedFramesDelta": 557,
+    "bytesReceivedDelta": 26105588,
+    "observedSeconds": 18.557400000035763,
+    "decodedFps": 30.014980546786003,
+    "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+    "liveAtEnd": true,
+    "inputWarmup": {
+      "passed": true,
+      "maxWaitMs": 8000,
+      "requiredNewFrames": 3,
+      "initialCounters": [
+        {
+          "id": "IT01V1519417151",
+          "bytesReceived": 141227,
+          "framesDecoded": 6,
+          "framesDropped": 0,
+          "packetsLost": 0,
+          "framesPerSecond": 33,
+          "totalDecodeTime": 0.015243999999999999
+        }
+      ],
+      "samples": [
+        {
+          "elapsedMs": 202,
+          "newFrames": 1,
+          "newBytes": 484361,
+          "ready": false
+        },
+        {
+          "elapsedMs": 404,
+          "newFrames": 6,
+          "newBytes": 645738,
+          "ready": true
+        }
+      ],
+      "elapsedMs": 404
+    },
+    "recording": {
+      "mime": "video/webm;codecs=vp8",
+      "bytes": 3496469,
+      "durationMs": 20111.80000001192,
+      "stopReason": "observation-ended",
+      "sha256": "7cb62e26527cfd57cd260000b55a4aed41e57299e9ac77cc87489fe2edd96552",
+      "source": "HTMLVideoElement.srcObject MediaStream; not desktop capture",
+      "completedStop": true,
+      "coveredObservation": true,
+      "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
+      "publiclyHosted": false,
+      "ffprobe": {
+        "decodedSuccessfully": true,
+        "codec": "vp8",
+        "width": 1280,
+        "height": 720,
+        "decodedFrames": 603,
+        "firstFramePtsSeconds": 0,
+        "lastFramePtsSeconds": 20.078,
+        "containerDurationSeconds": null,
+        "note": "MediaRecorder WebM has no declared container duration; measured recorder duration and decoded frame timestamps are reported separately."
+      }
+    },
+    "softwareEncodingNote": "VP8 fue la ruta con vídeo continuo verificada; las pruebas locales anteriores con H.264 no progresaron más de un fotograma.",
+    "browserCompatibilityNote": "El Firefox aislado de esta máquina no ofreció H.264. La ejecución verificada utilizó Chrome con VP8.",
+    "publicStreamingDeploymentVerified": false
   },
   "city": {
     "baseChanged": false,
@@ -42,17 +162,22 @@
     "detailedMeshSections": 45,
     "trianglesInLandmarks": 110618,
     "newPhysicallyMeasuredDimensions": 0,
-    "wholeCityScannedOrVerified": false
+    "wholeCityScannedOrVerified": false,
+    "wholeCityIdentical": false,
+    "referencesVerifiedOnlyPartially": true,
+    "scopeNote": "Se cargaron todas las huellas preparadas; su carga no valida identidad, fachadas ni dimensiones reales de todos los edificios."
   },
   "firefox": {
     "sharedWindowObserved": true,
     "viewerAddress": "1760 Cra. 21, Neiva, Huila",
     "imageYearObserved": "2024",
     "panoramaIdFromUserUrl": "CIC3DQzywCxaSxfLXZIXOA",
-    "keyboardAndPointerGranted": false,
-    "lastInputRequest": "cancelled",
-    "viewCount": 1,
-    "independentSessionVerification": "data/verification/isolated-firefox.json"
+    "keyboardAndPointerGranted": true,
+    "independentSessionVerification": "data/verification/isolated-firefox.json",
+    "authorizationScope": "El usuario autorizó navegar y revisar referencias públicas de Maps. La autorización no prueba un recorrido completo ni permite deducir medidas certificadas.",
+    "lastRecordedReferenceViewIsHistorical": true,
+    "completeCityStreetViewReviewPerformed": false,
+    "historicalReferenceViewCount": 1
   },
   "distribution": {
     "githubExecutableRelease": null,
@@ -65,7 +190,9 @@
     "docs/FIDELIDAD.md",
     "data/field-survey.json",
     "artifacts/unreal-native/streaming-browser-audit.json",
-    "artifacts/unreal-native/streaming-process-audit-fixed.json"
+    "artifacts/unreal-native/streaming-process-audit-fixed.json",
+    "data/verification/unreal-native-game05-log.txt",
+    "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/report.json"
   ],
   "preparationRecheckedAt": "2026-09-07T15:27:04.216809+00:00",
   "installedDependencies": {
@@ -87,7 +214,225 @@
         1280,
         720
       ],
-      "unrealRunVerified": false
+      "unrealRunVerified": true
+    }
+  },
+  "schemaVersion": 2,
+  "observedAt": "2026-09-07T17:29:44.096Z",
+  "runtimeReview": {
+    "method": "Revisión visual de capturas, contadores RTP del navegador y telemetría del proceso nativo; enviar teclas por sí solo no valida jugabilidad.",
+    "session": "editor-game-05",
+    "observedAtUtc": "2026-09-07T17:29:44.096Z",
+    "lastNativeStateAtUtc": "2026-09-07T17:30:05.730Z",
+    "physicalDesktopInput": false,
+    "browser": "Chrome/152.0.7977.64",
+    "ownTemporaryBrowserClosed": true,
+    "coordinateSystem": {
+      "unit": "centimetres",
+      "x": "east",
+      "y": "north",
+      "z": "up",
+      "geographicOriginLonLat": [
+        -75.2809,
+        2.9252
+      ]
+    },
+    "spawnAndFloor": {
+      "verified": true,
+      "beforeBrowserInput": true,
+      "sampleCount": 15,
+      "sampleWorldSeconds": [
+        1.007,
+        2.007,
+        3.007,
+        4.007,
+        5.007,
+        6.007,
+        7.008,
+        8.008,
+        9.008,
+        10.008,
+        11.008,
+        12.008,
+        13.008,
+        14.008,
+        15.008
+      ],
+      "sampleSpanSeconds": 14.001,
+      "samplingCadenceSeconds": 1,
+      "locationCm": [
+        -88670,
+        7880,
+        99.66
+      ],
+      "velocityCmPerSecond": [
+        0,
+        0,
+        0
+      ],
+      "movementModeCode": 1,
+      "movementMode": "WALKING",
+      "allSamplesSamePositionAndZeroVelocity": true,
+      "controlYawDegrees": 20,
+      "limitation": "Quince muestras iniciales con la misma posición; no equivale a revisar todas las colisiones de la ciudad."
+    },
+    "walkToVehicle": {
+      "verified": true,
+      "input": "W durante 3 segundos desde spawn y yaw 20; después E.",
+      "evidence": [
+        "before.png",
+        "car-enter.png",
+        "native vehicle entry log"
+      ]
+    },
+    "vehicleEntry": {
+      "verified": true,
+      "atUtc": "2026-09-07T17:29:49.387Z",
+      "carLocationCm": [
+        -87740.0,
+        8250.0,
+        70.0
+      ],
+      "evidence": [
+        "car-enter.png",
+        "Neiva: entered vehicle"
+      ]
+    },
+    "vehicleDrive": {
+      "verified": true,
+      "input": "W durante 1 segundo y después freno Space durante 1 segundo.",
+      "initialCarLocationCm": [
+        -87740.0,
+        8250.0,
+        70.0
+      ],
+      "finalCarLocationCm": [
+        -87293.95,
+        8427.312,
+        70.0
+      ],
+      "displacementCm": 480.000154,
+      "evidence": [
+        "car-drive.png",
+        "native car coordinates before and after"
+      ]
+    },
+    "vehicleBrake": {
+      "verified": true,
+      "input": "Space durante 1 segundo tras acelerar.",
+      "hudSpeedAfterBrakeKmH": 0,
+      "finalNativeSpeedProperty": 0,
+      "evidence": [
+        "car-drive.png: 0 km/h",
+        "final NeivaState speed_property=0"
+      ]
+    },
+    "vehicleExit": {
+      "verified": true,
+      "atUtc": "2026-09-07T17:29:52.887Z",
+      "exitLocationCm": [
+        -87208.99,
+        8213.58,
+        96.0
+      ],
+      "distanceFromCarCentreCm": 229.999064,
+      "finalPassenger": null,
+      "evidence": [
+        "car-exit.png",
+        "Neiva: exited vehicle",
+        "final NeivaState passenger=None"
+      ]
+    },
+    "walkAfterExit": {
+      "verified": true,
+      "input": "Shift+W durante 1 segundo.",
+      "finalLocationCm": [
+        -86755.874,
+        8393.699,
+        95.15
+      ],
+      "finalVelocityCmPerSecond": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "finalMovementMode": "WALKING",
+      "evidence": [
+        "after.png",
+        "NeivaState at world_seconds=60.092"
+      ]
+    },
+    "outfit": {
+      "verified": true,
+      "input": [
+        "C",
+        "V"
+      ],
+      "verificationScope": "Cambio de selector de colores de camiseta y pantalón; misma geometría de prendas.",
+      "trouserSelectorBefore": "2/4",
+      "trouserSelectorAfter": "3/4",
+      "evidence": [
+        "before.png",
+        "after.png"
+      ],
+      "limitation": "La sombra dificulta apreciar colores en el personaje; no se ha validado un catálogo de prendas diferentes."
+    },
+    "freeLookCameraVerified": false,
+    "pauseResumeVerified": false,
+    "knownVisualIssues": [
+      "Advertencia visible Non-Nanite Marking Job Queue overflow durante esta ejecución.",
+      "El personaje en sombra queda oscuro.",
+      "El detalle vegetal del parque y muchas fachadas siguen incompletos o interpretados."
+    ],
+    "artifacts": {
+      "report.json": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/report.json",
+        "bytes": 13276,
+        "sha256": "3cf185c665493b2080734f2b506db6d208b6cfd2425a042037e53fbf47afcab9",
+        "publiclyHosted": false
+      },
+      "before.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/before.png",
+        "bytes": 1110181,
+        "sha256": "baba20e94b73d7147ed0e40a9ce838ea2d23c88afced71535f4c0aea686c7089",
+        "publiclyHosted": false
+      },
+      "car-enter.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-enter.png",
+        "bytes": 1162898,
+        "sha256": "ccc8f1c963de4039abe726a393c7450a494d3f524ea5f94b187ea26730d50437",
+        "publiclyHosted": false
+      },
+      "car-drive.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-drive.png",
+        "bytes": 1248177,
+        "sha256": "3d098626883e0980ace837e7f95a4966f281908cb65db61ddfa18db8ad59458b",
+        "publiclyHosted": false
+      },
+      "car-exit.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-exit.png",
+        "bytes": 861600,
+        "sha256": "ca36b61416c527b0dbc8cc3d995c491a626623bfdccaf57aa61431f1888c4252",
+        "publiclyHosted": false
+      },
+      "after.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/after.png",
+        "bytes": 1077274,
+        "sha256": "e8fb0c69dc6dd0850e4903c776719a6a2ccbfe85e4007b54bd89192528339af2",
+        "publiclyHosted": false
+      },
+      "after-native-state.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/after-native-state.png",
+        "bytes": 958544,
+        "sha256": "223e27ddb41d99bd3838002222e5d8443c809224b10f8bec5abe2a51131f0276",
+        "publiclyHosted": false
+      },
+      "stream.webm": {
+        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
+        "bytes": 3496469,
+        "sha256": "7cb62e26527cfd57cd260000b55a4aed41e57299e9ac77cc87489fe2edd96552",
+        "publiclyHosted": false
+      }
     }
   }
 }

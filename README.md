@@ -1,24 +1,33 @@
 # Neiva Abierta
 
-**Entrega nativa en preparación:** el desarrollo solicitado continúa en
-**Unreal Engine**, con ejecutable para GitHub, descarga desde el sitio personal
-y visualización local mediante Pixel Streaming. No hay todavía motor instalado,
-compilación C++ ni ejecutable Unreal verificados. La web 0.4 de abajo es la edición
-anterior. [Construcción, transmisión y publicación](docs/DISTRIBUCION.md) ·
+**Desarrollo actual: Unreal Engine 5.5.4.** La distribución oficial de Linux
+está instalada; el proyecto C++ compila y la importación de activos pasó sus
+comprobaciones. La partida de desarrollo cargó 35.873/35.873 edificios bajo
+Xvfb, con Vulkan SM6 y una NVIDIA RTX 4050 Laptop. Se comprobó vídeo real
+mediante Pixel Streaming con VP8, además de entrar, conducir, frenar y salir
+del coche. La prueba recibió unos 30 FPS a 1280 × 720 durante 18,56 segundos;
+es una medición breve del vídeo recibido, no del rendimiento máximo del motor.
+El paquete Linux descargable está en construcción y todavía no está validado.
+[Construcción, transmisión y publicación](docs/DISTRIBUCION.md) ·
 [Proyecto Unreal](docs/UNREAL.md) ·
 [Revisar referencias sin usar el teclado o mouse del escritorio](docs/NAVEGACION-AISLADA.md).
+
+## Prototipo web anterior 0.4 · Three.js
+
+La descripción, captura, controles y mediciones web siguientes corresponden
+al prototipo Three.js 0.4. Sus pruebas no acreditan el ejecutable Unreal.
 
 Una interpretación jugable de Neiva, Huila, Colombia. Acceso gratuito, personaje
 sin nombre, caminata en tercera persona, un carro conducible, tráfico ambiental,
 mapa con destinos y un pequeño estudio ficticio para contactar a Jhon Steven
 Álvarez Ruiz. Controles de teclado y controles táctiles para celular.
 
-[Jugar en Vercel](https://neiva-abierta.vercel.app/) ·
+[Jugar al prototipo web anterior](https://neiva-abierta.vercel.app/) ·
 [Sala de juegos y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/)
 
-![Captura del juego: personaje en el Santander, Catedral, hotel y fuente](public/preview.webp)
+![Captura del prototipo Three.js 0.4: personaje en el Santander, Catedral, hotel y fuente](public/preview.webp)
 
-## Alcance de esta versión
+## Alcance del prototipo web 0.4
 
 La edición web usa Three.js/WebGL 2 y funciona como sitio estático en Vercel.
 Las calles, parques y huellas de edificios proceden de datos abiertos. Las
@@ -41,10 +50,12 @@ El suelo del juego es plano. No es una réplica
 fotográfica ni un levantamiento completo de cada barrio e interior de Neiva.
 El estudio mide 6 × 4 × 3,5 metros de juego y no representa una dirección real.
 
-El repositorio incluye también un proyecto C++ para Unreal Engine 5.5, con
-Lumen, ciudad procedural, personaje, vehículo, interacción y controles táctiles.
-Su código no se ha compilado: Unreal no estaba instalado en el entorno de
-construcción. [Preparación y límites de Unreal](docs/UNREAL.md).
+El desarrollo nativo usa Unreal Engine 5.5.4, con Lumen, ciudad procedural,
+personaje, vehículo e interacción. Se comprobaron compilación, importación,
+conducción y recepción de vídeo VP8 de la partida de desarrollo. La entrega
+empaquetada y su ejecución independiente siguen pendientes. Los controles y la
+captura de esta sección pertenecen al prototipo web.
+[Estado y límites de Unreal](docs/UNREAL.md).
 
 Google Photorealistic 3D Tiles puede conectarse mediante Cesium para Unreal.
 Se incluye una preparación opcional que requiere plugin, clave API, facturación
@@ -53,7 +64,7 @@ fachadas de Google Maps/Street View; los datos de Google no se redistribuyen
 bajo la licencia del juego. Publicar Unreal interactivo en navegador requiere
 además un servidor GPU y Pixel Streaming; Vercel aloja la edición web.
 
-## Jugar
+## Controles del prototipo web 0.4
 
 | Acción | Computador | Celular |
 | --- | --- | --- |
@@ -90,7 +101,7 @@ Las observaciones se guardan sólo en localStorage del dispositivo (clave v2);
 si ese almacenamiento no está disponible, se puede seguir jugando. Cambiar de
 pestaña limpia las entradas y pausa el juego. No hay cuentas ni multijugador.
 
-## Desarrollo
+## Desarrollo del prototipo web
 
 Node.js 24, npm y un navegador WebGL 2.
 
@@ -108,7 +119,7 @@ respeta los límites del proveedor. Consulta el pipeline y las fechas en
 [MAPAS.md](docs/MAPAS.md). Los datos se sirven con la aplicación y se pueden
 descargar dentro del juego.
 
-## Modelo, rendimiento y verificación
+## Modelo, rendimiento y verificación del prototipo web
 
 Coordenadas locales en metros, X este y Z sur, con origen geográfico declarado
 en `public/data/neiva.json`. La proyección equirectangular es una aproximación

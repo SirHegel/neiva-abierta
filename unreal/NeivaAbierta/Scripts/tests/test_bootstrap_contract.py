@@ -108,6 +108,52 @@ class BootstrapContracts(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Cannot save"):
             self.subject.import_texture("/art/brick.jpg", "color")
 
+    def test_skeletal_usage_is_set_before_compilation_and_persisted_without_changing_city_materials(self):
+        self.api.BlendMode = SimpleNamespace(BLEND_OPAQUE="opaque", BLEND_MASKED="masked")
+        self.api.MaterialSamplerType = SimpleNamespace(SAMPLERTYPE_COLOR="color")
+        self.api.MaterialProperty = SimpleNamespace(MP_BASE_COLOR="base", MP_ROUGHNESS="roughness")
+        for cls in ("MaterialExpressionTextureCoordinate", "MaterialExpressionTextureSampleParameter2D", "MaterialExpressionConstant"):
+            setattr(self.api, cls, object())
+        for skeletal in (True, False):
+            with self.subTest(skeletal=skeletal):
+                material = Asset("/Game/NeivaAssets/Materials/Subject")
+                self.registry[material.path] = material
+                compiled = []
+                self.api.MaterialEditingLibrary.recompile_material.side_effect = lambda asset: compiled.append(dict(asset.properties))
+                self.editor.save_loaded_asset.reset_mock()
+                with patch.object(self.subject, "import_texture", return_value=Texture2D("/texture")), patch.object(
+                        self.subject, "expression", side_effect=lambda *args: Asset("/node")):
+                    self.assertIs(self.subject.pbr_material("Subject", {"color": "/art/color.png"}, skeletal=skeletal), material)
+                self.assertEqual(len(compiled), 1)
+                self.assertEqual(compiled[0].get("used_with_skeletal_mesh", False), skeletal)
+                self.assertEqual(material.properties.get("used_with_skeletal_mesh", False), skeletal)
+                self.assertEqual(material.properties["blend_mode"], "opaque")
+                self.assertFalse(material.properties["two_sided"])
+                self.editor.save_loaded_asset.assert_called_once_with(material)
+
+    def test_bootstrap_marks_body_head_and_hair_for_skeletal_cooking(self):
+        character = Mock()
+        character.get_editor_property.side_effect = lambda key: [] if key == "materials" else object()
+        plan = {"materials": [], "models": [{"kind": "character"}, {"kind": "car"}],
+                "environment": "/art/sky.hdr", "clothingMask": "/art/mask.png",
+                "characterTextures": {part: {"color": f"/art/{part}.png"} for part in ("body", "head", "opacity")}}
+        self.editor.does_asset_exist.side_effect = None
+        self.editor.does_asset_exist.return_value = True
+        self.editor.save_directory.return_value = False  # Stop before writing the report.
+        self.api.LevelEditorSubsystem = object()
+        self.api.get_editor_subsystem = lambda cls: Mock()
+        with patch.multiple(self.subject, build_plan=lambda: plan, landmark_solid_material=lambda: None,
+                            water_material=lambda: None, import_texture=lambda *args: None,
+                            import_fbx=lambda *args: character, import_car=lambda *args: None), patch.object(
+                self.subject, "pbr_material", return_value=Asset("/material")) as pbr:
+            with self.assertRaisesRegex(RuntimeError, "all generated resources"):
+                self.subject.main()
+        self.assertEqual([call.args[0] for call in pbr.call_args_list],
+                         ["M_CharacterBody", "M_CharacterHead", "M_CharacterOpacity"])
+        self.assertTrue(all(call.kwargs["skeletal"] for call in pbr.call_args_list))
+        self.assertEqual([call.kwargs["masked"] for call in pbr.call_args_list], [False, False, True])
+        self.assertEqual(pbr.call_args_list[0].kwargs["clothing_mask"], "/art/mask.png")
+
     def test_unsaved_car_dependencies_prevent_success_report(self):
         character = Mock()
         character.get_editor_property.side_effect = lambda key: [] if key == "materials" else object()

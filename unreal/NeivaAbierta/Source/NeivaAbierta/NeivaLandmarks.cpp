@@ -2,7 +2,7 @@
 
 #include "Components/TextRenderComponent.h"
 #include "Dom/JsonObject.h"
-#include "KismetProceduralMeshLibrary.h"
+#include "NeivaProceduralTangents.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "Misc/FileHelper.h"
@@ -99,7 +99,7 @@ TSet<FString> ANeivaCity::BuildLandmarks(const TSharedPtr<FJsonObject>& MapData)
         const double TileU = Tile ? (*Tile)[0]->AsNumber() : 1;
         const double TileV = Tile ? (*Tile)[1]->AsNumber() : 1;
         const auto& Color = O->GetArrayField(TEXT("color"));
-        TArray<FVector> Vertices, Normals, CalculatedNormals;
+        TArray<FVector> Vertices, Normals;
         TArray<FVector2D> UV;
         TArray<int32> Indices;
         TArray<FLinearColor> Colors;
@@ -116,9 +116,13 @@ TSet<FString> ANeivaCity::BuildLandmarks(const TSharedPtr<FJsonObject>& MapData)
             Colors.Add(Tint);
         }
         for (const auto& Index : RawIndices) Indices.Add(static_cast<int32>(Index->AsNumber()));
-        // Preserve authored smooth normals. The helper's normal output is only
-        // temporary; it is not allowed to flatten or average the imported rigids.
-        UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Indices, UV, CalculatedNormals, Tangents);
+        // (x,y,z) -> (x,-z,y) is a rotation with determinant +1. Three's
+        // counterclockwise indices therefore still need reversal for PMC's
+        // clockwise fronts. Keep the converted authored normals unchanged.
+        for (int32 Index = 0; Index + 2 < Indices.Num(); Index += 3)
+            Swap(Indices[Index + 1], Indices[Index + 2]);
+        // Tangents share indices only; preserve authored normals and hard edges.
+        Neiva::CalculateTangents(Vertices, Indices, UV, Normals, Tangents);
         auto* Component = NewObject<UProceduralMeshComponent>(this,
             *FString::Printf(TEXT("Landmark_%d"), Count++));
         Component->SetupAttachment(Mesh);

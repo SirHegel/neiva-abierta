@@ -4,60 +4,62 @@ La entrega solicitada es **Unreal nativo**, con acceso gratuito para el jugador.
 La edición Three.js 0.4 publicada en Vercel es una entrega anterior. No acredita
 la ejecución de Unreal, ni se utiliza como sustituto de su ejecutable o captura.
 
-## Estado del equipo y del acceso
+## Estado comprobado
 
-Comprobado el 7 de septiembre de 2026: Linux, NVIDIA GeForce RTX 4050 Laptop
-con 6.141 MiB de VRAM y controlador 595.84, además de Intel UHD. El flujo nativo
-selecciona NVIDIA mediante variables de PRIME sólo para el proceso, sin alterar
-la configuración del escritorio. No hay medición de FPS de Unreal.
+El 7 de septiembre de 2026 se comprobó la instalación oficial de **Unreal
+Engine 5.5.4 para Linux**, la compilación C++ del proyecto y la importación de
+activos en el editor real. El informe local
+`artifacts/unreal-native/first-native-20260907T162729Z/import-03-report.json`
+registra `compiled: true`, `imported: true` y cero errores. Los informes y logs
+locales están excluidos de Git.
 
-No se encontró Unreal Editor ni UnrealBuildTool. La descarga oficial de Linux
-redirige a autenticación de Epic y el repositorio privado del motor devuelve
-404 para la cuenta GitHub conectada. Abrir Firefox no concede a un proceso nuevo
-una sesión Epic. La solicitud de compartir el escritorio mediante el portal de
-Ubuntu terminó cancelada. Tras una nueva indicación del usuario se obtuvo la
-imagen de su ventana Firefox: Street View en 1760 Carrera 21. Las llamadas de
-control de puntero y teclado fueron denegadas por el portal; compartir la imagen
-no concedió control. La vista y sus límites constan en `data/field-survey.json`.
+La partida de desarrollo, ejecutada con `UnrealEditor -game` bajo Xvfb,
+seleccionó Vulkan SM6 y una **NVIDIA GeForce RTX 4050 Laptop**, con 6.141 MiB
+de VRAM y controlador 595.84. El log `editor-game-05.log`, en el mismo directorio,
+registra **35.873/35.873 edificios cargados**, con radio de vista previa cero.
+La selección de GPU usa variables PRIME del proceso y la pantalla virtual
+evita utilizar el escritorio personal. Se corrigió la orientación de los
+triángulos de suelo y edificios para la colisión de Unreal. La partida posterior
+mantuvo al personaje sobre el suelo y permitió entrar al coche, avanzar, frenar
+y salir. El log confirma entrada a las 17:29:49 UTC, desplazamiento del coche
+de unos 4,8 m y salida a las 17:29:52 UTC. Esto comprueba esa secuencia concreta;
+no certifica todas las colisiones e interacciones de la ciudad.
 
-Posteriormente se resolvió la navegación sin usar controles del escritorio:
-un Firefox independiente, sin ventana y con perfil nuevo, permite clics, giro
-y avance en Street View mediante eventos virtuales. Se llegó al panorama exacto
-del enlace del usuario en 1760 Carrera 21. Ese navegador no comparte la sesión
-Epic ni las cookies del Firefox personal. [Navegación independiente](NAVEGACION-AISLADA.md).
+**Pixel Streaming recibió vídeo real VP8 de esa partida** a 1280 × 720.
+El informe local `artifacts/unreal-native/stream-observations/observation-ZoB8NJ/report.json`
+registra 557 cuadros decodificados durante 18,5574 s: **30,015 FPS recibidos**.
+La grabación `stream.webm` del mismo directorio contiene 603 cuadros VP8,
+dura unos 20,1 s y ocupa 3.496.469 bytes; SHA-256:
+`7cb62e26527cfd57cd260000b55a4aed41e57299e9ac77cc87489fe2edd96552`.
+Procede del vídeo WebRTC, sin capturar el escritorio. El observador registra
+vídeo y eventos de entrada; el comando y log del motor acreditan por separado
+la identidad de Unreal y el resultado de las interacciones.
 
-Por tanto, **no hay compilación C++, paquete ejecutable ni vídeo de Unreal
-validados**. El código de preparación, las pruebas sin motor y la señalización
-se validan por separado. No se publica una captura Three.js como captura Unreal.
+Son mediciones breves de recepción local en Chrome 152, con render en GPU y
+codificación VP8 por software; no son FPS de render ni un benchmark de toda
+Neiva. H.264/NVENC quedó detenido en un cuadro durante la prueba de Firefox
+y sigue pendiente de corrección. También apareció una advertencia de cola de
+sombras Virtual Shadow Maps para geometría sin Nanite. **El paquete Linux está
+en construcción y su ejecución independiente todavía no está validada.** No
+hay requisitos mínimos del juego establecidos ni servicio público de streaming.
 
-La dependencia oficial **v23 / clang 18.1.0** ya se descargó, se verificó y se
-extrajo en la caché local. Son 1.483.760.275 bytes comprimidos, SHA-256
-`048ad147d66e45b9dcfcbc986770f8df1ccbf94de11480877e72d2b3b1b48087`.
-El ejecutable del compilador responde correctamente. **Este SDK no contiene
-Unreal Editor y no acredita una compilación del juego.** Procede de la
+El SDK oficial v23 / clang 18.1.0 y Xvfb están disponibles localmente. Las
+versiones de compilador y sistema se contrastan con la
 [tabla de requisitos de Epic para UE 5.5](https://dev.epicgames.com/documentation/en-us/unreal-engine/linux-development-requirements-for-unreal-engine?application_version=5.5).
-
-También está disponible Xvfb en la caché local, extraído del paquete de Ubuntu
-sin instalación administrativa. Se comprobó una pantalla virtual independiente
-de 1280 × 720 mediante `xdpyinfo`; no se ha probado aún Unreal dentro de ella.
-
-La revisión del importador corrigió los nombres de texturas bajo Interchange
-5.5 y el destino de reimportación, valida que un HDR produzca un cubemap y
-exige guardar también materiales y texturas dependientes del carro. Los errores
-de guardado impiden generar el informe de importación satisfactoria. Las 16
-pruebas de preparación nativa y 39 del lanzador/cartografía pasan sin el motor;
-las siete regresiones nuevas emplean dobles de la API Python, no Unreal real.
 
 ## Construir y ejecutar
 
-Instalar la distribución oficial de **UE 5.5** desde
+En otro equipo, instalar la distribución oficial de **UE 5.5.4** desde
 [Epic para Linux](https://www.unrealengine.com/linux), o mediante el launcher
 de Epic en Windows. El proyecto y la infraestructura están fijados a 5.5;
 no se cambia la versión del motor sin compilar y revisar la migración.
 
 ```sh
 python3 scripts/unreal.py doctor --engine /ruta/UE_5.5
-python3 scripts/unreal.py package --engine /ruta/UE_5.5 --gpu nvidia
+python3 scripts/unreal.py import --engine /ruta/UE_5.5 --gpu nvidia \
+  --virtual-display --max-build-actions 2 --shader-workers 2
+python3 scripts/unreal.py package --engine /ruta/UE_5.5 --gpu nvidia \
+  --virtual-display --max-build-actions 2 --shader-workers 2 --cook-processes 1
 ```
 
 `package` valida y copia los datos, compila el editor, importa el arte local y
@@ -68,13 +70,20 @@ de una importación anterior como éxito de la actual. La salida se escribe en
 un directorio nuevo bajo `artifacts/unreal-native/packages/`, sin borrar otra
 compilación. `--dry-run` muestra los comandos; no acredita su ejecución.
 
+`--virtual-display` utiliza Xvfb privado en Linux. `--max-build-actions 2`
+limita las acciones paralelas de UBT; `--shader-workers 2` limita los workers
+locales de shaders durante importación y cook; `--cook-processes 1` selecciona
+un proceso de cook. Son límites de concurrencia, no cotas de RAM ni garantías
+de duración. El log del motor debe confirmar el número efectivo de workers.
+
 Para abrir la partida de desarrollo después de importar:
 
 ```sh
-python3 scripts/unreal.py play --engine /ruta/UE_5.5 --gpu nvidia
+python3 scripts/unreal.py play --engine /ruta/UE_5.5 --gpu nvidia --virtual-display
 ```
 
-El paquete Linux incluye `Linux/NeivaAbierta.sh`. Se puede copiar la carpeta
+Cuando finalice el empaquetado Linux, su entrada será `Linux/NeivaAbierta.sh`.
+Se debe comprobar antes de publicar. Se puede copiar la carpeta
 completa a otro lugar del PC y ejecutarlo desde allí. No basta con copiar sólo
 el binario: necesita sus datos y bibliotecas. En Windows, ejecutar el mismo flujo
 con `python` en un equipo con UE y Visual Studio compatibles produce el paquete
@@ -95,21 +104,46 @@ descargar esta infraestructura MIT.
 
 ```sh
 node scripts/pixel-streaming-local.mjs prepare
-node scripts/pixel-streaming-local.mjs start --package artifacts/unreal-native/packages/FECHA
+node scripts/pixel-streaming-local.mjs doctor --codec VP8 --virtual-display \
+  --capture-fence --decouple-framerate
 ```
 
-El segundo comando exige un paquete construido para el sistema actual. Ejecuta
-Unreal con render fuera de pantalla, audio y codificación H.264, y sirve el
-reproductor oficial en `http://127.0.0.1:8080`. La GPU del PC produce la imagen;
-el navegador recibe vídeo y envía los controles. La resolución inicial es
-1280 × 720 y el objetivo de transmisión es 30 FPS: **no son FPS medidos**.
-`--width`, `--height` y `--port` permiten ajustar la sesión. En este equipo el
-proceso Linux usa NVIDIA; no se prometen ajustes máximos con 6 GB de VRAM.
+`doctor` comprueba la infraestructura y muestra el plan sin abrir un servidor
+ni una partida. Cuando exista una carpeta de paquete verificada, sustituir
+`/ruta/al/paquete-validado` por su ruta real y ejecutar:
 
-Sin `--package`, se puede probar sólo la señalización: muestra explícitamente
-que no hay partida. Esa prueba respondió HTTP 200 y WebSocket con la lista de
-streamers vacía. **No hubo vídeo ni conexión de un juego Unreal.** La evidencia
-local está en `artifacts/unreal-native/streaming-check.json`.
+```sh
+node scripts/pixel-streaming-local.mjs start --package /ruta/al/paquete-validado \
+  --codec VP8 --virtual-display --capture-fence --decouple-framerate
+```
+
+`start --package` exige el informe, los binarios y los datos de un paquete
+construido para el sistema actual. El comando anterior abre Unreal en una
+ventana dentro de Xvfb privado en Linux y sirve el reproductor oficial en
+`http://127.0.0.1:8080`. No usa `RenderOffScreen` en ese modo. La GPU produce la
+imagen y VP8 se codifica por software; el navegador recibe vídeo y envía controles.
+La pantalla virtual y el juego comparten la resolución inicial de **1280 × 720**;
+`--width` y `--height` cambian ambas. El objetivo configurado es 30 FPS mediante
+`PixelStreamingWebRTCFps` y `t.MaxFPS`; no garantiza esa recepción en otros equipos.
+
+`--codec` admite `H264` y `VP8`; H264 conserva el valor predeterminado por
+compatibilidad, pero **VP8 es la configuración con recepción comprobada aquí**.
+`--capture-fence` y `--decouple-framerate` son opciones explícitas, desactivadas
+por defecto; la segunda exige la primera en UE 5.5. Sin `--virtual-display`
+se conserva el modo `RenderOffScreen`, disponible para Windows y Linux. El
+modo virtual requiere `xvfb-run`, Xvfb y `xauth`, en PATH o en
+`~/.cache/neiva-unreal-display/usr/bin`. Al cerrar la sesión, el lanzador termina
+el juego y su propia pantalla virtual. No modifica el entorno del escritorio.
+
+`--port` y `--streamer-port` cambian los puertos del reproductor y del juego;
+deben ser distintos. `--gpu nvidia` exige NVIDIA; `auto` la selecciona cuando
+está disponible. No se prometen ajustes máximos con 6 GB de VRAM.
+
+Sin `--package`, se puede probar sólo la señalización. Esa comprobación aislada
+respondió HTTP 200 y WebSocket con la lista de streamers vacía, según
+`artifacts/unreal-native/streaming-check.json`. **No acredita recepción de vídeo.**
+La evidencia de vídeo real procede de la observación VP8 descrita arriba,
+con una partida de desarrollo. Debe repetirse con el paquete que se distribuya.
 
 Por defecto ambos puertos escuchan sólo en localhost. `--host 0.0.0.0` permite
 acceder al reproductor desde la LAN; el puerto del juego sigue siendo local.
@@ -123,11 +157,11 @@ el escritorio. El PC debe permanecer encendido mientras transmite.
 
 | Destino | Qué aloja | Estado de esta entrega |
 | --- | --- | --- |
-| GitHub | Código; Releases puede distribuir el paquete compilado | Fuente preparada; ejecutable pendiente de motor y prueba |
+| GitHub | Código; Releases puede distribuir el paquete compilado | C++ compilado y activos importados; paquete descargable pendiente |
 | Sitio personal en Vercel | Ficha y enlace a descargar; puede enlazar un reproductor alojado con GPU | No hay enlace de ejecutable hasta existir un artefacto validado |
 | itch.io | Juego descargable sin coste de alojamiento | Alternativa comprobada; no se ha creado una cuenta ni publicado |
 | Epic Games Store | Juego descargable gratuito para el jugador | Borrador local; sin envío ni pago |
-| PC propio con Pixel Streaming | Render GPU y transmisión en navegador | Infraestructura comprobada; falta el juego compilado |
+| PC propio con Pixel Streaming | Render GPU y transmisión en navegador | Vídeo VP8 y conducción comprobados en la partida de desarrollo; sin servicio público |
 
 [itch.io no cobra por crear la página y subir contenido](https://itch.io/docs/creators/faq).
 Su herramienta [butler limita el paquete a 30 GB sin comprimir](https://itch.io/docs/butler/pushing.html).
@@ -145,7 +179,8 @@ bancarios ni pagos desde estos scripts.
 
 ## Cierre de una versión descargable
 
-1. Instalar Epic/Unreal con acceso legítimo y ejecutar el flujo de compilación.
+1. Completar el empaquetado con la instalación oficial de Unreal 5.5.4 y
+   verificar el informe, los binarios y los datos producidos por esa ejecución.
 2. Probar la carpeta empaquetada: inicio, caminar/correr, cámara, coche, peatones,
    personalización, colisiones y cierre. Medir carga y rendimiento en GPU real.
 3. Obtener una captura y una grabación del ejecutable; revisar que representen

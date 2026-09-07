@@ -43,6 +43,10 @@
     {
       "Name": "PixelStreaming",
       "Enabled": true
+    },
+    {
+      "Name": "AndroidFileServer",
+      "Enabled": false
     }
   ]
 }

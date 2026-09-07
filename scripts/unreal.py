@@ -13,11 +13,15 @@ import platform
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
+import xml.etree.ElementTree as ET
 
 REPO = Path(__file__).resolve().parents[1]
 PROJECT = REPO / "unreal/NeivaAbierta/NeivaAbierta.uproject"
 SUPPORTED = (5, 5)
+BUILD_NAMESPACE = "https://www.unrealengine.com/BuildConfiguration"
+DESKTOP_VARIABLES = ("DISPLAY", "WAYLAND_DISPLAY", "XAUTHORITY", "DBUS_SESSION_BUS_ADDRESS", "SESSION_MANAGER")
 
 
 def native_platform(system=None):
@@ -90,7 +94,150 @@ def gpu_environment(mode):
     return env
 
 
-def command_plan(action, root, target, output, configuration="Development", project=PROJECT):
+def positive_integer(value):
+    try:
+        result = int(value)
+    except (ValueError, TypeError):
+        raise argparse.ArgumentTypeError("Debe ser un entero mayor que cero.") from None
+    if result < 1:
+        raise argparse.ArgumentTypeError("Debe ser un entero mayor que cero.")
+    return result
+
+
+def virtual_display_path():
+    cache = Path.home() / ".cache/neiva-unreal-display/usr/bin"
+    found = shutil.which("xvfb-run")
+    wrapper = Path(found) if found else cache / "xvfb-run"
+    if not wrapper.is_file() or not os.access(wrapper, os.X_OK):
+        raise RuntimeError("--virtual-display requiere xvfb-run en PATH o en ~/.cache/neiva-unreal-display/usr/bin.")
+    search_path = str(wrapper.parent) + os.pathsep + os.environ.get("PATH", os.defpath)
+    for name in ("Xvfb", "xauth"):
+        if not shutil.which(name, path=search_path):
+            raise RuntimeError(f"Falta {name} para ejecutar la pantalla virtual.")
+    return wrapper.resolve()
+
+
+def virtual_environment(environment, wrapper):
+    env = environment.copy()
+    for name in DESKTOP_VARIABLES:
+        env.pop(name, None)
+    env["SDL_VIDEODRIVER"] = "x11"
+    env["PATH"] = str(Path(wrapper).parent) + os.pathsep + env.get("PATH", os.defpath)
+    return env
+
+
+def shader_worker_settings(max_workers, target):
+    """Plan a local UE 5.5 shader-worker cap; no files or environment writes.
+
+    Verified against the official 5.5.4 ShaderCompiler.cpp, lines 1065-1171,
+    and UnixPlatformMisc.cpp, NumberOfCoresIncludingHyperthreads(). Affinity
+    must stay unchanged between this plan and the child process. The low-core
+    branch overrides INI reserves, so incompatible limits fail explicitly.
+    This limits concurrency, not memory. The engine log must verify the count.
+    """
+    if target != "Linux":
+        raise ValueError("--shader-workers sólo está validado en Linux con UE 5.5.")
+    if isinstance(max_workers, bool) or not isinstance(max_workers, int) or max_workers < 1:
+        raise ValueError("--shader-workers debe ser un entero mayor que cero.")
+    try:
+        logical_cores = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError) as error:
+        raise RuntimeError("No se pudo consultar la afinidad CPU; no se estima un límite de shaders.") from error
+    if logical_cores < 1:
+        raise RuntimeError("La afinidad CPU está vacía; no se puede limitar la compilación de shaders.")
+    expected = max(1, logical_cores - 1) if logical_cores <= 4 else min(max_workers, logical_cores)
+    if expected > max_workers:
+        raise ValueError(f"UE 5.5 fuerza {expected} workers con {logical_cores} CPU lógicas; "
+                         f"no respeta el límite solicitado de {max_workers} mediante INI.")
+    reserve = max(0, logical_cores - max_workers)
+    settings = {
+        "NumUnusedShaderCompilingThreads": reserve,
+        "NumUnusedShaderCompilingThreadsDuringGame": reserve,
+        # Prevent the editor's percentage branch from replacing the reserve.
+        "ShaderCompilerCoreCountThreshold": 2147483647,
+        "bForceUseSCWMemoryPressureLimits": "False",
+        # Build-machine memory heuristics REPLACE, rather than clamp, workers.
+        # Use the explicit cap for this child instead of that automatic count.
+        "MemoryUsedPerSCWProcessInGB": 0,
+    }
+    arguments = [f"-ini:Engine:[DevOptions.Shaders]:{key}={value}" for key, value in settings.items()]
+    arguments += [f"-ini:{category}:[ConsoleVariables]:r.ForceAllCoresForShaderCompiling=0"
+                  for category in ("Engine", "Editor")]
+    arguments.append("-NoRemoteShaderCompile")
+    return {"requestedMaxWorkers": max_workers, "logicalCores": logical_cores,
+            "expectedLocalWorkers": expected, "runtimeValidated": False, "arguments": arguments}
+
+
+def build_configuration(project, max_actions, *, dry_run=False):
+    """Update only the requested project-local UBT property; never global XML.
+
+    Epic's UE 5.5 Build Configuration reference documents this path and property.
+    Malformed/ambiguous files and symlink escapes are errors, not replacements.
+    """
+    if isinstance(max_actions, bool) or not isinstance(max_actions, int) or max_actions < 1:
+        raise ValueError("MaxParallelActions debe ser un entero mayor que cero.")
+    project_dir = Path(project).parent.resolve()
+    destination = project_dir / "Saved/UnrealBuildTool/BuildConfiguration.xml"
+    for part in (destination, *destination.parents):
+        if part == project_dir:
+            break
+        if part.is_symlink():
+            raise RuntimeError(f"No se modifica una configuración UBT mediante enlace simbólico: {part}")
+    tag = lambda name: f"{{{BUILD_NAMESPACE}}}{name}"
+    if destination.exists():
+        try:
+            parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True, insert_pis=True))
+            tree = ET.parse(destination, parser=parser)
+        except ET.ParseError as error:
+            raise RuntimeError(f"BuildConfiguration.xml inválido; se conserva: {error}") from error
+        root = tree.getroot()
+        if root.tag != tag("Configuration"):
+            raise RuntimeError("BuildConfiguration.xml tiene un namespace o raíz incompatible; se conserva.")
+    else:
+        root = ET.Element(tag("Configuration"))
+        tree = ET.ElementTree(root)
+    groups = root.findall(tag("BuildConfiguration"))
+    if len(groups) > 1:
+        raise RuntimeError("BuildConfiguration.xml contiene secciones BuildConfiguration duplicadas; se conserva.")
+    group = groups[0] if groups else ET.SubElement(root, tag("BuildConfiguration"))
+    values = group.findall(tag("MaxParallelActions"))
+    if len(values) > 1:
+        raise RuntimeError("BuildConfiguration.xml contiene MaxParallelActions duplicado; se conserva.")
+    setting = values[0] if values else ET.SubElement(group, tag("MaxParallelActions"))
+    if setting.text == str(max_actions):
+        return destination
+    setting.text = str(max_actions)
+    if dry_run:
+        return destination
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    ET.register_namespace("", BUILD_NAMESPACE)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=destination.parent, prefix=".BuildConfiguration-", suffix=".tmp", delete=False) as output:
+            temporary = Path(output.name)
+            if destination.exists():
+                os.chmod(temporary, destination.stat().st_mode & 0o777)
+            tree.write(output, encoding="utf-8", xml_declaration=True)
+        os.replace(temporary, destination)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+    return destination
+
+
+def command_plan(action, root, target, output, configuration="Development", project=PROJECT,
+                 *, virtual_display=None, cook_processes=None, shader_workers=None, max_build_actions=None):
+    if virtual_display and target != "Linux":
+        raise ValueError("--virtual-display sólo está disponible en Linux.")
+    if cook_processes is not None and (isinstance(cook_processes, bool) or
+            not isinstance(cook_processes, int) or cook_processes < 1):
+        raise ValueError("--cook-processes debe ser un entero mayor que cero.")
+    if max_build_actions is not None and (isinstance(max_build_actions, bool) or
+            not isinstance(max_build_actions, int) or max_build_actions < 1):
+        raise ValueError("--max-build-actions debe ser un entero mayor que cero.")
+    if shader_workers is not None and action not in ("doctor", "import", "package"):
+        raise ValueError("--shader-workers requiere doctor, import o package.")
+    shader_args = shader_worker_settings(shader_workers, target)["arguments"] if shader_workers is not None else []
     files = engine_files(root, target)
     scripts = project.parent / "Scripts"
     commands = []
@@ -98,19 +245,39 @@ def command_plan(action, root, target, output, configuration="Development", proj
         commands += [[sys.executable, str(scripts / "prepare_project.py")],
                      [sys.executable, str(scripts / "asset_plan.py"), "--check"],
                      [str(files["build"]), "NeivaAbiertaEditor", target, "Development", str(project), "-WaitMutex"]]
+        if max_build_actions is not None:
+            # UE 5.5.4 BuildMode loads XML without the project directory;
+            # enforce the requested value directly, independently of that XML.
+            commands[-1].append(f"-MaxParallelActions={max_build_actions}")
     if action in ("import", "package"):
         # Full editor: LevelEditorSubsystem is required by bootstrap_editor.py.
         commands.append([str(files["editor"]), str(project),
                          f"-ExecutePythonScript={scripts / 'bootstrap_editor.py'}",
-                         "-unattended", "-nop4", "-nosplash", "-stdout", "-FullStdOutLogOutput"])
+                         # SourceControlSettings::LoadSettings reads this local override.
+                         # Automated generated assets do not connect to a user's provider.
+                         "-unattended", "-nop4", "-SCCProvider=None", "-nosplash", "-stdout", "-FullStdOutLogOutput", *shader_args])
     if action == "package":
         commands.append([str(files["uat"]), "BuildCookRun", f"-project={project}",
                          "-target=NeivaAbierta", f"-platform={target}", f"-clientconfig={configuration}",
                          "-map=/Game/Maps/Neiva", "-build", "-cook", "-stage", "-pak", "-iostore",
                          "-package", "-archive", f"-archivedirectory={output}",
                          "-nop4", "-unattended", "-utf8output"])
+        if max_build_actions is not None:
+            # ProjectParams.UbtArgs -> BuildProjectCommand ClientBuildArgs.
+            commands[-1].append(f"-UbtArgs=-MaxParallelActions={max_build_actions}")
     if action == "play":
         commands.append([str(files["editor"]), str(project), "/Game/Maps/Neiva", "-game", "-log"])
+    if action == "package":
+        cook_args = ([f"-cookprocesscount={cook_processes}"] if cook_processes is not None else []) + shader_args
+        if cook_args:
+            # UAT forwards this single value to the cook editor subprocess.
+            commands[-1].append("-AdditionalCookerOptions=" + " ".join(cook_args))
+    if virtual_display:
+        for index, command in enumerate(commands):
+            if command[0] == str(files["editor"]):
+                command += ["-vulkan", "-RenderOffScreen", "-ResX=1280", "-ResY=720", "-nosound", "-NoEpicPortal"]
+            if command[0] in (str(files["editor"]), str(files["uat"])):
+                commands[index] = [str(virtual_display), "-a", "-s", "-screen 0 1280x720x24 -nolisten tcp", *command]
     return commands
 
 
@@ -190,8 +357,31 @@ def main():
     parser.add_argument("--output", type=Path, help="Directorio nuevo para el paquete; nunca se borra ni se sobrescribe.")
     parser.add_argument("--report", type=Path)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--virtual-display", action="store_true", help="Linux: ejecutar editor y cook bajo Xvfb privado, sin usar el escritorio.")
+    parser.add_argument("--max-build-actions", nargs="?", const=2, type=positive_integer,
+                        help="Límite UBT local al proyecto; 2 si se indica sin valor. No cambia configuración global.")
+    parser.add_argument("--cook-processes", type=positive_integer,
+                        help="Número explícito de procesos de cook, por ejemplo 1; no limita los compiladores de shaders.")
+    parser.add_argument("--shader-workers", type=positive_integer,
+                        help="Linux/UE 5.5: máximo explícito de workers locales durante import/cook; no limita RAM.")
     args = parser.parse_args()
     target = native_platform()
+    if args.virtual_display and target != "Linux":
+        parser.error("--virtual-display sólo está disponible en Linux.")
+    if args.max_build_actions is not None and args.action not in ("doctor", "build", "import", "package"):
+        parser.error("--max-build-actions requiere doctor, build, import o package.")
+    if args.cook_processes is not None and args.action not in ("doctor", "package"):
+        parser.error("--cook-processes requiere doctor o package.")
+    shader_settings = None
+    if args.shader_workers is not None:
+        if args.action not in ("doctor", "import", "package"):
+            parser.error("--shader-workers requiere doctor, import o package.")
+        try:
+            shader_settings = shader_worker_settings(args.shader_workers, target)
+        except (ValueError, RuntimeError) as error:
+            parser.error(str(error))
+    if args.virtual_display and args.action == "verify-package":
+        parser.error("verify-package no ejecuta un editor y no admite --virtual-display.")
     if args.action == "verify-package":
         if not args.output:
             raise RuntimeError("verify-package requiere --output con la carpeta del paquete")
@@ -200,6 +390,18 @@ def main():
         return 0
     root = find_engine(args.engine)
     errors, version = inspect_engine(root, target)
+    wrapper = None
+    if args.virtual_display:
+        try:
+            wrapper = virtual_display_path()
+        except RuntimeError as error:
+            errors.append(str(error))
+    config = None
+    if args.max_build_actions is not None:
+        try:
+            config = build_configuration(PROJECT, args.max_build_actions, dry_run=True)
+        except (OSError, RuntimeError) as error:
+            errors.append(str(error))
     gpu = gpu_report()
     if args.gpu == "nvidia" and not gpu["nvidia"]:
         errors.append("Se solicitó NVIDIA, pero nvidia-smi no confirmó una GPU disponible.")
@@ -208,8 +410,17 @@ def main():
     report = {"engine": str(root) if root else None, "engineVersion": version, "target": target,
               "gpu": gpu, "action": args.action, "errors": errors, "compiled": False,
               "imported": False, "packaged": False, "runtimeValidated": False}
+    report["execution"] = {"virtualDisplay": args.virtual_display,
+                           "xvfbRun": str(wrapper) if wrapper else None,
+                           "maxBuildActions": args.max_build_actions,
+                           "maxBuildActionsVia": "UBT command line and UAT UbtArgs" if args.max_build_actions is not None else None,
+                           "buildConfiguration": str(config) if config else None,
+                           "cookProcesses": args.cook_processes,
+                           "shaderWorkers": shader_settings}
     if root:
-        report["commands"] = command_plan(args.action, root, target, output, args.configuration)
+        report["commands"] = command_plan(args.action, root, target, output, args.configuration,
+                                          project=PROJECT, virtual_display=wrapper, cook_processes=args.cook_processes,
+                                          shader_workers=args.shader_workers, max_build_actions=args.max_build_actions)
     if args.action == "doctor" or args.dry_run or errors:
         print(json.dumps(report, ensure_ascii=False, indent=2))
         if args.report:
@@ -220,11 +431,14 @@ def main():
         raise RuntimeError(f"El directorio de salida ya existe: {output}. Usa uno nuevo.")
     if args.action == "play" and not (PROJECT.parent / "Content/Maps/Neiva.umap").is_file():
         raise RuntimeError("Falta el mapa nativo. Ejecuta primero import.")
+    if args.max_build_actions is not None:
+        build_configuration(PROJECT, args.max_build_actions)
     env = gpu_environment("nvidia" if args.gpu == "nvidia" or (args.gpu == "auto" and gpu["nvidia"]) else "auto")
     for command in report["commands"]:
         print(json.dumps({"run": command}, ensure_ascii=False), flush=True)
         started = time.time()
-        subprocess.run(command, cwd=REPO, env=env, check=True)
+        child_env = virtual_environment(env, wrapper) if wrapper and command[0] == str(wrapper) else env.copy()
+        subprocess.run(command, cwd=REPO, env=child_env, check=True)
         if "NeivaAbiertaEditor" in command:
             report["compiled"] = True
         if any(arg.startswith("-ExecutePythonScript=") for arg in command):

@@ -94,6 +94,7 @@ public:
     virtual void Tick(float DeltaSeconds) override;
     virtual void SetupPlayerInputComponent(UInputComponent* Input) override;
     void Interact();
+    void ResetControlInput();
     void ResetPosition();
     void ToggleTouchControls();
     void CycleShirt();
@@ -150,6 +151,7 @@ public:
     virtual void SetupPlayerInputComponent(UInputComponent* Input) override;
     void Enter(ANeivaCharacter* Character);
     void Exit();
+    void ResetControlInput();
     void ResetPosition();
     void ToggleTouchControls();
     void CycleShirt();
