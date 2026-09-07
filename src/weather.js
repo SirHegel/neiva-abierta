@@ -29,20 +29,20 @@ export function createWeather({ scene, camera, renderer, sun, hemi, pbr, roads, 
   asphalt.customProgramCacheKey=()=> 'neiva-road-weather-v1';
   asphalt.needsUpdate=true;
   const reflections=createRoadReflections(scene,camera,roads,{renderer,mobile,powerful});
-  let mode='clear', request=0, timeIndex=0;
+  let mode='clear', request=0, timeIndex=0, viewDistance=mobile?450:700;
   const applyLighting=()=>{
     if(mode==='after-rain') {
       sun.color.set('#dde6ed');sun.intensity=.85;sun.shadow.radius=3;
       hemi.color.set('#c1d0dd');hemi.groundColor.set('#656661');hemi.intensity=.2;
       scene.environmentIntensity=.62;scene.backgroundIntensity=.66;
-      scene.fog.color.set('#a8b5bc');scene.fog.near=mobile?180:310;scene.fog.far=mobile?435:675;
+      scene.fog.color.set('#a8b5bc');scene.fog.near=viewDistance*.45;scene.fog.far=viewDistance*.96;
       renderer.toneMappingExposure=1.02;
     } else {
       const s=[['#fff3df',3.2,.18,.8,.94,.22],['#ffd2a0',2.4,.11,.6,1.02,.14],['#fff9f0',3.6,.22,.95,.91,.26]][timeIndex];
       sun.color.set(s[0]);sun.intensity=s[1];sun.shadow.radius=2;
       hemi.color.set('#d8e5ed');hemi.groundColor.set('#8d8170');hemi.intensity=s[2];
       scene.backgroundIntensity=s[3];renderer.toneMappingExposure=s[4];scene.environmentIntensity=s[5];
-      scene.fog.color.set('#c1c8c8');scene.fog.near=mobile?230:400;scene.fog.far=mobile?440:680;
+      scene.fog.color.set('#c1c8c8');scene.fog.near=viewDistance*.56;scene.fog.far=viewDistance*.97;
     }
   };
   async function setWeather(next) {
@@ -61,6 +61,7 @@ export function createWeather({ scene, camera, renderer, sun, hemi, pbr, roads, 
   }
   return {
     get mode(){return mode;}, setWeather,
+    setViewDistance(distance){viewDistance=distance;applyLighting();},
     setTime(index){timeIndex=T.MathUtils.clamp(Math.floor(index),0,2);applyLighting();},
     setQuality:reflections.setQuality,
     update:reflections.update,

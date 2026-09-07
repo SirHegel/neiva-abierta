@@ -33,8 +33,33 @@ export function addBox(group,w,h,d,x,y,z,material){const m=new T.Mesh(boxGeometr
 /** O(V) merging by spatial cells; buffers remain frustum-cullable across the city. */
 export class CityBatches{
   constructor(scene,cell=220){this.scene=scene;this.cell=cell;this.groups=new Map();}
-  add(g,material,x,z){if(!g.attributes.position.count){g.dispose();return;}const key=`${Math.floor(x/this.cell)},${Math.floor(z/this.cell)},${material.uuid},${Object.keys(g.attributes).sort().join()}`;if(!this.groups.has(key))this.groups.set(key,{material,geos:[]});this.groups.get(key).geos.push(g);}
-  finish(){for(const {material,geos} of this.groups.values()){const g=mergeGeometries(geos,false);if(!g)throw new Error('Geometría urbana incompatible');g.computeBoundingSphere();const m=new T.Mesh(g,material);m.castShadow=m.receiveShadow=true;m.userData.city=true;this.scene.add(m);geos.forEach(g=>g.dispose());}this.groups.clear();}
+  add(g,material,x,z,tier='base'){
+    if(!g.attributes.position.count){g.dispose();return;}
+    const size=tier==='detail'?this.cell/2:this.cell;
+    const key=`${Math.floor(x/size)},${Math.floor(z/size)},${tier},${material.uuid},${Object.keys(g.attributes).sort().join()}`;
+    if(!this.groups.has(key))this.groups.set(key,{material,tier,geos:[]});this.groups.get(key).geos.push(g);
+  }
+  finish(){
+    const meshes=[];
+    for(const {material,tier,geos} of this.groups.values()){
+      const g=mergeGeometries(geos,false);if(!g)throw new Error('Geometría urbana incompatible');g.computeBoundingSphere();g.computeBoundingBox();
+      const m=new T.Mesh(g,material);m.castShadow=m.receiveShadow=true;
+      m.userData.city=true;m.userData.cityTier=tier;
+      m.userData.cityBounds={minX:g.boundingBox.min.x,maxX:g.boundingBox.max.x,minZ:g.boundingBox.min.z,maxZ:g.boundingBox.max.z};
+      this.scene.add(m);meshes.push(m);geos.forEach(g=>g.dispose());
+    }
+    this.groups.clear();
+    const stats={total:meshes.length,visible:meshes.length,shadowCasters:meshes.length};let previous=null;
+    return {meshes,stats,updateVisibility(position,{baseDistance=650,detailDistance=140,shadowDistance=90}={}){
+      if(previous&&Math.hypot(position.x-previous.x,position.z-previous.z)<10&&previous.baseDistance===baseDistance&&previous.detailDistance===detailDistance&&previous.shadowDistance===shadowDistance)return;
+      previous={x:position.x,z:position.z,baseDistance,detailDistance,shadowDistance};stats.visible=stats.shadowCasters=0;
+      for(const mesh of meshes){const b=mesh.userData.cityBounds,d=Math.hypot(Math.max(b.minX-position.x,0,position.x-b.maxX),Math.max(b.minZ-position.z,0,position.z-b.maxZ));
+        mesh.visible=d<(mesh.userData.cityTier==='detail'?detailDistance:baseDistance);
+        mesh.castShadow=mesh.visible&&d<shadowDistance;
+        stats.visible+=Number(mesh.visible);stats.shadowCasters+=Number(mesh.castShadow);
+      }
+    },dispose(){for(const mesh of meshes){mesh.removeFromParent();mesh.geometry.dispose();}}};
+  }
 }
 export async function loadFacades(pbr){
   const loader=new T.TextureLoader();const [residential,upper]=await Promise.all(['neiva-residential.png','neiva-upper.png'].map(n=>loader.loadAsync('/facades/'+n)));
@@ -84,7 +109,7 @@ function buildingFaces(building,roads){
 /** Near the entrance, add depth to the street frontage using shared material/cell batches. */
 function frontageDetails(building,faces,batches,mats,shade,seed,style,baseHeight,geometricUpper){
   const p=building.points[0];
-  const add=(geometry,material,color=shade)=>batches.add(tint(geometry,color),material,...p);
+  const add=(geometry,material,color=shade)=>batches.add(tint(geometry,color),material,...p,'detail');
   for(const face of faces){
     const {a,length,tangent:t,outward:n}=face;
     const turn=-Math.atan2(t[1],t[0]);
@@ -200,6 +225,23 @@ export function buildBuildings(data,batches,pbr,facades){
     const b=data.buildings[i];if(b.points.length<3||b.model||b.id==='way/313286677')continue;
     const seed=stableSeed(b.id),p=b.points[0],near=b.points.some(p=>Math.hypot(p[0]-spawn[0],p[1]-spawn[1])<250);
     const style=Math.floor(random(seed+4)*3),shade=new T.Color().setHSL(.095+(random(seed)-.5)*.09,.025+random(seed+1)*.11,.73+random(seed+2)*.24);
+    if(b.structure?.kind==='open-canopy') {
+      // OSM building=roof identifies an open cover, not a walled room.
+      // Support locations and heights are explicitly marked estimated in data.
+      const thickness=Math.min(b.height,Math.max(.08,b.structure.roofThickness??.28));
+      const bottom=b.height-thickness;
+      batches.add(tint(surface(b.points,b.height,b.holes),shade),roof,...p);
+      batches.add(tint(surface(b.points,bottom,b.holes),shade),roof,...p);
+      batches.add(tint(walls(b,0,{bottom,top:b.height,photographic:false}),shade),plaster,...p);
+      for(const column of b.structure.columns||[]) {
+        const height=Math.min(bottom,column.height??bottom),radius=column.radius??.22;
+        if(height<=0||radius<=0)continue;
+        const geometry=new T.CylinderGeometry(radius,radius,height,12).toNonIndexed();
+        geometry.translate(column.x,height/2,column.z);
+        batches.add(tint(geometry,shade),plaster,column.x,column.z);
+      }
+      continue;
+    }
     const baseHeight=Math.min(b.height,3.1+random(seed+7)*.35);
     const faces=near?buildingFaces(b,localRoads):[];
     const geometricUpper=faces.length>0&&b.height>12&&style!==0;
@@ -215,8 +257,8 @@ export function buildBuildings(data,batches,pbr,facades){
       floor:b.height>9?b.height/Math.max(1,Math.round(b.height/3.15)):3.2}),shade),b.height>9?facades.upper:facades.residential,...p);
     const g=b.height<10&&b.points.length<18?pitchedRoof(b):surface(b.points,b.height+.08,b.holes);
     batches.add(tint(g,new T.Color().setHSL(.07+random(i)*.05,.04+random(i+4)*.08,.7+random(i+5)*.29)),b.height<10?roof:flatRoof,...p);
-    const cornice=perimeterBand(b,b.height,.16,.25);if(cornice)batches.add(tint(cornice,shade),trim,...p);
-    if(b.height>10){const ledge=perimeterBand(b,3.18,.12,.19);if(ledge)batches.add(tint(ledge,shade),trim,...p);}
+    const cornice=perimeterBand(b,b.height,.16,.25);if(cornice)batches.add(tint(cornice,shade),trim,...p,'detail');
+    if(b.height>10){const ledge=perimeterBand(b,3.18,.12,.19);if(ledge)batches.add(tint(ledge,shade),trim,...p,'detail');}
   }
 }
 
@@ -230,11 +272,16 @@ export function addStreetFurniture(scene,data,pbr){
     const head=boxGeometry(.65,.1,.27);head.rotateY(-Math.atan2(nz,nx));head.translate(x-nx*1.24,6.02,z-nz*1.24);batches.add(head,lampGlass,x,z);
   }}
   const park=data.parks.find(p=>/Santander/.test(p.name||''));
-  if(park){for(let i=0;i<10;i++){const a=park.points[i%park.points.length],b=park.points[(i+1)%park.points.length],t=.2+Math.floor(i/park.points.length)*.5,x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t,angle=-Math.atan2(b[1]-a[1],b[0]-a[0]);const bench=new T.Group();bench.position.set(x,0,z);bench.rotation.y=angle;
-    for(let n=0;n<5;n++)addBox(bench,1.8,.06,.075,0,.52,-.19+n*.09,wood);
-    for(let n=0;n<4;n++)addBox(bench,1.8,.075,.05,0,.72+n*.09,-.25,wood);
-    for(const side of [-.68,.68]){addBox(bench,.06,.54,.38,side,.27,0,metal);addBox(bench,.06,.92,.055,side,.52,-.26,metal);}
-    scene.add(bench);
-  }}
-  batches.finish();
+  if(park)for(let i=0;i<10;i++){
+    const a=park.points[i%park.points.length],b=park.points[(i+1)%park.points.length],t=.2+Math.floor(i/park.points.length)*.5;
+    const x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t,angle=-Math.atan2(b[1]-a[1],b[0]-a[0]);
+    const part=(w,h,d,px,py,pz,material)=>{
+      const g=boxGeometry(w,h,d);g.translate(px,py,pz);g.rotateY(angle);g.translate(x,0,z);
+      batches.add(g,material,x,z,'detail');
+    };
+    for(let n=0;n<5;n++)part(1.8,.06,.075,0,.52,-.19+n*.09,wood);
+    for(let n=0;n<4;n++)part(1.8,.075,.05,0,.72+n*.09,-.25,wood);
+    for(const side of [-.68,.68]){part(.06,.54,.38,side,.27,0,metal);part(.06,.92,.055,side,.52,-.26,metal);}
+  }
+  return batches.finish();
 }

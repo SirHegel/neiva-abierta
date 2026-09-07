@@ -131,6 +131,28 @@ async function prepareActors() {
     mesh.castShadow = mesh.receiveShadow = true; carTemplate.add(mesh);
     geometries.forEach(geometry => geometry.dispose());
   }
+  const glassSettings = new Map();
+  carTemplate.traverse(node => {
+    if (!node.isMesh) return;
+    for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+      if (material.transmission > 0 && !glassSettings.has(material)) {
+        glassSettings.set(material, { transmission: material.transmission, opacity: material.opacity,
+          transparent: material.transparent, depthWrite: material.depthWrite });
+      }
+    }
+  });
+  function setQuality(quality) {
+    for (const [material, original] of glassSettings) {
+      // Thin tinted panes retain their actual geometry, PBR highlights and view
+      // of the interior in Auto. High restores the costlier refracted scene pass.
+      const high = quality === 2;
+      material.transmission = high ? original.transmission : 0;
+      material.opacity = high ? original.opacity : .24;
+      material.transparent = high ? original.transparent : true;
+      material.depthWrite = high ? original.depthWrite : false;
+      material.needsUpdate = true;
+    }
+  }
 
   function makeCharacter() {
     const actor = new T.Group();
@@ -198,7 +220,7 @@ async function prepareActors() {
     return actor;
   }
 
-  return { makeCharacter, makeCar, updateCharacter, updateCar };
+  return { makeCharacter, makeCar, updateCharacter, updateCar, setQuality };
 }
 
 /** Loads the real assets once. A failed load rejects; there is no primitive fallback. */

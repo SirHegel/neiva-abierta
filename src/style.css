@@ -51,3 +51,15 @@ body.mouse-locked #aim-dot{display:block}
   .bottom-tools{left:50%;transform:translateX(-50%);bottom:45px}.interact{bottom:110px;font-size:10px;max-width:46vw}
   #joystick{bottom:48px;width:92px;height:92px}.touch-right{bottom:51px}.touch-tip{display:none}.toast{top:70px;max-width:48vw}
 }
+
+/* The destination stays readable above touch controls and outside the aiming area. */
+.route-guide{position:fixed;top:112px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:13px;padding:11px 16px;text-align:left;max-width:350px;min-height:54px}
+#route-arrow{display:block;font-size:29px;color:var(--accent);width:23px;text-align:center;line-height:1;flex-shrink:0}
+.route-guide strong,.route-guide small{display:block}.route-guide strong{font-size:12px;font-weight:500}.route-guide small{font-size:10px;color:var(--accent);margin-top:5px}
+.destination-row{display:grid;grid-template-columns:minmax(0,1fr) 76px;gap:8px;border-bottom:1px solid #d2e6c51c}
+.destinations .destination-row button{border:0}.destinations .destination-travel{font-size:11px;color:var(--accent);justify-content:end}.destinations .destination-guide{line-height:1.5}
+.observation-focus{border-left:2px solid var(--accent);padding:10px 15px;background:#d5fa7710}
+#building-id{overflow-wrap:anywhere;color:#b8cbb5}.building-measures>div{grid-template-columns:145px minmax(0,1fr)}
+@media(pointer:coarse){.route-guide{top:190px;left:12px;transform:none;max-width:calc(100vw - 24px);padding:9px 12px;min-height:48px;background:#112623cf}.route-guide strong{font-size:11px}.route-guide small{font-size:10px}.bottom-tools{max-width:calc(100vw - 24px)}}
+@media(max-width:600px){.building-measures>div{grid-template-columns:105px minmax(0,1fr);font-size:11px}.route-guide{max-width:calc(100vw - 24px)}.route-guide strong{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media(pointer:coarse) and (max-height:520px){.route-guide{top:64px;left:50%;transform:translateX(-50%);max-width:35vw;min-height:42px;padding:7px 10px}.route-guide strong{font-size:10px}.route-guide small{font-size:9px}}

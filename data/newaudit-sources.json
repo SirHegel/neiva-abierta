@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-07",
+  "scope": "Public primary-source research for Neiva, Colombia. No API account created, paid service activated, browser panorama extraction or bulk municipal download.",
+  "conclusion": "No downloadable, openly licensed, textured 3D survey covering Neiva was confirmed. Official 2D cartographic products and cadastral footprint services were found; they do not supply a complete, current, dimensionally verified city model.",
+  "sources": [
+    {
+      "id": "neiva-current-cadastral-portal",
+      "publisher": "Alcaldía de Neiva, Dirección de Gestión Catastral",
+      "discoveryUrl": "https://alcaldianeiva.gov.co/NuestraAlcaldia/Dependencias/Paginas/Direccion-de-Gestion-Catastral.aspx",
+      "url": "http://179.1.129.45:3080/",
+      "status": "Public viewer and bounded file requests returned HTTP 200/206",
+      "format": "qgis2web/OpenLayers, 2D GeoJSON JavaScript, WGS84",
+      "layers": [
+        {"name": "U_LC_CONSTRUCCION", "url": "http://179.1.129.45:3080/layers/U_LC_CONSTRUCCION.js", "sizeBytes": 70358688, "httpLastModified": "2023-07-29T17:31:04Z"},
+        {"name": "U_LC_UNIDADCONSTRUCCION", "url": "http://179.1.129.45:3080/layers/U_LC_UNIDADCONSTRUCCION.js", "sizeBytes": 11797792, "httpLastModified": "2023-07-29T17:31:05Z"}
+      ],
+      "observedPropertyNames": ["NPN", "AREA_CONST"],
+      "observedHeightOrFloorFields": [],
+      "coordinateDimension": 2,
+      "coverage": "Municipal urban construction layers are present. Complete feature count and surveyed extent were not downloaded or independently verified.",
+      "license": "No dataset-specific redistribution license located in the inspected configuration or official landing page.",
+      "downloads": "First 524288 bytes of each layer inspected with HTTP Range; no complete layer downloaded. No cadastral identifier values, owner data or raw municipal geometry copied into the repository.",
+      "dateCaveat": "HTTP Last-Modified is file publication metadata, not an exact field survey date.",
+      "imageryCaveat": "Viewer configuration exposes Google Satellite as a background, not a municipally licensed downloadable orthophoto or a 3D mesh. No Google tiles were downloaded.",
+      "integration": "Not imported; requires explicit dataset license and field/accuracy metadata before replacement of OSM/ML. Even with access this is planar geometry, not measured building height."
+    },
+    {
+      "id": "igac-neiva-2021-orthophoto",
+      "publisher": "IGAC product registry",
+      "url": "https://mapas2.igac.gov.co/server/rest/services/carto/productoscartograficosvigentes/MapServer/0",
+      "queryUrl": "https://mapas2.igac.gov.co/server/rest/services/carto/productoscartograficosvigentes/MapServer/0/query?f=pjson&objectIds=7098&returnGeometry=true&outSR=4326&outFields=*",
+      "recordId": 7098,
+      "municipalityCode": "41001",
+      "product": "Orto10_41001000_20210513",
+      "type": "Ortoimagen",
+      "sourceDate": "2021-05-13",
+      "pixelResolutionMetres": 0.1,
+      "referenceScale": 1000,
+      "coverageAreaKm2": 60.5376086435,
+      "indexBoundsLonLat": [-75.3095189, 2.8808950, -75.2098423, 2.9934355],
+      "publicDownloadUrlField": "blank",
+      "status": "Official metadata and coverage polygon accessible; image download/service not confirmed.",
+      "license": "IGAC-authored open data uses CC-BY-4.0 under Resolution 616/2020. Ownership and licensing of this registered orthophoto must be confirmed; registration alone does not establish IGAC copyright or a download right.",
+      "dimensionalLimit": "10cm pixel spacing is not a certified 10cm positional accuracy. Orthophoto is 2D; no facade geometry, floor count, textured mesh or building elevation was supplied.",
+      "integration": "Metadata reference only; no imagery acquired or shipped."
+    },
+    {
+      "id": "igac-national-urban-constructions",
+      "publisher": "IGAC",
+      "url": "https://mapas.igac.gov.co/server/rest/services/Dato_Fundamental_Catastro/MapServer/2",
+      "format": "ArcGIS MapServer polygon feature layer U_CONSTRUCCION",
+      "crs": "MAGNA-SIRGAS EPSG:4686, geographic coordinates",
+      "usefulFieldsObserved": ["FID", "TIPO_CONST", "NUMERO_PIS", "NUMERO_SOT", "NUMERO_MEZ", "NUMERO_SEM"],
+      "heightFieldObserved": false,
+      "status": "Layer schema accessible. Neiva bbox count and a request limited to five central geometries timed out at 35/45 seconds; municipality code query returned non-JSON. No Neiva feature successfully retrieved.",
+      "coverage": "National service extent includes Colombia; that does not prove Neiva records are present/current.",
+      "sourceDate": null,
+      "license": "IGAC open-data framework CC-BY-4.0, Resolution 616/2020; layer copyrightText is empty and per-record provenance not retrieved.",
+      "integration": "Not imported. Floor designation, if retrieved, would still not be a metric exterior building height. Only whitelisted geometric/structural attributes were requested."
+    },
+    {
+      "id": "igac-licensing",
+      "publisher": "IGAC",
+      "url": "https://redgeodesica.igac.gov.co/documentos/resolucion_616_de_2020.pdf",
+      "landingPage": "https://www.igac.gov.co/transparencia-y-acceso-a-la-informacion-publica/normograma/resolucion-616-de-2020",
+      "license": "CC-BY-4.0 for the specified IGAC open data, not a blanket license over all third-party/municipal imagery."
+    },
+    {
+      "id": "neiva-old-cadastral-links",
+      "publisher": "Alcaldía de Neiva",
+      "url": "https://www.alcaldianeiva.gov.co/NuestraAlcaldia/Dependencias/Informes%20y%20Resultados%20Sec%20Paz/Informe%20de%20rendicion%20de%20cuentas%20del%20Decreto%200496-21%20vigencia%202024.pdf",
+      "reportYear": 2024,
+      "publishedGeoportal": "http://177.74.204.196:3080/",
+      "publishedCadastreApp": "http://177.74.204.196:3050/",
+      "status": "Both documented old links returned no route to host in this session. Superseded for this research by the currently linked 179.1.129.45:3080 portal; not evidence that municipal cadastral data do not exist."
+    },
+    {
+      "id": "arcgis-scene-search",
+      "publisher": "Esri ArcGIS public item catalog",
+      "url": "https://www.arcgis.com/sharing/rest/search?f=json&q=Neiva%20AND%20(type%3A%22Scene%20Service%22%20OR%20type%3A%22Web%20Scene%22)&num=100",
+      "resultCount": 0,
+      "status": "No public item matched this exact city/type search. This does not rule out differently titled, unindexed, private or institutional scene services.",
+      "downloaded3DAssets": 0
+    },
+    {
+      "id": "google-official-3d-coverage",
+      "publisher": "Google Maps Platform",
+      "url": "https://developers.google.com/maps/coverage",
+      "productUrl": "https://developers.google.com/maps/documentation/javascript/3d/coverage",
+      "status": "Current country table lists Colombia with one 2D tile marker, without the paired 3D marker shown for countries such as Chile/Canada, and with Maps JavaScript 3D unavailable. No current official evidence of Neiva photorealistic 3D coverage was found.",
+      "license": "Google Maps Platform agreement, not open-data redistribution.",
+      "policyUrl": "https://developers.google.com/maps/documentation/tile/policies",
+      "integration": "Official API visualization requires configured credentials/account and service terms; imagery presence or Street View coverage does not supply an exportable city mesh. No API key or paid service activated."
+    },
+    {
+      "id": "cesium-osm-buildings",
+      "publisher": "Cesium",
+      "url": "https://cesium.com/platform/cesium-ion/content/cesium-osm-buildings/",
+      "coverage": "Global OSM-derived 3D building layer, updated quarterly according to the product page.",
+      "license": "Underlying OSM ODbL plus Cesium ion service terms for hosted access.",
+      "heightPolicy": "Official cesium#estimatedHeight falls back to levels times 3 metres, assuming at least one level. This does not replace missing real Neiva dimensions.",
+      "integration": "Not fetched. OSM-derived extrusions are not new Neiva photogrammetry or a survey of every building."
+    },
+    {
+      "id": "mapillary",
+      "publisher": "Mapillary",
+      "url": "https://www.mapillary.com/developer/api-documentation/",
+      "licenseUrl": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data",
+      "license": "Images shared under CC-BY-SA with image/author attribution; terms must be checked for each intended use and derivative.",
+      "coverage": "No authenticated Neiva imagery inventory or capture-date coverage was retrieved in this task.",
+      "integration": "Potential street-level reference source through official viewer/API; needs an application token for programmatic access. Image availability is not a certified city-wide metric 3D model. No token obtained, no panorama downloaded."
+    }
+  ]
+}

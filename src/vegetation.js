@@ -62,7 +62,7 @@ function palmFrond() {
  */
 export function addVegetation(scene, locations, pbr) {
   const group = new T.Group(); group.name = 'Neiva photographic vegetation';
-  const cells = new Map(), mature = [];
+  const cells = new Map(), mature = [], renderCells = [];
   locations.forEach((p, i) => { if (Number.isFinite(p[2]) && p[2] >= 1.35) mature.push(i); });
   const palms = new Set();
   for (let i = 0; i < Math.min(6, mature.length); i++) palms.add(mature[Math.floor(i * mature.length / Math.min(6, mature.length))]);
@@ -79,6 +79,8 @@ export function addVegetation(scene, locations, pbr) {
   const branchGeometry = taperedTube([[0, 0, 0], [.1, .32, .06], [.15, .69, .03], [0, 1, 0]], 3, .125, .013, 8);
   const palmGeometry = taperedTube([[0, 0, 0], [.11, .3, .01], [.35, .7, -.05], [.51, 1, -.11]], 18, .18, .10, 14);
   const cardGeometry = leafCard(), frondGeometry = palmFrond();
+  const distantTrunkGeometry = taperedTube([[0,0,0],[.08,.27,-.02],[-.06,.62,.06],[.16,1,.03]],4,.24,.075,7);
+  const distantPalmGeometry = taperedTube([[0,0,0],[.11,.3,.01],[.35,.7,-.05],[.51,1,-.11]],7,.18,.10,8);
   const dummy = new T.Object3D(), up = new T.Vector3(0, 1, 0);
   const origin = new T.Vector3(), end = new T.Vector3(), direction = new T.Vector3(), color = new T.Color();
   const stats = { trees: locations.length, broadleaf: locations.length - palms.size, palms: palms.size, cells: cells.size, meshes: 0, leafCards: 0, branches: 0 };
@@ -162,9 +164,43 @@ export function addVegetation(scene, locations, pbr) {
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       mesh.computeBoundingBox(); mesh.computeBoundingSphere(); group.add(mesh); stats.meshes++;
     }
+    let distantLeaves;
+    if(leaves) {
+      distantLeaves=make(cardGeometry,foliage,Math.ceil(leaves.count/3),`Distant photographic canopy ${key}`);
+      const matrix=new T.Matrix4(),scale=new T.Vector3(1.3,1.3,1.3);
+      for(let source=0,target=0;source<leaves.count;source+=3,target++) {
+        leaves.getMatrixAt(source,matrix);matrix.scale(scale);distantLeaves.setMatrixAt(target,matrix);
+        leaves.getColorAt(source,color);distantLeaves.setColorAt(target,color);
+      }
+      distantLeaves.computeBoundingBox();distantLeaves.computeBoundingSphere();distantLeaves.visible=false;group.add(distantLeaves);
+    }
+    const box=new T.Box3();for(const mesh of [trunks,branches,leaves,palmTrunks,fronds])if(mesh)box.union(mesh.boundingBox);
+    renderCells.push({box,trunks,branches,leaves,palmTrunks,fronds,distantLeaves});
     stats.leafCards += leafCount; stats.branches += branchCount;
   }
   group.userData.vegetation = stats;
   group.userData.reference = 'Original tree silhouettes from public Neiva park references; photographic Jacaranda CC0 atlas, approximate species and branch arrangement.';
   scene.add(group);
+  let previous;
+  stats.visibleCells=cells.size;stats.distantCells=0;
+  return {group,stats,setAlphaToCoverage(enabled) {
+    // Alpha-to-coverage needs a multisampled destination. The composer's
+    // single-sample color target must use ordinary alpha-test cutouts instead.
+    if(foliage.alphaToCoverage!==enabled){foliage.alphaToCoverage=enabled;foliage.needsUpdate=true;}
+  },updateVisibility(position,{baseDistance=450,detailDistance=125,shadowDistance=105}={}) {
+    if(previous&&Math.hypot(position.x-previous.x,position.z-previous.z)<10&&previous.baseDistance===baseDistance&&previous.detailDistance===detailDistance&&previous.shadowDistance===shadowDistance)return;
+    previous={x:position.x,z:position.z,baseDistance,detailDistance,shadowDistance};stats.visibleCells=stats.distantCells=0;
+    for(const cell of renderCells) {
+      const b=cell.box,d=Math.hypot(Math.max(b.min.x-position.x,0,position.x-b.max.x),Math.max(b.min.z-position.z,0,position.z-b.max.z));
+      const visible=d<baseDistance,detailed=d<detailDistance;
+      if(visible){stats.visibleCells++;if(!detailed)stats.distantCells++;}
+      if(cell.trunks)cell.trunks.geometry=detailed?trunkGeometry:distantTrunkGeometry;
+      if(cell.palmTrunks)cell.palmTrunks.geometry=detailed?palmGeometry:distantPalmGeometry;
+      for(const mesh of [cell.trunks,cell.branches,cell.leaves,cell.palmTrunks,cell.fronds,cell.distantLeaves]) {
+        if(!mesh)continue;
+        mesh.visible=visible&&(mesh===cell.distantLeaves?!detailed:(mesh===cell.branches||mesh===cell.leaves)?detailed:true);
+        mesh.castShadow=mesh.visible&&d<shadowDistance;
+      }
+    }
+  }};
 }

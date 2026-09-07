@@ -1,0 +1,1165 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-07",
+  "baseSha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+  "origin": [
+    -75.2809,
+    2.9252
+  ],
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors · Overture Maps Foundation · Microsoft · Google Open Buildings",
+  "sources": [
+    {
+      "id": "osm-snapshot",
+      "url": "https://www.openstreetmap.org/api/0.6/map.json?bbox=-75.34,2.86,-75.22,3.015",
+      "snapshot": "neiva.osm.json.gz",
+      "fetchedAt": "2026-09-07T03:28:29.354Z",
+      "latestElementEdit": "2026-08-28T23:21:45Z",
+      "license": "ODbL-1.0"
+    },
+    {
+      "id": "overture-snapshot",
+      "url": "https://docs.overturemaps.org/guides/buildings/",
+      "snapshot": "neiva.overture.json.gz",
+      "release": "2026-08-19.0",
+      "fetchedAt": "2026-09-07T03:31:35.757Z",
+      "license": "ODbL-1.0"
+    },
+    {
+      "id": "osm-roof-definition",
+      "url": "https://wiki.openstreetmap.org/wiki/Tag:building%3Droof",
+      "type": "tag-semantics-reference",
+      "note": "At least two open sides; exact remaining walls/supports are not specified by this tag."
+    }
+  ],
+  "buildingCorrections": [
+    {
+      "id": "way/1090290365",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -547.92,
+            "z": 926.68,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -541.62,
+            "z": 926.93,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -540.88,
+            "z": 908.83,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -547.18,
+            "z": 908.58,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1092123285",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -484.65,
+            "z": 1878.31,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -478.77,
+            "z": 1911.55,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -472.75,
+            "z": 1910.48,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -478.73,
+            "z": 1877.25,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1092670160",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -1546.99,
+            "z": -1746.92,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -1546.32,
+            "z": -1740.01,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -1528.32,
+            "z": -1741.88,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1092670161",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -1545.58,
+            "z": -1763.63,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -1544.82,
+            "z": -1756.32,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -1503.21,
+            "z": -1760.97,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -1503.98,
+            "z": -1768.28,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1093326417",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 74.6,
+            "z": 2862.59,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 81.09,
+            "z": 2857.4,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 57.2,
+            "z": 2827.41,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 50.62,
+            "z": 2832.61,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1093329626",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 1410.74,
+            "z": -654.73,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 1409.47,
+            "z": -653.54,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 1408.76,
+            "z": -651.24,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 1421.59,
+            "z": -646.87,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 1423.45,
+            "z": -650.08,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 1423.36,
+            "z": -652.27,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1093915802",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -3301.42,
+            "z": -4379.52,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3324.18,
+            "z": -4382.69,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3325.05,
+            "z": -4380.85,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3324.09,
+            "z": -4377.48,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3301.45,
+            "z": -4374.19,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3300.74,
+            "z": -4376.14,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1093916649",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -272.88,
+            "z": 669.83,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -288.77,
+            "z": 639.98,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1165393100",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -3923.46,
+            "z": 69.32,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3920.28,
+            "z": 63.36,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3954.34,
+            "z": 44.88,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3957.62,
+            "z": 50.84,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1170404584",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 4288.93,
+            "z": -1088.64,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 4288.77,
+            "z": -1081.34,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 4317.57,
+            "z": -1080.87,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 4317.74,
+            "z": -1088.17,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1188190097",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 3503.83,
+            "z": -627.02,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3501.39,
+            "z": -626.42,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1188190102",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 3473.44,
+            "z": -739.79,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3470.59,
+            "z": -738.95,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3474.57,
+            "z": -724.31,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3477.5,
+            "z": -725.15,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1194038200",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 3101.01,
+            "z": -1389.51,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3086.3,
+            "z": -1390.6,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3085.8,
+            "z": -1383.69,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 3100.5,
+            "z": -1382.61,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1290646223",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 210.48,
+            "z": 1647.84,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 226.04,
+            "z": 1675.21,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 232.02,
+            "z": 1671.77,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 216.36,
+            "z": 1644.48,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1290646224",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 180.97,
+            "z": 1655.96,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 196.76,
+            "z": 1649.73,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 193.83,
+            "z": 1642.34,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 178.05,
+            "z": 1648.56,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1290647094",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -2366.11,
+            "z": -1722.57,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2345.67,
+            "z": -1732.89,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2348.89,
+            "z": -1739.42,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2369.42,
+            "z": -1729.11,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1290648928",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -3408.9,
+            "z": -2709.4,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3417.6,
+            "z": -2703.89,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3400.8,
+            "z": -2677.4,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -3392.1,
+            "z": -2682.9,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1423412519",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -729.13,
+            "z": -4203.28,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -729.78,
+            "z": -4197.57,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -711.07,
+            "z": -4195.51,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -710.42,
+            "z": -4201.12,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/1489942788",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof",
+        "layer": "1"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -2944.15,
+            "z": -5867.86,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2947.77,
+            "z": -5842.45,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2912.95,
+            "z": -5837.54,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -2909.33,
+            "z": -5862.95,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/737314203",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -499.51,
+            "z": 856.45,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -481.46,
+            "z": 887.91,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -493.64,
+            "z": 853.09,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/737314204",
+      "buildingKind": "roof",
+      "amenity": "fuel",
+      "sourceTags": {
+        "building": "roof",
+        "amenity": "fuel"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": -485.22,
+            "z": 849.92,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -477.77,
+            "z": 862.61,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -472.19,
+            "z": 859.36,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": -479.73,
+            "z": 846.6,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    },
+    {
+      "id": "way/949061643",
+      "buildingKind": "roof",
+      "sourceTags": {
+        "building": "roof"
+      },
+      "structure": {
+        "kind": "open-canopy",
+        "roofThickness": 0.28,
+        "supportsEstimated": true,
+        "columns": [
+          {
+            "x": 2075.92,
+            "z": -1734.61,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 2079.99,
+            "z": -1729.71,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 2084.18,
+            "z": -1733.1,
+            "radius": 0.22,
+            "height": 5.52
+          },
+          {
+            "x": 2080.11,
+            "z": -1738.08,
+            "radius": 0.22,
+            "height": 5.52
+          }
+        ]
+      },
+      "collisionMode": "columns",
+      "sourceIds": [
+        "osm-snapshot",
+        "osm-roof-definition"
+      ],
+      "reason": "OSM building=roof/carport identifies an open cover. Preserve its mapped roof footprint; remove unsupported enclosing walls. Column dimensions and positions are estimates."
+    }
+  ],
+  "geometryCorrections": [
+    {
+      "id": "overture/803e95fd-4868-4568-a335-af0c4d992ce8",
+      "points": [
+        [
+          -994.58,
+          -3935.57
+        ],
+        [
+          -998.31,
+          -3921.33
+        ],
+        [
+          -960.94,
+          -3911.52
+        ],
+        [
+          -956.91,
+          -3926.86
+        ],
+        [
+          -956.07,
+          -3926.64
+        ],
+        [
+          -949.7,
+          -3950.91
+        ],
+        [
+          -968.67,
+          -3955.89
+        ],
+        [
+          -967.82,
+          -3959.14
+        ],
+        [
+          -967.04,
+          -3959.95
+        ],
+        [
+          -962.63,
+          -3955.6
+        ],
+        [
+          -950.22,
+          -3952.34
+        ],
+        [
+          -947.32,
+          -3963.41
+        ],
+        [
+          -961.24,
+          -3967.06
+        ],
+        [
+          -965.76,
+          -3962.45
+        ],
+        [
+          -965.73,
+          -3962.57
+        ],
+        [
+          -970.46,
+          -3963.82
+        ],
+        [
+          -969.31,
+          -3968.25
+        ],
+        [
+          -966.46,
+          -3971.14
+        ],
+        [
+          -962.16,
+          -3987.54
+        ],
+        [
+          -970.06,
+          -3995.32
+        ],
+        [
+          -978.06,
+          -3997.42
+        ],
+        [
+          -983.97,
+          -3974.86
+        ],
+        [
+          -985.38,
+          -3973.43
+        ],
+        [
+          -986.42,
+          -3969.49
+        ],
+        [
+          -980.7,
+          -3967.99
+        ],
+        [
+          -982.32,
+          -3961.85
+        ],
+        [
+          -984.83,
+          -3962.52
+        ],
+        [
+          -990.92,
+          -3939.3
+        ]
+      ],
+      "precisionMetres": 0.01,
+      "sourceIds": [
+        "overture-snapshot"
+      ],
+      "sourceGeometryValid": true,
+      "reason": "The original ring is valid. Rounding local coordinates to 0.1m creates a self-intersection. Reproject this ring at 0.01m formatting precision; this does not improve survey accuracy."
+    }
+  ],
+  "counts": {
+    "openRoofs": 22,
+    "fuelCanopies": 14,
+    "estimatedColumns": 86,
+    "geometryRepairs": 1
+  },
+  "heightPolicy": "Base height is retained and remains estimated; no new measured height or floor count is asserted.",
+  "datePolicy": "Download, edit and release dates are not survey or imagery capture dates."
+}

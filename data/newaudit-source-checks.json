@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "checks": [
+    {
+      "id": "municipal-constructions",
+      "url": "http://179.1.129.45:3080/layers/U_LC_CONSTRUCCION.js",
+      "checkedAt": "2026-09-07T06:34:56.692249+00:00",
+      "httpStatus": 206,
+      "headers": {
+        "Content-Type": "application/javascript",
+        "Content-Length": "524288",
+        "Content-Range": "bytes 0-524287/70358688",
+        "Last-Modified": "Sat, 29 Jul 2023 17:31:04 GMT",
+        "ETag": "\"64c54cd8-43196a0\""
+      },
+      "propertyNames": [
+        "NPN",
+        "AREA_CONST"
+      ],
+      "geometryType": "MultiPolygon",
+      "coordinateDimension": 2,
+      "heightOrFloorPropertyObserved": false,
+      "dataCopied": "Property names and HTTP metadata only; no cadastral ID values or geometries."
+    },
+    {
+      "id": "municipal-construction-units",
+      "url": "http://179.1.129.45:3080/layers/U_LC_UNIDADCONSTRUCCION.js",
+      "checkedAt": "2026-09-07T06:34:56.693059+00:00",
+      "httpStatus": 206,
+      "headers": {
+        "Content-Type": "application/javascript",
+        "Content-Length": "524288",
+        "Content-Range": "bytes 0-524287/11797792",
+        "Last-Modified": "Sat, 29 Jul 2023 17:31:05 GMT",
+        "ETag": "\"64c54cd9-b40520\""
+      },
+      "propertyNames": [
+        "NPN",
+        "AREA_CONST"
+      ],
+      "geometryType": "MultiPolygon",
+      "coordinateDimension": 2,
+      "heightOrFloorPropertyObserved": false,
+      "dataCopied": "Property names and HTTP metadata only; no cadastral ID values or geometries."
+    },
+    {
+      "id": "igac-urban-constructions-schema",
+      "url": "https://mapas.igac.gov.co/server/rest/services/Dato_Fundamental_Catastro/MapServer/2?f=pjson",
+      "checkedAt": "2026-09-07T06:34:56.693504+00:00",
+      "httpStatus": 200,
+      "headers": {
+        "Content-Type": "text/plain;charset=UTF-8",
+        "Content-Length": "6034",
+        "ETag": "\"f344e84b\""
+      },
+      "name": "U_CONSTRUCCION",
+      "geometryType": "esriGeometryPolygon",
+      "fields": [
+        {
+          "name": "FID",
+          "type": "esriFieldTypeOID"
+        },
+        {
+          "name": "Shape",
+          "type": "esriFieldTypeGeometry"
+        },
+        {
+          "name": "CODIGO",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "TERRENO_CO",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "TIPO_CONST",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "TIPO_DOMIN",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "NUMERO_PIS",
+          "type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "NUMERO_SOT",
+          "type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "NUMERO_MEZ",
+          "type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "NUMERO_SEM",
+          "type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "ETIQUETA",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "IDENTIFICA",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "CODIGO_EDI",
+          "type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "CODIGO_ANT",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "GLOBALID_S",
+          "type": "esriFieldTypeString"
+        },
+        {
+          "name": "SHAPE_Leng",
+          "type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "SHAPE_Area",
+          "type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "GlobalID",
+          "type": "esriFieldTypeString"
+        }
+      ],
+      "sourceSpatialReference": {
+        "wkid": 4686,
+        "latestWkid": 4686,
+        "xyTolerance": 8.983152841195215e-09,
+        "zTolerance": 0.001,
+        "mTolerance": 0.001,
+        "falseX": -400,
+        "falseY": -400,
+        "xyUnits": 11258999068426.238,
+        "falseZ": -100000,
+        "zUnits": 10000,
+        "falseM": -100000,
+        "mUnits": 10000
+      },
+      "copyrightText": "",
+      "hasZ": null
+    },
+    {
+      "id": "igac-neiva-ortho-index",
+      "url": "https://mapas2.igac.gov.co/server/rest/services/carto/productoscartograficosvigentes/MapServer/0/query?f=json&objectIds=7098&returnGeometry=false&outFields=FID%2CDIVIPOLA%2CProducto%2CFech_Insu%2CA%C3%B1o_Insum%2CTipo_PC%2CEscala_Ref%2CR_Espacial%2CArea%2Curl_Public",
+      "checkedAt": "2026-09-07T06:34:56.693784+00:00",
+      "httpStatus": 200,
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Content-Length": "1316",
+        "ETag": "\"1766795511\""
+      },
+      "products": [
+        {
+          "FID": 7098,
+          "DIVIPOLA": "41001",
+          "Producto": "Orto10_41001000_20210513",
+          "Fech_Insu": 1620864000000,
+          "Año_Insum": "2021",
+          "Tipo_PC": "Ortoimagen",
+          "Escala_Ref": 1000,
+          "R_Espacial": 0.1,
+          "Area": 6053.76086435,
+          "url_Public": " "
+        }
+      ]
+    },
+    {
+      "id": "arcgis-public-neiva-3d-search",
+      "url": "https://www.arcgis.com/sharing/rest/search?f=json&q=Neiva+AND+%28type%3A%22Scene+Service%22+OR+type%3A%22Web+Scene%22%29&num=100",
+      "checkedAt": "2026-09-07T06:34:56.694169+00:00",
+      "httpStatus": 200,
+      "headers": {
+        "Content-Type": "application/json;charset=utf-8"
+      },
+      "total": 0,
+      "items": []
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { loadMaterials } from './materials.js';
 import { loadActors } from './actors.js';
 import { createWeather } from './weather.js';
+import { adaptiveResolution, freezeStaticScene } from './render-performance.js';
 import { CityBatches,surface,roadSurface,loadFacades,buildBuildings,addBox,addStreetFurniture,random } from './architecture.js';
 import { addVegetation } from './vegetation.js';
 import { buildCathedral } from './landmarks.js';
@@ -58,10 +59,10 @@ export async function createWorld(canvas,data,onProgress){
   for(const r of data.roads){const p=r.points[0];if(!p)continue;const pedestrian=/footway|path|steps|cycleway|pedestrian/.test(r.type),paved=r.material==='pavement';batches.add(roadSurface(r.points,r.width+2.5,-.012),pbr.pavement,...p);batches.add(roadSurface(r.points,r.width,.005),pedestrian||paved?pbr.pavement:pbr.asphalt,...p);if(!pedestrian&&!paved&&r.width>=7)batches.add(roadSurface(r.points,.105,.011),paint,...p);}
   for(const w of data.water){if(w.points.length<2)continue;batches.add(w.polygon?surface(w.points,.012,w.holes):roadSurface(w.points,w.width||10,.012),water,...w.points[0]);}
   for(const p of data.parks){if(p.points.length>2)batches.add(surface(p.points,-.025,p.holes),pbr.ground,...p.points[0]);}
-  onProgress('Construyendo fachadas, aleros y cubiertas');const facades=await loadFacades(pbr);await new Promise(r=>setTimeout(r,0));buildBuildings(data,batches,pbr,facades);batches.finish();
+  onProgress('Construyendo fachadas, aleros y cubiertas');const facades=await loadFacades(pbr);await new Promise(r=>setTimeout(r,0));buildBuildings(data,batches,pbr,facades);const urbanBatches=batches.finish();
   const cathedral=data.buildings.find(b=>b.id==='way/313286677');if(cathedral)buildCathedral(scene,cathedral,pbr);
   const civic=buildCivicScene(scene,data,pbr),civicPark=data.parks.find(p=>p.id==='way/39365299');
-  onProgress('Añadiendo follaje y mobiliario de calle');const trees=[...treePositions(data).filter(([x,z])=>!civicPark||!pointInPolygon(x,z,civicPark.points)),...civic.treeLocations];pbr.foliage.color.set('#bdcda7');pbr.foliage.envMapIntensity=.35;pbr.foliage.normalScale.set(.25,.25);pbr.foliage.alphaTest=.55;addVegetation(scene,trees,pbr);addStreetFurniture(scene,data,pbr);
+  onProgress('Añadiendo follaje y mobiliario de calle');const trees=[...treePositions(data).filter(([x,z])=>!civicPark||!pointInPolygon(x,z,civicPark.points)),...civic.treeLocations];pbr.foliage.color.set('#bdcda7');pbr.foliage.envMapIntensity=.35;pbr.foliage.normalScale.set(.25,.25);pbr.foliage.alphaTest=.55;const vegetation=addVegetation(scene,trees,pbr),furniture=addStreetFurniture(scene,data,pbr);
   const asPoint=v=>Array.isArray(v)?{x:v[0],z:v[1]}:v;
   const spawn=asPoint(data.meta.spawn),studio=asPoint(data.meta.studio),carPosition=asPoint(data.meta.car),road=nearestRoad(spawn.x,spawn.z,data.roads,true);
   makeStudio(scene,studio,pbr);const beacon=new T.Mesh(new T.TorusGeometry(.52,.027,6,40),new T.MeshBasicMaterial({color:'#d5fa77'}));beacon.position.set(studio.x,4.3,studio.z);beacon.rotation.x=Math.PI/2;scene.add(beacon);
@@ -73,11 +74,56 @@ export async function createWorld(canvas,data,onProgress){
   onProgress('Preparando cielo cubierto y superficies después de lluvia');await weather.setWeather('after-rain');
   const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));const ao=new GTAOPass(scene,camera,innerWidth,innerHeight,undefined,{radius:2.5,distanceExponent:1,thickness:.7,samples:8});ao.blendIntensity=.65;composer.addPass(ao);composer.addPass(new OutputPass());
   const aoRender=ao.render.bind(ao);ao.render=(...args)=>{const hidden=[];scene.traverse(o=>{if(o.isMesh&&o.visible&&!Array.isArray(o.material)&&(o.material?.alphaTest>0||o.material?.transmission>.1||o.isReflector)){hidden.push(o);o.visible=false;}});const shadowAutoUpdate=renderer.shadowMap.autoUpdate;renderer.shadowMap.autoUpdate=false;try{aoRender(...args);}finally{renderer.shadowMap.autoUpdate=shadowAutoUpdate;hidden.forEach(o=>o.visible=true);}};
-  let quality=0;const resize=()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setPixelRatio(renderer.getPixelRatio());composer.setSize(innerWidth,innerHeight);};
-  const setQuality=q=>{quality=q;renderer.setPixelRatio(q===1?1:Math.min(devicePixelRatio,q===2?1.7:mobile?1.15:1.4));renderer.shadowMap.enabled=true;ao.enabled=q===2||(q===0&&automaticAO);renderer.transmissionResolutionScale=q===2?1:.5;weather.setQuality(q);resize();};setQuality(0);
-  renderer.info.autoReset=false;const render=dt=>{renderer.info.reset();civic.update(dt);actors.updateCar(playerCar);for(const car of traffic)if(car.mesh.visible)actors.updateCar(car.mesh);weather.update(dt,sun.target.position);if(!ao.enabled)renderer.render(scene,camera);else composer.render(dt);};
+  let quality=0;
+  const resize=()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setPixelRatio(renderer.getPixelRatio());composer.setSize(innerWidth,innerHeight);};
+  const resolution=adaptiveResolution({mobile,setPixelRatio:ratio=>{renderer.setPixelRatio(ratio);resize();}});
+  let visibility={baseDistance:480,detailDistance:125,shadowDistance:105};
+  const updateVisibility=()=>{
+    urbanBatches.updateVisibility(sun.target.position,visibility);
+    furniture.updateVisibility(sun.target.position,{...visibility,baseDistance:Math.min(visibility.baseDistance,320)});
+    vegetation.updateVisibility(sun.target.position,visibility);
+  };
+  const setQuality=q=>{
+    quality=q;resolution.setQuality(q);actors.setQuality(q);
+    renderer.shadowMap.enabled=true;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
+    ao.enabled=q===2;renderer.transmissionResolutionScale=q===2?1:.5;
+    vegetation.setAlphaToCoverage(q!==2&&context.getContextAttributes().antialias);
+    const distance=q===2?(mobile?550:700):q===1?(mobile?280:380):(mobile?350:480);
+    visibility={baseDistance:distance,detailDistance:q===2?210:q===1?95:125,shadowDistance:q===2?140:105};
+    camera.far=distance;camera.updateProjectionMatrix();weather.setQuality(q);weather.setViewDistance(distance);
+    updateVisibility();resize();
+  };
+  const staticTransformCount=freezeStaticScene(scene,[avatar,playerCar,...traffic.map(car=>car.mesh),sun,sun.target,beacon,weather.reflections.mesh]);
+  let lastShadowTime=0;
+  const lastShadowTarget=new T.Vector3(Infinity,Infinity,Infinity),lastShadowDirection=new T.Vector3(),direction=new T.Vector3();
+  const lastAvatarPosition=avatar.position.clone(),lastCarPosition=playerCar.position.clone();
+  const updateShadows=time=>{
+    // A stable snapped light anchor keeps cached scenery shadows from sliding
+    // while only the camera moves. Moving actors refresh at up to 30 Hz.
+    const tx=Math.round(sun.target.position.x/2)*2,tz=Math.round(sun.target.position.z/2)*2;
+    sun.position.x+=tx-sun.target.position.x;sun.position.z+=tz-sun.target.position.z;
+    sun.target.position.x=tx;sun.target.position.z=tz;
+    direction.subVectors(sun.position,sun.target.position).normalize();
+    const moved=lastShadowTarget.distanceToSquared(sun.target.position)>.001||lastShadowDirection.distanceToSquared(direction)>.000001;
+    const movingActor=(avatar.visible&&lastAvatarPosition.distanceToSquared(avatar.position)>.000001)||lastCarPosition.distanceToSquared(playerCar.position)>.000001;
+    lastAvatarPosition.copy(avatar.position);lastCarPosition.copy(playerCar.position);
+    const nearTraffic=traffic.some(car=>car.mesh.visible&&car.mesh.position.distanceToSquared(sun.target.position)<90*90);
+    if(moved||time-lastShadowTime>((movingActor||nearTraffic)?33:180)) {
+      renderer.shadowMap.needsUpdate=true;lastShadowTime=time;lastShadowTarget.copy(sun.target.position);lastShadowDirection.copy(direction);
+    }
+    sun.target.updateMatrixWorld();
+  };
+  setQuality(0);
+  const performanceMetrics={resolution:resolution.stats,urban:urbanBatches.stats,furniture:furniture.stats,vegetation:vegetation.stats,reflections:weather.reflections.stats,staticTransforms:staticTransformCount};
+  renderer.info.autoReset=false;
+  const render=(dt,{active=true}={})=>{
+    const time=performance.now();if(active)resolution.sample(time);else resolution.pause();renderer.info.reset();
+    civic.update(dt);actors.updateCar(playerCar);for(const car of traffic)if(car.mesh.visible)actors.updateCar(car.mesh);
+    updateVisibility();weather.update(dt,sun.target.position);updateShadows(time);
+    if(!ao.enabled)renderer.render(scene,camera);else composer.render(dt);
+  };
   const setTime=weather.setTime,setWeather=weather.setWeather;
-  return {scene,camera,renderer,composer,sun,hemi,avatar,playerCar,traffic,spawn,studio,beacon,road,mobile,treeCount:trees.length,pbr,render,resize,setQuality,setTime,setWeather,weather,civic,updateCharacter:actors.updateCharacter,visualVersion:'0.3-wet-city'};
+  return {scene,camera,renderer,composer,sun,hemi,avatar,playerCar,traffic,spawn,studio,beacon,road,mobile,treeCount:trees.length,pbr,render,resize,setQuality,setTime,setWeather,weather,civic,performanceMetrics,updateCharacter:actors.updateCharacter,visualVersion:'0.4-adaptive-city'};
 }
 export function updateTraffic(traffic,dt,player){
   for(const car of traffic){const a=car.points[car.segment],b=car.points[car.segment+1];if(!b)continue;const l=Math.hypot(b[0]-a[0],b[1]-a[1]),distance=Math.hypot(car.mesh.position.x-player.x,car.mesh.position.z-player.z);car.mesh.visible=distance<250;if(distance>8)car.t+=dt*car.speed/Math.max(l,1);if(car.t>=1){car.t=0;car.segment++;if(car.segment>=car.points.length-1){car.points=[...car.points].reverse();car.segment=0;}}const pa=car.points[car.segment],pb=car.points[car.segment+1],len=Math.hypot(pb[0]-pa[0],pb[1]-pa[1])||1;car.mesh.position.set(pa[0]+(pb[0]-pa[0])*car.t+(pb[1]-pa[1])/len*1.5,0,pa[1]+(pb[1]-pa[1])*car.t-(pb[0]-pa[0])/len*1.5);car.mesh.rotation.y=Math.atan2(pb[0]-pa[0],pb[1]-pa[1]);}

@@ -72,6 +72,24 @@ export function createRoadReflections(scene, camera, roads, { renderer, mobile=f
   }
   let anchor=new T.Vector2(Infinity,Infinity), elapsed=1, enabled=false, quality=0, pending=true;
   const captureCamera=camera.clone();
+  const lastCameraPosition=new T.Vector3(Infinity,Infinity,Infinity),lastCameraRotation=new T.Quaternion();
+  const visibilityCamera=new T.Frustum(),visibilityMatrix=new T.Matrix4();
+  const staticEntries=[],dynamicActors=[],point=new T.Vector2();
+  const stats={captures:0,skippedOffscreen:0,lastCaptureCPU:0,resolution:384,visibleMeshes:0};
+  scene.updateMatrixWorld(true);
+  // Cache bounds once; selecting the reflected area does not recompute city
+  // bounds. Static meshes retain their original geometry and materials.
+  function collect(node,inActor=false) {
+    const actor=node.userData.kind==='detailed-car'||node.userData.kind==='detailed-character';
+    if(actor)dynamicActors.push(node);
+    if(node.isMesh&&!node.isReflector) {
+      const panes=(Array.isArray(node.material)?node.material:[node.material]).some(m=>m.transmission>0);
+      if(!inActor&&!actor)staticEntries.push({node,box:new T.Box3().setFromObject(node),panes});
+      else if(panes)staticEntries.push({node,box:null,panes:true});
+    }
+    for(const child of node.children)collect(child,inActor||actor);
+  }
+  collect(scene);
   const originalRender=puddles.onBeforeRender.bind(puddles);
   // Reflector already preserves the shadow map and renders only once. The smaller
   // far plane also culls distant detailed objects from the extra pass.
@@ -80,24 +98,31 @@ export function createRoadReflections(scene, camera, roads, { renderer, mobile=f
   puddles.onBeforeRender=()=>{};
   function capture() {
     if(!pending)return;
-    pending=false;elapsed=0;
     camera.updateMatrixWorld(true);
-    captureCamera.copy(camera);captureCamera.far=mobile?75:115;captureCamera.updateProjectionMatrix();
+    visibilityMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);
+    visibilityCamera.setFromProjectionMatrix(visibilityMatrix);
+    if(!puddles.geometry.boundingSphere||!visibilityCamera.intersectsObject(puddles)) {
+      stats.skippedOffscreen++;return;
+    }
+    const started=performance.now();pending=false;elapsed=0;
+    const range=quality===2?115:mobile?65:90;
+    captureCamera.copy(camera);captureCamera.far=range;captureCamera.updateProjectionMatrix();
     captureCamera.matrixWorld.copy(camera.matrixWorld);captureCamera.matrixWorldInverse.copy(camera.matrixWorldInverse);
     const hidden=[];
-    scene.updateMatrixWorld(true);
-    scene.traverse(node=>{
-      if(node.userData.kind==='detailed-car'&&node.visible&&node.position.distanceTo(camera.position)>65) {
-        hidden.push(node);node.visible=false;
-      }
-      // The reflected glass does not need another scene refraction pass. Keep
-      // every visible car/body/tree surface, and omit only transmissive panes.
-      if(node.isMesh&&node.visible&&!Array.isArray(node.material)&&node.material.transmission>0) {
-        hidden.push(node);node.visible=false;
-      }
-    });
+    scene.updateMatrixWorld();
+    let visible=0;
+    for(const {node,box,panes} of staticEntries) {
+      if(!node.visible)continue;
+      const dx=box?Math.max(box.min.x-camera.position.x,0,camera.position.x-box.max.x):0;
+      const dz=box?Math.max(box.min.z-camera.position.z,0,camera.position.z-box.max.z):0;
+      if(panes||dx*dx+dz*dz>range*range){hidden.push(node);node.visible=false;}else visible++;
+    }
+    for(const node of dynamicActors)if(node.visible&&node.position.distanceToSquared(camera.position)>65*65){hidden.push(node);node.visible=false;}
+    const shadowPending=renderer.shadowMap.needsUpdate;renderer.shadowMap.needsUpdate=false;
     try { originalRender(renderer,scene,captureCamera); }
-    finally { hidden.forEach(node=>node.visible=true); }
+    finally { renderer.shadowMap.needsUpdate=shadowPending;hidden.forEach(node=>node.visible=true); }
+    lastCameraPosition.copy(camera.position);lastCameraRotation.copy(camera.quaternion);
+    stats.captures++;stats.lastCaptureCPU=performance.now()-started;stats.visibleMeshes=visible;
   }
   function rebuild(x,z) {
     const positions=[],uv=[],segments=new Set(), radius=48;
@@ -122,12 +147,15 @@ export function createRoadReflections(scene, camera, roads, { renderer, mobile=f
   }
   return {
     mesh:puddles,
+    stats,
     setEnabled(value){enabled=value;puddles.visible=value;pending=true;},
-    setQuality(value){quality=value;const size=mobile?256:value===2?512:384;puddles.getRenderTarget().setSize(size,size);pending=true;},
+    setQuality(value){quality=value;const size=value===2?512:mobile?192:256;puddles.getRenderTarget().setSize(size,size);stats.resolution=size;pending=true;},
     update(dt,position){
       if(!enabled)return;
-      if(anchor.distanceTo(new T.Vector2(position.x,position.z))>12)rebuild(position.x,position.z);
-      elapsed+=dt;if(elapsed>=(quality===2 && powerful ? .1 : .2))pending=true;
+      point.set(position.x,position.z);if(anchor.distanceTo(point)>12)rebuild(position.x,position.z);
+      const moving=lastCameraPosition.distanceToSquared(camera.position)>.0025||1-Math.abs(lastCameraRotation.dot(camera.quaternion))>.00001;
+      const interval=quality===2 && powerful ? .1 : moving ? .25 : 1;
+      elapsed+=dt;if(elapsed>=interval)pending=true;
       puddles.material.uniforms.cameraPositionWorld.value.copy(camera.position);
       puddles.material.uniforms.focus.value.set(position.x,position.z);
       capture();

@@ -42,23 +42,42 @@ function watch(page){
 async function load(page){
   const start=Date.now();
   await page.goto(origin,{waitUntil:'domcontentloaded'});
+  if(process.env.GAME_TEST_TRACE==='1')await page.evaluate(()=>{window.qaInput=[];for(const name of ['pointerdown','pointerup','pointercancel','gotpointercapture','lostpointercapture','touchstart','touchend','click'])document.addEventListener(name,e=>{window.qaInput.push({type:name,target:e.target.id,pointerId:e.pointerId,x:e.clientX,y:e.clientY,touches:e.touches?.length});if(window.qaInput.length>60)window.qaInput.shift();},true);});
   await page.waitForFunction(()=>window.neiva?.snapshot().ready,{timeout:120000});
-  assert.equal((await state(page)).visualVersion,'0.3-wet-city');
+  assert.equal((await state(page)).visualVersion,'0.4-adaptive-city');
   return Date.now()-start;
 }
 async function waitDialog(page,id){
   await page.waitForSelector(`#${id}[open]`);
   await page.waitForFunction(()=>!document.pointerLockElement&&!neiva.snapshot().active);
 }
-async function destination(page,needle,touch=false){
-  const index=await page.$$eval('#destinations button',(buttons,term)=>buttons.findIndex(button=>button.textContent.includes(term)),needle);
+async function destination(page,needle,touch=false,action='travel'){
+  const index=await page.$$eval(`#destinations .destination-${action}`,(buttons,term)=>buttons.findIndex(button=>button.getAttribute('aria-label').includes(term)),needle);
   assert.ok(index>=0,`falta destino ${needle}`);
-  const selector=`#destinations button:nth-child(${index+1})`;
+  const selector=`#destinations .destination-row:nth-child(${index+1}) .destination-${action}`;
   // Let the native unlock event settle while the user reads a destination.
   if(!touch)await sleep(700);
   await page[touch?'tap':'click'](selector);
   await page.waitForFunction(()=>neiva.snapshot().active&&!document.querySelector('dialog[open]'));
   if(!touch)await locked(page);
+}
+async function observe(page,id,name,touch=false){
+  await page.waitForFunction(term=>neiva.snapshot().near==='place'&&document.getElementById('interact-text').textContent.includes(term),{timeout:15000},name);
+  assert.equal((await state(page)).progress.includes(id),false,'acercarse o viajar no registra una observación');
+  if(touch)await page.tap('#touch-interact');else await page.keyboard.press('KeyE');
+  await waitDialog(page,'observation-dialog');
+  assert.ok((await page.$eval('#observation-title',e=>e.textContent)).includes(name));
+  assert.ok((await state(page)).progress.includes(id),'E registra la observación');
+  assert.ok(await page.$$eval('#observation-sources > *',sources=>sources.length>0),'la ficha identifica su fuente');
+  await page[touch?'tap':'click']('#observation-dialog .close');
+  await page.waitForFunction(()=>neiva.snapshot().active);
+  if(!touch)await locked(page);
+}
+async function aimAt(page,point,pitch=0){
+  await page.mouse.move(720,480);
+  const s=await state(page),desired=Math.atan2(s.player.x-point.x,s.player.z-point.z),delta=Math.atan2(Math.sin(s.controls.yaw-desired),Math.cos(s.controls.yaw-desired));
+  await page.mouse.move(720+delta/(.0026*s.controls.sensitivity),480+(pitch-s.controls.pitch)/(.0022*s.controls.sensitivity),{steps:6});
+  await sleep(350);
 }
 async function walkToCar(page){
   await page.keyboard.down('KeyW');
@@ -67,12 +86,18 @@ async function walkToCar(page){
   finally{await page.keyboard.up('KeyW');}
 }
 try{
+  if(process.env.GAME_TEST_DEVICE!=='mobile'){
   const page=await browser.newPage(),audit=watch(page);
   await page.setViewport({width:1440,height:960});
   const readyMs=await load(page);console.log('Ciudad lista',readyMs,'ms');
   await page.screenshot({path:resolve(artifactDir,'desktop-intro.png')});
   await page.click('#play');await locked(page);
   const initial=await state(page);
+  assert.deepEqual(initial.progress,[],'la versión nueva no concede visitas al entrar');
+  await sleep(500);const warmMap=(await state(page)).performance.map;
+  await sleep(700);const cachedMap=(await state(page)).performance.map;
+  assert.equal(cachedMap.tileBuilds,warmMap.tileBuilds);assert.equal(cachedMap.featuresPainted,warmMap.featuresPainted);
+  assert.ok(cachedMap.tileHits>warmMap.tileHits);assert.ok(cachedMap.tileBytes<=4*1024*1024);
   await page.mouse.move(750,470);await page.mouse.move(830,490,{steps:3});
   await page.waitForFunction(yaw=>Math.abs(neiva.snapshot().controls.yaw-yaw)>.03,{},initial.controls.yaw);
   assert.equal((await state(page)).controls.locked,true);
@@ -106,15 +131,25 @@ try{
   const afterDrive=await state(page);
   assert.equal(await page.evaluate(p=>neiva.isBlocked(p.x,p.z,.4),afterDrive.player),false);
   console.log('Caminar, correr, acelerar, frenar y bajar comprobados');
+  await page.keyboard.down('KeyW');await page.waitForFunction(()=>neiva.snapshot().controls.movementSpeed>1);
   await page.keyboard.press('Escape');
   await page.waitForFunction(()=>!neiva.snapshot().active&&!document.pointerLockElement);
+  const paused=await state(page);await sleep(700);
+  assert.deepEqual((await state(page)).player,paused.player,'pausar detiene la simulación aunque W estuviera pulsada');
+  await page.keyboard.up('KeyW');
   await page.keyboard.press('Escape');assert.equal((await state(page)).active,false);
   // Allow the browser's native Escape release to settle before the new gesture.
   await sleep(1300);await page.click('#play');await locked(page);
   await page.keyboard.press('KeyM');await waitDialog(page,'map-dialog');
-  const destinationNames=await page.$$eval('#destinations button',buttons=>buttons.map(button=>button.textContent));
+  const destinationNames=await page.$$eval('#destinations .destination-guide',buttons=>buttons.map(button=>button.textContent));
   for(const name of ['Palacio de Justicia','Catedral','Hotel Neiva Plaza','Templo Colonial'])assert.ok(destinationNames.some(label=>label.includes(name)),`destino urbano visible: ${name}`);
   await page.screenshot({path:resolve(artifactDir,'desktop-map.png')});
+  const beforeGuide=await state(page);await destination(page,'Palacio de Justicia',false,'guide');
+  assert.deepEqual((await state(page)).player,beforeGuide.player,'elegir una guía no teletransporta');
+  assert.equal((await state(page)).route,'way/312876443');
+  assert.match(await page.$eval('#route-guide',e=>e.getAttribute('aria-label')),/Distancia en línea recta/);
+  await page.keyboard.press('KeyM');await waitDialog(page,'map-dialog');
+  assert.equal((await state(page)).performance.map.atlasBuilds,beforeGuide.performance.map.atlasBuilds,'reabrir el atlas conserva su geometría');
   await page.click('#map-dialog .close');await locked(page);
   await page.keyboard.press('KeyC');await waitDialog(page,'controls-dialog');
   await page.focus('#sensitivity');await page.keyboard.press('End');
@@ -135,13 +170,23 @@ try{
   await sleep(1500);
   if(!(await state(page)).active){await page.click('#play');await locked(page);}
   await page.keyboard.press('KeyM');await waitDialog(page,'map-dialog');await destination(page,'Palacio de Justicia');
-  await page.waitForFunction(()=>neiva.snapshot().progress.includes('way/312876443'),{timeout:15000});
+  await observe(page,'way/312876443','Palacio de Justicia');
   const courtAccess=await state(page);assert.equal(await page.evaluate(p=>neiva.isBlocked(p.x,p.z,.4),courtAccess.player),false);
+  await page.screenshot({path:resolve(artifactDir,'desktop-courthouse.png')});
+  await aimAt(page,{x:-963.6,z:-6.1});await page.keyboard.press('KeyI');await waitDialog(page,'building-dialog');
+  assert.equal(await page.$eval('#building-id',e=>e.textContent),'way/312876443');
+  assert.equal(await page.$$eval('#building-measures > div',rows=>rows.length),4);
+  const streetView=new URL(await page.$eval('#building-streetview',e=>e.href));
+  assert.equal(streetView.origin,'https://www.google.com');assert.equal(streetView.searchParams.get('api'),'1');assert.equal(streetView.searchParams.get('map_action'),'pano');
+  assert.ok(streetView.searchParams.get('viewpoint').split(',').every(value=>Number.isFinite(Number(value))));
+  await page.screenshot({path:resolve(artifactDir,'desktop-inspector.png')});
+  await page.click('#building-dialog .close');await locked(page);
   await page.keyboard.press('KeyM');await waitDialog(page,'map-dialog');await destination(page,'Templo Colonial');
-  await page.waitForFunction(()=>neiva.snapshot().progress.includes('way/313286683'),{timeout:15000});
+  await observe(page,'way/313286683','Templo Colonial');
   const colonialAccess=await state(page);assert.equal(await page.evaluate(p=>neiva.isBlocked(p.x,p.z,.4),colonialAccess.player),false);
+  await page.screenshot({path:resolve(artifactDir,'desktop-colonial.png')});
   await page.keyboard.press('KeyM');await waitDialog(page,'map-dialog');await destination(page,'Santander');
-  await page.waitForFunction(()=>neiva.snapshot().progress.length>=2,{timeout:15000});
+  await observe(page,'way/39365299','Santander');
   const downloads=resolve(artifactDir,`browser-downloads-${Date.now()}`);await mkdir(downloads);
   const desktopCdp=await page.createCDPSession();await desktopCdp.send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
   await page.keyboard.press('KeyP');
@@ -150,40 +195,61 @@ try{
   await page.screenshot({path:resolve(artifactDir,'desktop-play.png')});
   const graphics=await page.evaluate(()=>{const gl=document.querySelector('#world').getContext('webgl2'),ext=gl.getExtension('WEBGL_debug_renderer_info');return ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);});
   assert.deepEqual(audit.errors,[]);assert.deepEqual(audit.http,[]);
-  results.push({device:'desktop',width:1440,readyMs,graphics,pointerLock:true,nativeLockFallbacks,mouseWithoutButton:true,walkingSpeed:walking.controls.movementSpeed,runningSpeed:running.controls.movementSpeed,acceleratingSpeed:accelerating.carSpeed,brakedSpeed:braked.carSpeed,vehicleInteraction:true,studioContact:true,pause:true,mapTravel:true,courthouseDestination:true,colonialDestination:true,sensitivity:true,weatherToggle:true,fullscreen:true,photo:true,...audit,snapshot:await state(page)});
+  results.push({device:'desktop',width:1440,readyMs,graphics,pointerLock:true,nativeLockFallbacks,mouseWithoutButton:true,walkingSpeed:walking.controls.movementSpeed,runningSpeed:running.controls.movementSpeed,acceleratingSpeed:accelerating.carSpeed,brakedSpeed:braked.carSpeed,vehicleInteraction:true,studioContact:true,pause:true,pausedMotion:false,mapTravel:true,routeWithoutTeleport:true,explicitObservations:true,courthouseDestination:true,colonialDestination:true,buildingInspector:true,streetViewUrl:streetView.href,mapCache:true,sensitivity:true,weatherToggle:true,fullscreen:true,photo:true,...audit,snapshot:await state(page)});
+  await writeFile(resolve(artifactDir,'browser-results.json'),JSON.stringify(results,null,2));
   await page.close();
-  for(const width of [320,390]){
-    const p=await browser.newPage(),mobileAudit=watch(p);
+  }
+  for(const width of process.env.GAME_TEST_DEVICE==='desktop'?[]:[320,390]){
+    const mobileContext=await browser.createBrowserContext(),p=await mobileContext.newPage(),mobileAudit=watch(p);
     await p.setViewport({width,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true});
     const mobileReadyMs=await load(p);await p.screenshot({path:resolve(artifactDir,`mobile-${width}-intro.png`)});
     await p.tap('#play');await p.waitForFunction(()=>neiva.snapshot().active&&neiva.snapshot().near==='studio');
     assert.equal((await state(p)).controls.locked,false);
+    assert.deepEqual((await state(p)).progress,[]);
     await p.tap('#touch-interact');await waitDialog(p,'studio-dialog');
     assert.match(await p.$eval('#studio-dialog .primary',a=>a.href),/^mailto:alvarezruizj289@gmail.com/);
     await p.tap('#studio-dialog .close');await p.waitForFunction(()=>neiva.snapshot().active);
     await p.tap('#run-button');assert.equal(await p.$eval('#run-button',e=>e.getAttribute('aria-pressed')),'true');
     const before=await state(p),bounds=await p.$eval('#joystick',el=>{const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};});
-    const cdp=await p.createCDPSession(),touch={x:bounds.x,y:bounds.y-38,id:1,radiusX:6,radiusY:6,force:1};
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch]});
+    // Keep every touch in Puppeteer's own session and identifier sequence.
+    const joystickTouch=await p.touchscreen.touchStart(bounds.x,bounds.y-38);
     await p.waitForFunction(([x,z])=>neiva.snapshot().controls.movementSpeed>5.1&&Math.hypot(neiva.snapshot().player.x-x,neiva.snapshot().player.z-z)>.4,{timeout:45000},[before.player.x,before.player.z]);
-    const mobileRun=await state(p);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const mobileRun=await state(p);await joystickTouch.end();
     await p.waitForFunction(()=>neiva.snapshot().controls.movementSpeed<.05);
     await p.tap('#run-button');assert.equal(await p.$eval('#run-button',e=>e.getAttribute('aria-pressed')),'false');
-    const beforeLook=(await state(p)).controls.yaw,cameraTouch={x:Math.round(width*.52),y:405,id:2,radiusX:6,radiusY:6,force:1};
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[cameraTouch]});
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...cameraTouch,x:cameraTouch.x+48}]});
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const beforeLook=(await state(p)).controls.yaw,cameraX=Math.round(width*.52);
+    const cameraTouch=await p.touchscreen.touchStart(cameraX,405);
+    // Model a continuous human swipe. An instantaneous 48px jump makes the
+    // next Chrome emulated touch emit down/up without a native click.
+    for(let step=1;step<=6;step++){await cameraTouch.move(cameraX+step*8,405);await sleep(35);}
+    await cameraTouch.end();
     assert.ok(Math.abs((await state(p)).controls.yaw-beforeLook)>.1,'deslizar la ciudad mueve la cámara');
     await p.screenshot({path:resolve(artifactDir,`mobile-${width}-play.png`)});
     const layout=await p.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth,buttons:['joystick','run-button','touch-interact','map-button','controls-button','menu-button'].map(id=>{const r=document.getElementById(id).getBoundingClientRect();return {id,width:r.width,height:r.height,inside:r.x>=0&&r.right<=innerWidth&&r.y>=0&&r.bottom<=innerHeight};})}));
     assert.equal(layout.document,layout.viewport);for(const b of layout.buttons)assert.ok(b.width>=44&&b.height>=44&&b.inside,JSON.stringify(b));
+    await p.tap('#map-button');await waitDialog(p,'map-dialog');
+    const beforeMobileGuide=await state(p);await destination(p,'Santander',true,'guide');
+    assert.deepEqual((await state(p)).player,beforeMobileGuide.player);
     await p.tap('#map-button');await waitDialog(p,'map-dialog');await destination(p,'Santander',true);
+    await observe(p,'way/39365299','Santander',true);
     await p.tap('#map-button');await waitDialog(p,'map-dialog');await destination(p,'estudio',true);
     await p.waitForFunction(()=>neiva.snapshot().near==='studio',{timeout:15000});
     await p.tap('#touch-interact');await waitDialog(p,'studio-dialog');await p.tap('#studio-dialog .close');await p.waitForFunction(()=>neiva.snapshot().active);
     assert.deepEqual(mobileAudit.errors,[]);assert.deepEqual(mobileAudit.http,[]);
-    results.push({device:'mobile',width,readyMs:mobileReadyMs,joystick:true,runningSpeed:mobileRun.controls.movementSpeed,sprintToggle:true,touchLook:true,studioContact:true,mapTravel:true,layout,...mobileAudit});
-    await p.close();console.log('Móvil comprobado',width);
+    results.push({device:'mobile',width,readyMs:mobileReadyMs,joystick:true,runningSpeed:mobileRun.controls.movementSpeed,sprintToggle:true,touchLook:true,studioContact:true,mapTravel:true,routeWithoutTeleport:true,explicitObservation:true,layout,...mobileAudit,snapshot:await state(p)});
+    await writeFile(resolve(artifactDir,'browser-results.json'),JSON.stringify(results,null,2));
+    await mobileContext.close();console.log('Móvil comprobado',width);
   }
   await writeFile(resolve(artifactDir,'browser-results.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
+}catch(error){
+  const diagnostics=[];
+  for(const [index,page] of (await browser.pages()).entries()){
+    if(page.isClosed()||page.url()==='about:blank')continue;
+    try{
+      diagnostics.push(await page.evaluate(()=>({url:location.href,snapshot:window.neiva?.snapshot(),inputs:window.qaInput,dialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),focus:document.activeElement?.id,mapButton:(()=>{const r=document.getElementById('map-button').getBoundingClientRect();return {rect:{x:r.x,y:r.y,width:r.width,height:r.height},hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.outerHTML};})()})));
+      await page.screenshot({path:resolve(artifactDir,`failure-${index}.png`)});
+    }catch(diagnosticError){diagnostics.push({error:diagnosticError.message});}
+  }
+  await writeFile(resolve(artifactDir,'failure.json'),JSON.stringify({error:error.stack,diagnostics,results},null,2));
+  throw error;
 }finally{await browser.close();}

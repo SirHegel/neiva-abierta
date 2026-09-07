@@ -1,0 +1,712 @@
+[
+  {
+    "device": "desktop",
+    "width": 1440,
+    "readyMs": 10865,
+    "graphics": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)",
+    "pointerLock": true,
+    "nativeLockFallbacks": [
+      {
+        "error": {
+          "name": "NotAllowedError",
+          "message": "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time."
+        },
+        "hoverLook": true,
+        "automaticRecapture": false
+      },
+      {
+        "error": {
+          "name": "NotAllowedError",
+          "message": "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time."
+        },
+        "hoverLook": true,
+        "automaticRecapture": false
+      }
+    ],
+    "mouseWithoutButton": true,
+    "walkingSpeed": 2.0000000000000413,
+    "runningSpeed": 5.3999999999978945,
+    "acceleratingSpeed": 4.999999999999998,
+    "brakedSpeed": 0.16666666666666494,
+    "vehicleInteraction": true,
+    "studioContact": true,
+    "pause": true,
+    "pausedMotion": false,
+    "mapTravel": true,
+    "routeWithoutTeleport": true,
+    "explicitObservations": true,
+    "courthouseDestination": true,
+    "colonialDestination": true,
+    "buildingInspector": true,
+    "streetViewUrl": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=2.9253627%2C-75.2892703&heading=250.0",
+    "mapCache": true,
+    "sensitivity": true,
+    "weatherToggle": true,
+    "fullscreen": true,
+    "photo": true,
+    "errors": [],
+    "http": [],
+    "snapshot": {
+      "ready": true,
+      "visualVersion": "0.4-adaptive-city",
+      "active": true,
+      "driving": false,
+      "carSpeed": 0,
+      "weather": "after-rain",
+      "player": {
+        "x": -872.3490874433076,
+        "z": -151.1378957516268
+      },
+      "car": {
+        "x": -878.0175599770207,
+        "z": -199.91971870170232,
+        "angle": 1.9519287472311497
+      },
+      "studio": {
+        "x": -890.4,
+        "z": -88.1
+      },
+      "spawn": {
+        "x": -886.7,
+        "z": -78.8
+      },
+      "near": "place",
+      "progress": [
+        "studio",
+        "way/312876443",
+        "way/313286683",
+        "way/39365299"
+      ],
+      "route": "way/39365299",
+      "observationStops": [
+        {
+          "id": "studio",
+          "point": null
+        },
+        {
+          "id": "way/39365299",
+          "point": {
+            "x": -872.3490874433076,
+            "z": -151.13789575162681
+          }
+        },
+        {
+          "id": "way/312711191",
+          "point": {
+            "x": -1363.24829607915,
+            "z": 102.02227922315859
+          }
+        },
+        {
+          "id": "way/39644846",
+          "point": {
+            "x": -388.3016339896236,
+            "z": -156.58454019812433
+          }
+        },
+        {
+          "id": "way/312876443",
+          "point": {
+            "x": -930.5598540145985,
+            "z": -18.11459854014599
+          }
+        },
+        {
+          "id": "way/313286677",
+          "point": {
+            "x": -931.5145985401459,
+            "z": -20.740145985401462
+          }
+        },
+        {
+          "id": "way/313286678",
+          "point": {
+            "x": -832.2060366650941,
+            "z": -52.759706274853386
+          }
+        },
+        {
+          "id": "way/313286683",
+          "point": {
+            "x": -855.262023244683,
+            "z": -209.03846284020574
+          }
+        }
+      ],
+      "performance": {
+        "frames": 459,
+        "fps": 36.39582923470384,
+        "frameMs": 16.700000000004366,
+        "updateMs": 5.5,
+        "simulation": {
+          "step": 0.016666666666666666,
+          "ticks": 50,
+          "elapsedSeconds": 0.8499666666666695,
+          "simulatedSeconds": 0.8333333333333334,
+          "pendingSeconds": 0.01663333333333637,
+          "alpha": 0.9980000000001822,
+          "steps": 1
+        },
+        "renderer": {
+          "resolution": {
+            "quality": 1,
+            "pixelRatio": 0.8,
+            "measuredFrameMs": 27.05373134363943,
+            "sampleCount": 67,
+            "adjustments": 4
+          },
+          "urban": {
+            "total": 11567,
+            "visible": 163,
+            "shadowCasters": 84
+          },
+          "furniture": {
+            "total": 1632,
+            "visible": 22,
+            "shadowCasters": 16
+          },
+          "vegetation": {
+            "trees": 3813,
+            "broadleaf": 3807,
+            "palms": 6,
+            "cells": 407,
+            "meshes": 1229,
+            "leafCards": 353241,
+            "branches": 27153,
+            "visibleCells": 6,
+            "distantCells": 2
+          },
+          "reflections": {
+            "captures": 37,
+            "skippedOffscreen": 111,
+            "lastCaptureCPU": 4.5,
+            "resolution": 256,
+            "visibleMeshes": 117
+          },
+          "staticTransforms": 14918
+        },
+        "map": {
+          "draws": 97,
+          "tileBuilds": 9,
+          "tileHits": 561,
+          "tileEvictions": 0,
+          "atlasBuilds": 1,
+          "atlasHits": 4,
+          "atlasEvictions": 0,
+          "featuresPainted": 45232,
+          "lastFeatureCount": 0,
+          "tileCount": 9,
+          "tileBytes": 2359296,
+          "tileLimit": 16,
+          "atlasCount": 1,
+          "atlasBytes": 2880000,
+          "disposed": false
+        },
+        "roadIndex": {
+          "queries": 114,
+          "visitedSegments": 9,
+          "visitedCells": 1,
+          "totalSegments": 35370
+        }
+      },
+      "controls": {
+        "mode": "locked",
+        "locked": true,
+        "pending": false,
+        "error": null,
+        "sensitivity": 1,
+        "sprinting": false,
+        "movementSpeed": 0,
+        "yaw": 3.550786810378277,
+        "pitch": 0.12,
+        "camera": [
+          -874.7102222968515,
+          2.012647374257921,
+          -155.20003436762954
+        ]
+      },
+      "roads": 6141,
+      "buildings": 35873,
+      "triangles": 183721,
+      "calls": 167
+    }
+  },
+  {
+    "device": "mobile",
+    "width": 320,
+    "readyMs": 7072,
+    "joystick": true,
+    "runningSpeed": 5.299999999997733,
+    "sprintToggle": true,
+    "touchLook": true,
+    "studioContact": true,
+    "mapTravel": true,
+    "routeWithoutTeleport": true,
+    "explicitObservation": true,
+    "layout": {
+      "viewport": 320,
+      "document": 320,
+      "buttons": [
+        {
+          "id": "joystick",
+          "width": 106,
+          "height": 106,
+          "inside": true
+        },
+        {
+          "id": "run-button",
+          "width": 58,
+          "height": 58,
+          "inside": true
+        },
+        {
+          "id": "touch-interact",
+          "width": 64,
+          "height": 64,
+          "inside": true
+        },
+        {
+          "id": "map-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        },
+        {
+          "id": "controls-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        },
+        {
+          "id": "menu-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        }
+      ]
+    },
+    "errors": [],
+    "http": [],
+    "snapshot": {
+      "ready": true,
+      "visualVersion": "0.4-adaptive-city",
+      "active": true,
+      "driving": false,
+      "carSpeed": 0,
+      "weather": "after-rain",
+      "player": {
+        "x": -886.7016157510744,
+        "z": -78.79625212379652
+      },
+      "car": {
+        "x": -877.4089089778139,
+        "z": -82.49024736285658,
+        "angle": 1.949159084468252
+      },
+      "studio": {
+        "x": -890.4,
+        "z": -88.1
+      },
+      "spawn": {
+        "x": -886.7,
+        "z": -78.8
+      },
+      "near": "studio",
+      "progress": [
+        "studio",
+        "way/39365299"
+      ],
+      "route": "studio",
+      "observationStops": [
+        {
+          "id": "studio",
+          "point": null
+        },
+        {
+          "id": "way/39365299",
+          "point": {
+            "x": -872.3490874433076,
+            "z": -151.13789575162681
+          }
+        },
+        {
+          "id": "way/312711191",
+          "point": {
+            "x": -1363.24829607915,
+            "z": 102.02227922315859
+          }
+        },
+        {
+          "id": "way/39644846",
+          "point": {
+            "x": -388.3016339896236,
+            "z": -156.58454019812433
+          }
+        },
+        {
+          "id": "way/312876443",
+          "point": {
+            "x": -930.5598540145985,
+            "z": -18.11459854014599
+          }
+        },
+        {
+          "id": "way/313286677",
+          "point": {
+            "x": -931.5145985401459,
+            "z": -20.740145985401462
+          }
+        },
+        {
+          "id": "way/313286678",
+          "point": {
+            "x": -832.2060366650941,
+            "z": -52.759706274853386
+          }
+        },
+        {
+          "id": "way/313286683",
+          "point": {
+            "x": -855.262023244683,
+            "z": -209.03846284020574
+          }
+        }
+      ],
+      "performance": {
+        "frames": 141,
+        "fps": 60.00393468424162,
+        "frameMs": 16.700000000000728,
+        "updateMs": 4.800000011920929,
+        "simulation": {
+          "step": 0.016666666666666666,
+          "ticks": 11,
+          "elapsedSeconds": 0.1833666666666674,
+          "simulatedSeconds": 0.18333333333333332,
+          "pendingSeconds": 0.00003333333333407559,
+          "alpha": 0.0020000000000445356,
+          "steps": 1
+        },
+        "renderer": {
+          "resolution": {
+            "quality": 0,
+            "pixelRatio": 1,
+            "measuredFrameMs": 0,
+            "sampleCount": 0,
+            "adjustments": 0
+          },
+          "urban": {
+            "total": 11567,
+            "visible": 179,
+            "shadowCasters": 96
+          },
+          "furniture": {
+            "total": 1632,
+            "visible": 24,
+            "shadowCasters": 10
+          },
+          "vegetation": {
+            "trees": 3813,
+            "broadleaf": 3807,
+            "palms": 6,
+            "cells": 407,
+            "meshes": 1229,
+            "leafCards": 353241,
+            "branches": 27153,
+            "visibleCells": 7,
+            "distantCells": 2
+          },
+          "reflections": {
+            "captures": 9,
+            "skippedOffscreen": 18,
+            "lastCaptureCPU": 5.199999988079071,
+            "resolution": 192,
+            "visibleMeshes": 152
+          },
+          "staticTransforms": 14918
+        },
+        "map": {
+          "draws": 17,
+          "tileBuilds": 6,
+          "tileHits": 78,
+          "tileEvictions": 0,
+          "atlasBuilds": 1,
+          "atlasHits": 2,
+          "atlasEvictions": 0,
+          "featuresPainted": 44061,
+          "lastFeatureCount": 0,
+          "tileCount": 6,
+          "tileBytes": 1572864,
+          "tileLimit": 16,
+          "atlasCount": 1,
+          "atlasBytes": 2880000,
+          "disposed": false
+        },
+        "roadIndex": {
+          "queries": 29,
+          "visitedSegments": 8,
+          "visitedCells": 1,
+          "totalSegments": 35370
+        }
+      },
+      "controls": {
+        "mode": "touch",
+        "locked": false,
+        "pending": false,
+        "error": null,
+        "sensitivity": 1,
+        "sprinting": false,
+        "movementSpeed": 0,
+        "yaw": 5.090751738058045,
+        "pitch": 0.12,
+        "camera": [
+          -890.834609394353,
+          2.012647374257921,
+          -76.56146097542049
+        ]
+      },
+      "roads": 6141,
+      "buildings": 35873,
+      "triangles": 410141,
+      "calls": 180
+    }
+  },
+  {
+    "device": "mobile",
+    "width": 390,
+    "readyMs": 7004,
+    "joystick": true,
+    "runningSpeed": 5.299999999997733,
+    "sprintToggle": true,
+    "touchLook": true,
+    "studioContact": true,
+    "mapTravel": true,
+    "routeWithoutTeleport": true,
+    "explicitObservation": true,
+    "layout": {
+      "viewport": 390,
+      "document": 390,
+      "buttons": [
+        {
+          "id": "joystick",
+          "width": 106,
+          "height": 106,
+          "inside": true
+        },
+        {
+          "id": "run-button",
+          "width": 58,
+          "height": 58,
+          "inside": true
+        },
+        {
+          "id": "touch-interact",
+          "width": 64,
+          "height": 64,
+          "inside": true
+        },
+        {
+          "id": "map-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        },
+        {
+          "id": "controls-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        },
+        {
+          "id": "menu-button",
+          "width": 44,
+          "height": 44,
+          "inside": true
+        }
+      ]
+    },
+    "errors": [],
+    "http": [],
+    "snapshot": {
+      "ready": true,
+      "visualVersion": "0.4-adaptive-city",
+      "active": true,
+      "driving": false,
+      "carSpeed": 0,
+      "weather": "after-rain",
+      "player": {
+        "x": -886.7016157510744,
+        "z": -78.79625212379652
+      },
+      "car": {
+        "x": -877.4089089778139,
+        "z": -82.49024736285658,
+        "angle": 1.949159084468252
+      },
+      "studio": {
+        "x": -890.4,
+        "z": -88.1
+      },
+      "spawn": {
+        "x": -886.7,
+        "z": -78.8
+      },
+      "near": "studio",
+      "progress": [
+        "studio",
+        "way/39365299"
+      ],
+      "route": "studio",
+      "observationStops": [
+        {
+          "id": "studio",
+          "point": null
+        },
+        {
+          "id": "way/39365299",
+          "point": {
+            "x": -872.3490874433076,
+            "z": -151.13789575162681
+          }
+        },
+        {
+          "id": "way/312711191",
+          "point": {
+            "x": -1363.24829607915,
+            "z": 102.02227922315859
+          }
+        },
+        {
+          "id": "way/39644846",
+          "point": {
+            "x": -388.3016339896236,
+            "z": -156.58454019812433
+          }
+        },
+        {
+          "id": "way/312876443",
+          "point": {
+            "x": -930.5598540145985,
+            "z": -18.11459854014599
+          }
+        },
+        {
+          "id": "way/313286677",
+          "point": {
+            "x": -931.5145985401459,
+            "z": -20.740145985401462
+          }
+        },
+        {
+          "id": "way/313286678",
+          "point": {
+            "x": -832.2060366650941,
+            "z": -52.759706274853386
+          }
+        },
+        {
+          "id": "way/313286683",
+          "point": {
+            "x": -855.262023244683,
+            "z": -209.03846284020574
+          }
+        }
+      ],
+      "performance": {
+        "frames": 146,
+        "fps": 60.00393468424162,
+        "frameMs": 16.600000000000364,
+        "updateMs": 4,
+        "simulation": {
+          "step": 0.016666666666666666,
+          "ticks": 7,
+          "elapsedSeconds": 0.11666666666666667,
+          "simulatedSeconds": 0.11666666666666667,
+          "pendingSeconds": 1.0408340855860843e-17,
+          "alpha": 6.245004513516506e-16,
+          "steps": 1
+        },
+        "renderer": {
+          "resolution": {
+            "quality": 0,
+            "pixelRatio": 1,
+            "measuredFrameMs": 0,
+            "sampleCount": 0,
+            "adjustments": 0
+          },
+          "urban": {
+            "total": 11567,
+            "visible": 179,
+            "shadowCasters": 96
+          },
+          "furniture": {
+            "total": 1632,
+            "visible": 24,
+            "shadowCasters": 10
+          },
+          "vegetation": {
+            "trees": 3813,
+            "broadleaf": 3807,
+            "palms": 6,
+            "cells": 407,
+            "meshes": 1229,
+            "leafCards": 353241,
+            "branches": 27153,
+            "visibleCells": 7,
+            "distantCells": 2
+          },
+          "reflections": {
+            "captures": 11,
+            "skippedOffscreen": 19,
+            "lastCaptureCPU": 5.599999964237213,
+            "resolution": 192,
+            "visibleMeshes": 152
+          },
+          "staticTransforms": 14918
+        },
+        "map": {
+          "draws": 18,
+          "tileBuilds": 6,
+          "tileHits": 84,
+          "tileEvictions": 0,
+          "atlasBuilds": 1,
+          "atlasHits": 2,
+          "atlasEvictions": 0,
+          "featuresPainted": 44061,
+          "lastFeatureCount": 0,
+          "tileCount": 6,
+          "tileBytes": 1572864,
+          "tileLimit": 16,
+          "atlasCount": 1,
+          "atlasBytes": 2880000,
+          "disposed": false
+        },
+        "roadIndex": {
+          "queries": 30,
+          "visitedSegments": 8,
+          "visitedCells": 1,
+          "totalSegments": 35370
+        }
+      },
+      "controls": {
+        "mode": "touch",
+        "locked": false,
+        "pending": false,
+        "error": null,
+        "sensitivity": 1,
+        "sprinting": false,
+        "movementSpeed": 0,
+        "yaw": 5.090751738058045,
+        "pitch": 0.12,
+        "camera": [
+          -890.834609394353,
+          2.012647374257921,
+          -76.56146097542049
+        ]
+      },
+      "roads": 6141,
+      "buildings": 35873,
+      "triangles": 401637,
+      "calls": 178
+    }
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "method": "EXT_disjoint_timer_query_webgl2 around world.render during live requestAnimationFrame loop; disjoint samples discarded; asynchronous query polling; no gl.finish",
+  "gpu": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)",
+  "viewport": [
+    1440,
+    960
+  ],
+  "weather": "after-rain",
+  "camera": "idle benchmark at spawn, facing anonymous actor and cathedral side",
+  "warmupSeconds": 6.5,
+  "measurementSeconds": 8,
+  "runOrder": [
+    "render-first",
+    "before"
+  ],
+  "results": [
+    {
+      "version": "render-first",
+      "frameCount": 142,
+      "meanRafMs": 56.33591549295775,
+      "meanFrameCPUMs": 11.052112677567441,
+      "meanGPUMs": 44.59975667605636,
+      "pixelRatio": 0.7
+    },
+    {
+      "version": "before",
+      "frameCount": 75,
+      "meanRafMs": 107.10666666666667,
+      "meanFrameCPUMs": 24.42800000111262,
+      "meanGPUMs": 91.63231465333334,
+      "pixelRatio": 1
+    }
+  ],
+  "limitations": [
+    "Aggregate diagnostic values only; raw query samples were not saved.",
+    "Different adaptive rendering resolution; not an equal-image-resolution comparison.",
+    "Shared desktop load, browser state and GPU scheduling vary; do not use as a fixed FPS guarantee."
+  ],
+  "drawingBufferExperiment": {
+    "version": "final 0.4",
+    "pixelRatio": 0.7,
+    "viewport": [
+      1440,
+      960
+    ],
+    "case": "after-rain idle",
+    "warmupSeconds": 6.5,
+    "measurementSeconds": 8,
+    "results": [
+      {
+        "preserveDrawingBuffer": true,
+        "count": 141,
+        "meanRafMs": 56.73475177304966,
+        "meanCPUMs": 10.134751768822365,
+        "meanGPUMs": 46.133004730496445
+      },
+      {
+        "preserveDrawingBuffer": false,
+        "count": 141,
+        "meanRafMs": 56.7354609929078,
+        "meanCPUMs": 11.535460994175985,
+        "meanGPUMs": 46.30593547517732
+      }
+    ],
+    "decision": "No measured improvement. Kept preserveDrawingBuffer=true in source."
+  }
+}

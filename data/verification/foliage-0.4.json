@@ -1,0 +1,51 @@
+{
+  "high-before": {
+    "camera": [
+      -924.1498106759727,
+      1.1916303073727816,
+      -134.58297725407303
+    ],
+    "dpr": 1,
+    "screenSamples": 4,
+    "composerSamples": 0,
+    "gpu": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)",
+    "foliageRoi": [
+      0,
+      50,
+      500,
+      480
+    ],
+    "nearWhitePixels": 21484,
+    "roiPixels": 215000
+  },
+  "high-a2c-disabled": {
+    "camera": [
+      -924.1498106759727,
+      1.1916303073727816,
+      -134.58297725407303
+    ],
+    "dpr": 1,
+    "screenSamples": 4,
+    "composerSamples": 0,
+    "gpu": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)",
+    "foliageRoi": [
+      0,
+      50,
+      500,
+      480
+    ],
+    "nearWhitePixels": 0,
+    "roiPixels": 215000
+  },
+  "auto-a2c-enabled": {
+    "camera": [
+      -924.1498106759727,
+      1.1916303073727816,
+      -134.58297725407303
+    ],
+    "dpr": 0.9,
+    "screenSamples": 4,
+    "composerSamples": 0,
+    "gpu": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)"
+  }
+}

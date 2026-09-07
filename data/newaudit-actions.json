@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-07T06:25:29.370195+00:00",
+  "baseSha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors · Overture Maps Foundation · Microsoft · Google Open Buildings",
+  "notApplied": true,
+  "canopies": [
+    {
+      "id": "way/737314203",
+      "x": -487.5,
+      "z": 870.5,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/737314203",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/737314204",
+      "x": -478.7,
+      "z": 854.6,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/737314204",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/949061643",
+      "x": 2080.1,
+      "z": -1733.9,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/949061643",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1090290365",
+      "x": -544.4,
+      "z": 917.8,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1090290365",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1092123285",
+      "x": -478.7,
+      "z": 1894.4,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1092123285",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1092670160",
+      "x": -1537.7,
+      "z": -1744.4,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1092670160",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1092670161",
+      "x": -1524.4,
+      "z": -1762.3,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1092670161",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1093326417",
+      "x": 65.9,
+      "z": 2845.0,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1093326417",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1093329626",
+      "x": 1416.2,
+      "z": -650.8,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1093329626",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1093915802",
+      "x": -3312.8,
+      "z": -4378.5,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1093915802",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1093916649",
+      "x": -283.8,
+      "z": 656.5,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": null,
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1093916649",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1165393100",
+      "x": -3938.9,
+      "z": 57.1,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1165393100",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1170404584",
+      "x": 4303.3,
+      "z": -1084.8,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1170404584",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1188190097",
+      "x": 3504.1,
+      "z": -620.7,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1188190097",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1188190102",
+      "x": 3474.0,
+      "z": -732.0,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1188190102",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1194038200",
+      "x": 3093.4,
+      "z": -1386.6,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1194038200",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1290646223",
+      "x": 221.2,
+      "z": 1659.9,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1290646223",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1290646224",
+      "x": 187.4,
+      "z": 1649.1,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1290646224",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1290647094",
+      "x": -2357.5,
+      "z": -1731.0,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1290647094",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1290648928",
+      "x": -3404.8,
+      "z": -2693.4,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1290648928",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": true
+    },
+    {
+      "id": "way/1423412519",
+      "x": -720.1,
+      "z": -4199.3,
+      "sourceBuildingType": "roof",
+      "amenity": "fuel",
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1423412519",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    },
+    {
+      "id": "way/1489942788",
+      "x": -2928.5,
+      "z": -5852.7,
+      "sourceBuildingType": "roof",
+      "amenity": null,
+      "sourceLayer": "1",
+      "sourceHeight": null,
+      "sourceLevels": null,
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "sourceUrl": "https://www.openstreetmap.org/way/1489942788",
+      "issue": "Open roof has been interpreted as an enclosed generic building.",
+      "proposedModel": "open-canopy",
+      "proposedCollision": "support-columns-only",
+      "preserveFootprint": true,
+      "roadCandidate": false
+    }
+  ],
+  "geometryRepairs": [
+    {
+      "id": "overture/803e95fd-4868-4568-a335-af0c4d992ce8",
+      "sourceGeometryValid": true,
+      "exportGeometryValid": false,
+      "proposedGeometryValid": true,
+      "cause": "Local 0.1m coordinate quantization introduces a self-intersection at [-965.8,-3962.5]. Original Overture ring is valid.",
+      "repair": "Reproject original ring at 0.01m formatting precision. This improves topology, not survey accuracy.",
+      "points": [
+        [
+          -994.58,
+          -3935.57
+        ],
+        [
+          -998.31,
+          -3921.33
+        ],
+        [
+          -960.94,
+          -3911.52
+        ],
+        [
+          -956.91,
+          -3926.86
+        ],
+        [
+          -956.07,
+          -3926.64
+        ],
+        [
+          -949.7,
+          -3950.91
+        ],
+        [
+          -968.67,
+          -3955.89
+        ],
+        [
+          -967.82,
+          -3959.14
+        ],
+        [
+          -967.04,
+          -3959.95
+        ],
+        [
+          -962.63,
+          -3955.6
+        ],
+        [
+          -950.22,
+          -3952.34
+        ],
+        [
+          -947.32,
+          -3963.41
+        ],
+        [
+          -961.24,
+          -3967.06
+        ],
+        [
+          -965.76,
+          -3962.45
+        ],
+        [
+          -965.73,
+          -3962.57
+        ],
+        [
+          -970.46,
+          -3963.82
+        ],
+        [
+          -969.31,
+          -3968.25
+        ],
+        [
+          -966.46,
+          -3971.14
+        ],
+        [
+          -962.16,
+          -3987.54
+        ],
+        [
+          -970.06,
+          -3995.32
+        ],
+        [
+          -978.06,
+          -3997.42
+        ],
+        [
+          -983.97,
+          -3974.86
+        ],
+        [
+          -985.38,
+          -3973.43
+        ],
+        [
+          -986.42,
+          -3969.49
+        ],
+        [
+          -980.7,
+          -3967.99
+        ],
+        [
+          -982.32,
+          -3961.85
+        ],
+        [
+          -984.83,
+          -3962.52
+        ],
+        [
+          -990.92,
+          -3939.3
+        ]
+      ],
+      "heightM": 5.8,
+      "heightEstimated": true,
+      "automaticPhysicalBuildingDeletion": false,
+      "sourceSnapshot": "public/data/neiva.overture.json.gz"
+    }
+  ],
+  "note": "Confirmed source semantics/topology repairs; no claim of verified physical dimensions, no deletion of source records."
+}
