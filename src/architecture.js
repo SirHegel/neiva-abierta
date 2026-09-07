@@ -197,7 +197,7 @@ export function buildBuildings(data,batches,pbr,facades){
   const spawn=Array.isArray(data.meta?.spawn)?data.meta.spawn:[data.meta?.spawn?.x??-886.7,data.meta?.spawn?.z??-78.8];
   const localRoads=data.roads.filter(r=>r.points.some(p=>Math.hypot(p[0]-spawn[0],p[1]-spawn[1])<520));
   for(let i=0;i<data.buildings.length;i++){
-    const b=data.buildings[i];if(b.points.length<3||b.id==='way/313286677')continue;
+    const b=data.buildings[i];if(b.points.length<3||b.model||b.id==='way/313286677')continue;
     const seed=stableSeed(b.id),p=b.points[0],near=b.points.some(p=>Math.hypot(p[0]-spawn[0],p[1]-spawn[1])<250);
     const style=Math.floor(random(seed+4)*3),shade=new T.Color().setHSL(.095+(random(seed)-.5)*.09,.025+random(seed+1)*.11,.73+random(seed+2)*.24);
     const baseHeight=Math.min(b.height,3.1+random(seed+7)*.35);

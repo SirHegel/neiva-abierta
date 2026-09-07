@@ -1,0 +1,17 @@
+# Cielo cubierto y calles mojadas
+
+`world.setWeather('after-rain')` activa cielo cubierto, superficies húmedas y charcos; `world.setWeather('clear')` recupera el cielo despejado y permite los tres horarios existentes. Devuelve una promesa. El estado efectivo está en `world.weather.mode`. El inicio usa después de lluvia. Es una condición visual, no meteorología actual consultada para Neiva.
+
+El cielo es **Overcast Soil (Pure Sky)**, de **Jarod Guest** (edición) y **Sergej Majboroda** (original), obtenido de la [página oficial de Poly Haven](https://polyhaven.com/a/overcast_soil_puresky), con [licencia CC0](https://polyhaven.com/license). El HDR 2048 × 1024 original se sirve localmente; `public/textures/weather-source.json` registra URL, fecha, tamaño y SHA-256. No representa una fotografía tomada en Neiva.
+
+Los charcos reflejan realmente las fachadas, árboles, personaje y coches de esta escena mediante un pase planar. Su geometría se recorta a tramos de calles del mapa a menos de 48 m del jugador y sus bordes irregulares se calculan en el shader. No son fotografías de reflejos ni imágenes inventadas de otra ciudad. No hay un charco bajo cada edificio: el agua se limita a la superficie de los tramos de calles. El adoquín se respeta cuando la revisión urbana identifica ese material.
+
+Para limitar el coste, se comparte **un solo render target** (384 píxeles en Auto escritorio, 256 móvil y 512 Alta), se actualiza hasta **5 veces por segundo** (10 en Alta con GPU dedicada), se reutilizan las sombras y sólo se dibuja el entorno de 75–115 m en ese pase. Los vehículos lejanos y las hojas de vidrio con transmisión se excluyen del pase de reflejo; la vista principal conserva el vidrio físico. La refracción de la vista principal usa media resolución en Auto y resolución completa en Alta. Entre actualizaciones se conserva la última proyección; los objetos móviles pueden verse con retraso de hasta 0,2 s. El brillo PBR general del asfalto utiliza la iluminación HDR; los charcos añaden reflejos locales de objetos. Esta técnica no equivale a ray tracing ni garantiza reflejos de todo objeto oculto.
+
+El asfalto combina dos escalas de la misma fotografía CC0 y variaciones amplias de humedad para reducir el patrón repetido. Su capa de agua utiliza clearcoat dieléctrico, rugosidad variable y normales moderadas. La calidad automática sigue omitiendo AO en móviles y GPU integrada para evitar un segundo pase completo de geometría.
+
+## Validación local
+
+`artifacts/weather-validation.json` conserva 12 muestras por condición en la misma vista de 1440 × 960, Auto y escala de píxel 1. El render aislado, esperando la finalización GPU, dio medias de 16,13 ms seco y 22,43 ms mojado; no incluye el coste de toda la interfaz ni es una garantía de FPS. Los fotogramas que renovaron el reflejo costaron 38–45 ms. No hubo errores JavaScript ni de compilación GLSL.
+
+Para repetir con Chrome sin ventana y GPU real en esta máquina se usó `headless: true` con `--no-sandbox --disable-dev-shm-usage --enable-gpu --use-gl=angle --use-angle=gl --ignore-gpu-blocklist`. Siempre se verifica el renderer de WebGL: en esta ejecución informó `ANGLE (Intel, Mesa Intel(R) UHD Graphics (ADL-S GT0.5), OpenGL ES 3.2)`. El headless predeterminado utilizaba SwiftShader y no servía para comparar costes de esta GPU. Las ventanas headful se cerraron repetidamente durante esta sesión por una causa no confirmada.

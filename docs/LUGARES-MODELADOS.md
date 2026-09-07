@@ -6,6 +6,8 @@ El modelo interpreta elementos visibles: fachada de ladrillo, torre central y ca
 
 La implantación utiliza la huella OSM `way/313286677`. El primer segmento de esa huella es el frente que mira hacia el Parque Santander. La altura total toma la etiqueta OSM de 33 m. Esa etiqueta y la fotografía **no constituyen un levantamiento medido**: posiciones de ventanas, proporciones de cuerpos, interiores y detalles ornamentales no están verificados con planos. El modelo es un exterior interpretable dentro del juego, sin interior recorrible.
 
+La revisión del 7 de septiembre de 2026 corrige la silueta de la aguja central: las fotografías de la Diócesis y del [Hotel Neiva Plaza](https://www.hotelneivaplaza.com/en/) muestran una aguja roja alargada. Se aumenta su proporción y se normaliza verticalmente el conjunto, incluida la cruz, para conservar los 33 m de la etiqueta OSM y la huella existente. La aguja ocupa aproximadamente 8,37 m del modelo final; esa proporción es una interpretación visual, **no una altura medida de la aguja real**. Los UV verticales se ajustan a esa normalización para mantener la escala del material. El pequeño desplazamiento del grupo de 0,035 m sobre el terreno evita superposiciones y no forma parte de la altura arquitectónica nominal.
+
 ## Integración
 
 ```js

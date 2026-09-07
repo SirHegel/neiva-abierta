@@ -8,19 +8,25 @@ mapa con destinos y un pequeño estudio ficticio para contactar a Jhon Steven
 [Jugar en Vercel](https://neiva-abierta.vercel.app/) ·
 [Sala de juegos y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/)
 
-![Captura del juego: recreación de la Catedral y su entorno](public/preview.webp)
+![Captura del juego: personaje en el Santander, Catedral, hotel y fuente](public/preview.webp)
 
 ## Alcance de esta versión
 
 La edición web usa Three.js/WebGL 2 y funciona como sitio estático en Vercel.
 Las calles, parques y huellas de edificios proceden de datos abiertos. Las
 alturas ausentes, fachadas y árboles son una interpretación visual. La edición
-0.2 usa un personaje humano animado de Microsoft Rocketbox, el automóvil
+0.3 usa un personaje humano animado de Microsoft Rocketbox, el automóvil
 Car Concept de Khronos, mapas PBR fotográficos de Poly Haven, iluminación HDR,
 sombras solares y fachadas de apariencia fotográfica generadas con IA. La
 Catedral de la Inmaculada Concepción tiene una malla arquitectónica específica
-con arcos, torre, reloj y cubiertas. Los demás edificios conservan huellas reales
-y reciben fachadas, aleros y tejados representativos. El suelo del juego es plano. No es una réplica
+con arcos, torre, reloj y cubiertas. El Palacio de Justicia, el Hotel Neiva Plaza
+y el Templo Colonial tienen modelos específicos apoyados en referencias del
+centro; el Santander incorpora pavimento, fuente de mosaico y vegetación densa.
+La [revisión de fidelidad](docs/FIDELIDAD.md) registra las fuentes y los detalles
+todavía estimados. Se corrigieron dos extrusiones residenciales sin respaldo
+dentro del parque y el material de Calle 7 en su borde sur. El resto de edificios
+conserva huellas cartográficas y recibe fachadas, aleros y tejados representativos.
+El suelo del juego es plano. No es una réplica
 fotográfica ni un levantamiento completo de cada barrio e interior de Neiva.
 El estudio mide 6 × 4 × 3,5 metros de juego y no representa una dirección real.
 
@@ -41,19 +47,27 @@ además un servidor GPU y Pixel Streaming; Vercel aloja la edición web.
 | Acción | Computador | Celular |
 | --- | --- | --- |
 | Caminar / conducir | WASD o flechas | Palanca izquierda |
-| Mirar | Arrastrar sobre la ciudad | Deslizar sobre la ciudad |
-| Correr | Shift | Mantener ⇧ |
+| Mirar | Mover el mouse, sin mantener clic | Deslizar sobre la ciudad |
+| Correr | Mantener Shift | Tocar Correr para activar/desactivar |
 | Subir / bajar del carro, visitar estudio | E o botón contextual | E |
-| Frenar carro | Espacio | Soltar acelerador |
+| Frenar carro | Espacio | Mantener Freno |
 | Mapa y viaje a un destino | M o Mapa | Mapa |
 | Pausar / continuar | Esc o menú | Menú |
+| Sensibilidad | C o ajustes | Ajustes |
+| Pantalla completa | F | Ajustes, cuando el navegador lo admita |
+
+Entrar a la ciudad solicita la captura del mouse mediante Pointer Lock. Escape
+suelta el cursor y pausa; continuar vuelve a capturarlo con un gesto del usuario.
+Los diálogos también liberan el mouse. Si el navegador deniega la captura, la
+cámara sigue el mouse sobre el canvas sin arrastrar, y un clic reintenta la captura.
 
 El carro dorado es conducible. Los demás vehículos son tráfico ambiental de
 recorrido simple; no son una simulación vial completa. Los edificios tienen
 colisión de huella; el estudio abre un panel de servicios. Las demás fachadas
 no tienen interiores. El botón Inicio recupera una posición transitable.
 
-Hay tres luces del día, calidad gráfica ajustable y descarga de una foto del
+Hay tres luces del día, ambiente seco o después de lluvia (tecla L), reflejos
+locales en charcos, calidad gráfica ajustable y descarga de una foto del
 recorrido. Los lugares visitados se guardan sólo en localStorage del dispositivo;
 si ese almacenamiento no está disponible, se puede seguir jugando. Cambiar de
 pestaña limpia las entradas y pausa el juego. No hay cuentas ni multijugador.
@@ -83,7 +97,8 @@ en `public/data/neiva.json`. La proyección equirectangular es una aproximación
 local; la precisión posicional de las huellas y alturas estimadas es desconocida.
 El juego conserva IDs y procedencia para consultar y sustituir datos.
 
-La velocidad a pie es 3,2 m/s y al correr 6,3 m/s; el carro limita avance a
+La velocidad a pie es 2 m/s y al correr 5,4 m/s; las animaciones de espera,
+caminata y carrera se mezclan según el desplazamiento efectivo. El carro limita avance a
 24 m/s y reversa a 7 m/s. Son parámetros de juego, no medidas del tráfico real.
 Las colisiones se consultan con índice espacial y el movimiento se subdivide
 cada 0,35 m para impedir atravesar una pared por un salto temporal. Un cuadro
@@ -98,7 +113,8 @@ fotogramas sin medición en el dispositivo.
 
 [Actores y licencias](docs/ACTORES.md) · [Materiales](docs/MATERIALES.md) ·
 [Fachadas generadas y prompts](docs/FACHADAS-GENERADAS.md) ·
-[Catedral y límites de fidelidad](docs/LUGARES-MODELADOS.md).
+[Catedral](docs/LUGARES-MODELADOS.md) · [Revisión del centro](docs/FIDELIDAD.md) ·
+[Clima y reflejos](docs/CLIMA.md).
 
 Umbral funcional: cero errores JavaScript, movimiento comprobable, entrada/salida
 del vehículo, panel de contacto accesible y cero desbordamiento horizontal a

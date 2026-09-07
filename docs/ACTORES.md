@@ -10,6 +10,7 @@ const car = actors.makeCar('#bd9646');
 scene.add(character, car);
 // En cada fotograma: delta en segundos y velocidad del personaje en m/s.
 actors.updateCharacter(character, delta, movingSpeed);
+actors.updateCar(car); // después de actualizar su posición; también detecta reversa
 ```
 
 El origen de cada grupo está a nivel de los pies/ruedas, con Y hacia arriba y el frente hacia **+Z**. El personaje mide **1,8 m** en su pose de referencia. El coche mide **1,8 m de ancho × 4,2 m de largo**, con una altura resultante de **1,2607 m**. Los grupos externos conservan posiciones y rotaciones independientes para el controlador del juego.
@@ -18,7 +19,7 @@ El origen de cada grupo está a nivel de los pies/ruedas, con Y hacia arriba y e
 
 Se utiliza `Male_Adult_01` de **Microsoft Rocketbox**: adulto con polo, pantalón corto y zapatos, geometría facial y texturas de piel/ropa/cabello. Es un personaje de la biblioteca, no una representación de Jhon. El FBX contiene **81 huesos** y una malla de 7.440 triángulos; su esqueleto se duplica mediante `SkeletonUtils.clone` para que cada instancia pueda animarse por separado.
 
-El mismo repositorio publica los clips `m_walk_neutral.max.fbx` y `m_idle_breathe_01.max.fbx`, de 1,0667 s y 2,7333 s. Se adaptan por nombres de huesos coincidentes: se mantienen las longitudes del personaje y la oscilación vertical de la cadera, se elimina el desplazamiento horizontal del hueso raíz y se mezclan caminar/respirar según la velocidad. No se sustituye la animación por movimientos de piezas primitivas.
+El mismo repositorio publica los clips `m_walk_neutral.max.fbx` y `m_idle_breathe_01.max.fbx`, de 1,0667 s y 2,7333 s. También se incluye `m_run_neutral.max.fbx` (0,7667 s), de la misma fuente y licencia MIT. Se adaptan por nombres de huesos coincidentes: se mantienen las longitudes del personaje y la oscilación vertical de la cadera, se elimina el desplazamiento horizontal del hueso raíz y se mezclan respirar/caminar/correr según la velocidad (carrera entre 2,5 y 3,8 m/s). No se sustituye la animación por movimientos de piezas primitivas.
 
 Las texturas TGA originales se convirtieron a JPEG de calidad 94 para color/normales. El cabello conserva alfa en PNG y WebP sin pérdida; la web carga WebP y se conserva PNG para importadores nativos. Los materiales de la web usan las texturas originales con iluminación PBR y rugosidad configurada. Los mapas especulares originales convertidos se conservan como fuente adicional, pero no se reinterpretan como mapas de rugosidad.
 
@@ -39,3 +40,9 @@ Las instancias comparten recursos, pero cada coche sigue dibujando su geometría
 `public/models/sources.json` contiene fecha de descarga, URLs originales, commits fuente, tamaños y SHA-256 de archivos originales y derivados. `public/models/ATTRIBUTION.txt` reúne los créditos para distribuir junto al juego. La licencia MIT del código propio no reemplaza la licencia CC-BY del automóvil.
 
 Se comprobó la carga local en Chrome/WebGL, se inspeccionaron capturas con el personaje detenido y caminando, y se verificó que los huesos se animan sin mover el grupo externo. También se comprobó que dos personajes conservan esqueletos independientes, que dos coches comparten geometría y que las dimensiones finales coinciden con el contrato. La prueba no produjo errores JavaScript. Estas comprobaciones no equivalen a pruebas de Unreal ni garantizan FPS en todos los teléfonos.
+
+## Actualización de movimiento y rendimiento
+
+Las carrocerías conservan todos sus triángulos y materiales, pero las piezas opacas estáticas se combinan por material. Los cristales mantienen su ordenación y las ruedas sus pivotes. Las llantas y los discos giran según el desplazamiento real del coche; las pinzas de freno permanecen fijas. Teletransportarse no acumula una rotación enorme. No hay sustitución por modelos de bloques.
+
+La carrera usa el clip auténtico de Rocketbox, con su root motion horizontal de 2,3573 m eliminado para que el controlador sea la única fuente de desplazamiento. Su velocidad de referencia, normalizada a la escala del personaje, es aproximadamente 3,04 m/s. Los tres pesos suman uno y cambian suavemente, incluyendo al detenerse o chocar contra un obstáculo.

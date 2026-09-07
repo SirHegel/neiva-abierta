@@ -1,0 +1,1044 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-07T05:12:49.362Z",
+  "scope": "Targeted manual reference review of Parque Santander / Carrera 4 / Calle 7; computational checks across the existing export. Not a citywide street-by-street or cadastral survey.",
+  "origin": [
+    -75.2809,
+    2.9252
+  ],
+  "units": "metres",
+  "axes": {
+    "x": "east",
+    "z": "south"
+  },
+  "baseDataSha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+  "license": "ODbL-1.0 for copied/derived map geometry; original qualitative notes and model parameters CC0-1.0; no Google or institutional imagery redistributed",
+  "sources": [
+    {
+      "id": "osm-snapshot",
+      "title": "OpenStreetMap snapshot de Neiva",
+      "url": "https://www.openstreetmap.org/api/0.6/map.json?bbox=-75.34,2.86,-75.22,3.015",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "fetchedAt": "2026-09-07T03:28:29.354Z",
+      "latestElementEdit": "2026-08-28T23:21:45Z",
+      "license": "ODbL-1.0",
+      "type": "open-map-geometry",
+      "note": "Dates are download/latest element edit, not survey dates."
+    },
+    {
+      "id": "overture-2026-08",
+      "title": "Overture Maps Buildings 2026-08-19.0",
+      "url": "https://docs.overturemaps.org/guides/buildings/",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "release": "2026-08-19.0",
+      "license": "ODbL-1.0",
+      "type": "machine-inferred-footprints",
+      "note": "Release date does not date underlying imagery."
+    },
+    {
+      "id": "google-streetview-link",
+      "title": "Google Maps: vista pública enlazada por el usuario",
+      "url": "https://maps.app.goo.gl/NGQz5C3JjTi7NTx59",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "imageDate": "2024-08",
+      "type": "manual-visual-reference",
+      "titleObserved": "4112 Cl. 7, Neiva, Huila",
+      "cameraLonLat": [
+        -75.2888091,
+        2.9260439
+      ],
+      "cameraXZ": [
+        -879.3,
+        -93.9
+      ],
+      "headingDegrees": 294.02,
+      "observed": true,
+      "redistributedImagery": false,
+      "note": "Inspected one rendered panorama in headful Chrome. Selected POI is Parqueadero el Príncipe; it is not the camera or the courthouse."
+    },
+    {
+      "id": "user-streetview-2024",
+      "title": "Captura de Street View aportada por el usuario: 691 Cra. 4",
+      "url": null,
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "imageDate": "2024-08",
+      "type": "user-supplied-visual-reference",
+      "observed": true,
+      "redistributedImagery": false,
+      "note": "Cream lower courthouse wing has three visible levels, ribbon windows, masonry plinth and a paved forecourt. Upper complex is partly cropped/occluded. Capture is not stored in the repository."
+    },
+    {
+      "id": "judiciary-address",
+      "title": "Consejo Seccional de la Judicatura del Huila",
+      "url": "https://www.ramajudicial.gov.co/es/web/consejo-seccional-de-la-judicatura-del-huila",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "type": "institutional-address",
+      "fact": "Carrera 4 No. 6-99, Palacio de Justicia."
+    },
+    {
+      "id": "judiciary-floor10",
+      "title": "Tribunal Superior de Neiva, ubicación institucional",
+      "url": "https://www.ramajudicialdelhuila.gov.co/newSite/superior/index.php/contactar-con-el-tribunal-superior-de-neiva",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "type": "institutional-address",
+      "fact": "Institution lists Piso 10, Oficina 10-09 at Carrera 4 #6-99.",
+      "note": "Confirms a tenth-floor designation in the complex; it supplies no measured exterior height, tower footprint or date of architectural survey."
+    },
+    {
+      "id": "hotel-official",
+      "title": "Hotel Neiva Plaza, sitio oficial",
+      "url": "https://www.hotelneivaplaza.com/en/",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "type": "owner-photo-and-address",
+      "imageUrl": "https://files-p.pxsol.com/25608/company/library/user/8883935585c2a5a0a7d4edaacb3cf629d82cffd926.jpg",
+      "imageDate": null,
+      "fact": "Calle 7 #4-62. Photograph shows a lower articulated cream/orange hotel with balconies and terraces.",
+      "redistributedImagery": false
+    },
+    {
+      "id": "santander-municipality",
+      "title": "Alcaldía de Neiva: recuperación de la fuente del Parque Santander",
+      "url": "https://www.alcaldianeiva.gov.co/NuestraAlcaldia/SalaDePrensa/Paginas/Fuente-del-Parque-Santander-se-recupera-gracias-al-trabajo-de-la-alcald%C3%ADa-de-Neiva.aspx",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "type": "municipal-article-and-photo",
+      "publishedAt": "2024-03-12",
+      "imageDate": null,
+      "fact": "Fountain with an irregular mosaic-lined basin; brick/paver edges, paved walking areas and dense tree canopy.",
+      "redistributedImagery": false,
+      "note": "Publication date is not established camera capture date."
+    },
+    {
+      "id": "templo-municipality",
+      "title": "Alcaldía de Neiva: conmemoración de los 413 años",
+      "url": "https://www.alcaldianeiva.gov.co/NuestraAlcaldia/SalaDePrensa/Paginas/Emotiva-conmemoraci%C3%B3n-de-los-413-a%C3%B1os-de-Neiva.aspx",
+      "checkedAt": "2026-09-07T04:53:36.099Z",
+      "type": "municipal-place-identification",
+      "publishedAt": "2025-05-24",
+      "fact": "Identifies Templo Colonial and Parque Santander as distinct venues."
+    },
+    {
+      "id": "colonial-sityc-2016",
+      "title": "SITYC Huila, inventario turístico de Neiva, ficha del Templo Colonial",
+      "url": "https://huila.travel/storage/app/uploads/public/5eb/2f7/c01/5eb2f7c01812b498962156.pdf#page=97",
+      "checkedAt": "2026-09-07T05:12:49.362Z",
+      "recordDate": "2016-12",
+      "imageDate": null,
+      "type": "government-inventory-with-front-photo",
+      "fact": "Frontal photo shows a lateral stepped clock tower, pyramidal cap, arched portal and low curved main facade.",
+      "redistributedImagery": false,
+      "note": "Inventory date is not a verified image capture date. The tower is to the right of an observer facing the entrance from the park."
+    },
+    {
+      "id": "colonial-sityc-2022",
+      "title": "Gobernación del Huila, Ruta de Arquitectura y Arte Religioso",
+      "url": "https://huila.travel/storage/app/uploads/public/639/f78/a4a/639f78a4a37bd613071795.pdf#page=6",
+      "checkedAt": "2026-09-07T05:12:49.362Z",
+      "publishedAt": "2022-10",
+      "imageDate": null,
+      "type": "government-architecture-description-and-photo",
+      "fact": "Describes stepped lateral bell tower, curved fronton, round oculus, buttressed rectangular nave and clay tile roof.",
+      "redistributedImagery": false,
+      "note": "Its phrase left side of the nave is not a viewer-facing-left instruction; the frontal inventory photograph is used for side orientation."
+    }
+  ],
+  "buildingOverrides": [
+    {
+      "id": "way/312876443",
+      "model": "courthouse",
+      "name": "Palacio de Justicia Rodrigo Lara Bonilla",
+      "height": 10.5,
+      "heightEstimated": true,
+      "sourceHeight": 5.8,
+      "reason": "Render the visually referenced low wing at an interpreted 10.5 m. The institutional tenth-floor designation is retained as evidence of a taller complex, but no unverified tower prism is generated without a separate footprint.",
+      "sourceIds": [
+        "osm-snapshot",
+        "user-streetview-2024",
+        "judiciary-address",
+        "judiciary-floor10"
+      ],
+      "confidence": {
+        "identity": "high",
+        "footprint": "source-only",
+        "lowWingBands": "visual-reference",
+        "height": "inferred",
+        "towerGeometry": "unconfirmed-not-rendered"
+      }
+    },
+    {
+      "id": "way/313286678",
+      "model": "hotel",
+      "name": "Hotel Neiva Plaza",
+      "height": 19.8,
+      "heightEstimated": true,
+      "sourceHeight": 40,
+      "sourceLevels": 3,
+      "reason": "OSM height=40 and building:levels=3 conflict with each other and with the owner photograph. 19.8 m approximates six visible levels and roof elements; it is not a measurement.",
+      "sourceIds": [
+        "osm-snapshot",
+        "hotel-official"
+      ],
+      "confidence": {
+        "identity": "high",
+        "footprint": "source-only",
+        "height": "visual-estimate"
+      }
+    },
+    {
+      "id": "way/313286683",
+      "model": "colonial",
+      "name": "Templo Colonial",
+      "heightEstimated": true,
+      "reason": "A distinct original model follows the official inventory photograph: lateral clock tower, curved fronton, arched portal, oculus and buttresses. Total 14.71 m is interpreted on the OSM footprint, not a measured height.",
+      "sourceIds": [
+        "osm-snapshot",
+        "templo-municipality",
+        "colonial-sityc-2016",
+        "colonial-sityc-2022"
+      ],
+      "confidence": {
+        "identity": "high",
+        "footprint": "source-only",
+        "height": "unverified"
+      },
+      "height": 14.71,
+      "sourceHeight": 5.8
+    }
+  ],
+  "excludedBuildings": [
+    {
+      "id": "overture/0e5ad925-bf96-4b0c-a996-a82c7aa5fe91",
+      "reason": "Suppress the generic enclosed residential extrusion inside the observed paved public park. ML footprint alone does not establish an enclosed habitable building or a 5.8 m obstruction; preserve source data for review.",
+      "sourceIds": [
+        "osm-snapshot",
+        "overture-2026-08",
+        "google-streetview-link",
+        "santander-municipality"
+      ],
+      "center": [
+        -931.1,
+        -122.9
+      ],
+      "footprintAreaM2": 64.1,
+      "source": "Microsoft ML Buildings",
+      "replacementHint": "fountain-candidate",
+      "confidence": "reviewed park context; exact feature correspondence inferred",
+      "sourceDeletion": false
+    },
+    {
+      "id": "overture/8376ddc8-2578-4243-a4e7-1c492adcf22d",
+      "reason": "Suppress the generic enclosed residential extrusion inside the observed paved public park. ML footprint alone does not establish an enclosed habitable building or a 5.8 m obstruction; preserve source data for review.",
+      "sourceIds": [
+        "osm-snapshot",
+        "overture-2026-08",
+        "google-streetview-link",
+        "santander-municipality"
+      ],
+      "center": [
+        -929.1,
+        -72.8
+      ],
+      "footprintAreaM2": 35,
+      "source": "Google Open Buildings",
+      "replacementHint": "open-shelter-candidate",
+      "confidence": "reviewed park context; exact feature correspondence inferred",
+      "sourceDeletion": false
+    }
+  ],
+  "roadOverrides": [
+    {
+      "id": "way/39365612",
+      "material": "pavement",
+      "segments": [
+        3
+      ],
+      "reason": "Manually viewed August 2024 panorama on the Santander frontage shows red/grey interlocking paving and yellow taxi markings. Apply only points[3]→points[4]; other segments were not visually checked.",
+      "sourceIds": [
+        "osm-snapshot",
+        "google-streetview-link"
+      ],
+      "confidence": "visible-surface-reference",
+      "segmentIndexPolicy": "zero-based starting vertex; segment i joins points[i] to points[i+1]"
+    }
+  ],
+  "places": [
+    {
+      "id": "way/312876443",
+      "name": "Palacio de Justicia Rodrigo Lara Bonilla",
+      "x": -963.6,
+      "z": -6.1,
+      "lonLat": [
+        -75.2895675,
+        2.9252548
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    },
+    {
+      "id": "way/313286678",
+      "name": "Hotel Neiva Plaza",
+      "x": -857.3,
+      "z": -43.4,
+      "lonLat": [
+        -75.2886113,
+        2.9255899
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    },
+    {
+      "id": "way/313286683",
+      "name": "Templo Colonial",
+      "x": -851.6,
+      "z": -199.9,
+      "lonLat": [
+        -75.28856,
+        2.9269957
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    },
+    {
+      "id": "way/313286677",
+      "name": "Catedral Inmaculada Concepción",
+      "x": -904.4,
+      "z": -30.6,
+      "lonLat": [
+        -75.289035,
+        2.9254749
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    },
+    {
+      "id": "way/39365299",
+      "name": "Parque Central Santander",
+      "x": -909.1,
+      "z": -135.2,
+      "lonLat": [
+        -75.2890772,
+        2.9264145
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    },
+    {
+      "id": "way/88319128",
+      "name": "Plaza Cívica Los Libertadores",
+      "x": -1124.3,
+      "z": -68.3,
+      "lonLat": [
+        -75.2910129,
+        2.9258135
+      ],
+      "sourceIds": [
+        "osm-snapshot"
+      ]
+    }
+  ],
+  "features": {
+    "courthouse": {
+      "id": "way/312876443",
+      "name": "Palacio de Justicia de Neiva",
+      "center": [
+        -963.6,
+        -6.1
+      ],
+      "lonLat": [
+        -75.2895675,
+        2.9252548
+      ],
+      "bbox": {
+        "min": [
+          -1007.9,
+          -31.8
+        ],
+        "max": [
+          -933.9,
+          30.7
+        ]
+      },
+      "geographicBbox": {
+        "southWest": [
+          -75.2899659,
+          2.9249242
+        ],
+        "northEast": [
+          -75.2893003,
+          2.9254857
+        ]
+      },
+      "points": [
+        [
+          -1007.9,
+          -20.2
+        ],
+        [
+          -975.5,
+          -31.8
+        ],
+        [
+          -952,
+          -22.2
+        ],
+        [
+          -945.3,
+          -4.3
+        ],
+        [
+          -939.8,
+          -6
+        ],
+        [
+          -933.9,
+          11.2
+        ],
+        [
+          -990.5,
+          30.7
+        ]
+      ],
+      "geometrySourceId": "osm-snapshot",
+      "geometryAccuracy": "OSM footprint; no cadastral or survey validation",
+      "frontEdge": [
+        2,
+        5
+      ],
+      "frontSegments": [
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "frontStreetId": "way/632682061",
+      "frontStreetName": "Carrera 4",
+      "frontDirection": "east-northeast",
+      "address": "Carrera 4 No. 6-99",
+      "lowWing": {
+        "visibleHorizontalBands": 3,
+        "height": 10.5,
+        "heightEstimated": true,
+        "floorCountVerified": false,
+        "confidence": "visible facade bands; metric height inferred"
+      },
+      "tower": {
+        "status": "proposed",
+        "noGeometry": true,
+        "render": false,
+        "documentedFloorDesignation": 10,
+        "heightProposal": 32,
+        "heightEstimated": true,
+        "placementVerified": false,
+        "placement": null,
+        "sourceIds": [
+          "judiciary-floor10"
+        ],
+        "note": "The institutional address mentions floor 10. No separate tower footprint or reliable placement was found; no tower volume is rendered. The proposed height is not a measured dimension."
+      },
+      "forecourt": {
+        "paved": true,
+        "points": [
+          [
+            -952,
+            -22.2
+          ],
+          [
+            -945.3,
+            -4.3
+          ],
+          [
+            -939.8,
+            -6
+          ],
+          [
+            -933.9,
+            11.2
+          ],
+          [
+            -922.8,
+            16
+          ],
+          [
+            -947.2,
+            -47.2
+          ]
+        ],
+        "geometryEstimated": true,
+        "sourceIds": [
+          "osm-snapshot",
+          "user-streetview-2024"
+        ],
+        "note": "Schematic free area between OSM footprint and Carrera 4; not a traced or surveyed plaza boundary.",
+        "treeLocations": [
+          [
+            -946,
+            -30,
+            1.1
+          ],
+          [
+            -937,
+            -11,
+            1.15
+          ],
+          [
+            -928,
+            7,
+            1.1
+          ]
+        ],
+        "treePositionsEstimated": true
+      },
+      "sourceIds": [
+        "osm-snapshot",
+        "user-streetview-2024",
+        "judiciary-address",
+        "judiciary-floor10"
+      ],
+      "wingHeight": 10.5
+    },
+    "santander": {
+      "id": "way/39365299",
+      "name": "Parque Central Santander",
+      "center": [
+        -909.1,
+        -135.2
+      ],
+      "lonLat": [
+        -75.2890772,
+        2.9264145
+      ],
+      "bbox": {
+        "min": [
+          -984.3,
+          -196.2
+        ],
+        "max": [
+          -847.7,
+          -55.9
+        ]
+      },
+      "geographicBbox": {
+        "southWest": [
+          -75.2897537,
+          2.9257022
+        ],
+        "northEast": [
+          -75.288525,
+          2.9269625
+        ]
+      },
+      "points": [
+        [
+          -944.3,
+          -55.9
+        ],
+        [
+          -847.7,
+          -94.3
+        ],
+        [
+          -881.7,
+          -172.7
+        ],
+        [
+          -887.3,
+          -196.2
+        ],
+        [
+          -984.3,
+          -156.8
+        ]
+      ],
+      "geometrySourceId": "osm-snapshot",
+      "geometryAccuracy": "OSM footprint; no cadastral or survey validation",
+      "paved": true,
+      "uniformGrass": false,
+      "treeCanopy": "dense broadleaf trees with tall palms",
+      "surface": "red-grey paving with tree wells and limited planted beds",
+      "fountain": {
+        "x": -931.1,
+        "z": -122.9,
+        "radius": 6.2,
+        "height": 0.25,
+        "waterJetHeight": 2.5,
+        "geometryEstimated": true,
+        "positionEstimated": true,
+        "shape": "irregular mosaic basin",
+        "sourceIds": [
+          "santander-municipality",
+          "osm-snapshot",
+          "overture-2026-08"
+        ],
+        "note": "Existence and basin character observed in municipal photo. Position uses the central ML footprint only as a provisional anchor; shape/radius/jet height are original approximations."
+      },
+      "openShelter": {
+        "x": -929.1,
+        "z": -72.8,
+        "width": 7,
+        "depth": 5,
+        "height": 3.2,
+        "geometryEstimated": true,
+        "positionEstimated": true,
+        "sourceIds": [
+          "google-streetview-link",
+          "overture-2026-08"
+        ],
+        "note": "A low open timber-roof shelter is visible on the park edge. Correspondence to this ML footprint is approximate, not proven."
+      },
+      "boundaryRoads": [
+        {
+          "id": "way/39365612",
+          "name": "Calle 7",
+          "side": "south"
+        },
+        {
+          "id": "way/632682061",
+          "name": "Carrera 4",
+          "side": "west"
+        },
+        {
+          "id": "way/821174856",
+          "name": "Calle 8",
+          "side": "north",
+          "type": "footway"
+        },
+        {
+          "id": "way/821174854",
+          "name": "Carrera 5",
+          "side": "east",
+          "type": "footway"
+        }
+      ],
+      "sourceIds": [
+        "osm-snapshot",
+        "google-streetview-link",
+        "santander-municipality"
+      ],
+      "interiorTreeLocations": [
+        [
+          -959,
+          -142,
+          1.65
+        ],
+        [
+          -950,
+          -151,
+          1.55
+        ],
+        [
+          -947,
+          -136,
+          1.65
+        ],
+        [
+          -949,
+          -109,
+          1.7
+        ],
+        [
+          -908,
+          -166,
+          1.65
+        ],
+        [
+          -894,
+          -154,
+          1.65
+        ],
+        [
+          -882,
+          -133,
+          1.55
+        ],
+        [
+          -889,
+          -112,
+          1.6
+        ],
+        [
+          -907,
+          -110,
+          1.65
+        ],
+        [
+          -903,
+          -145,
+          1.55
+        ],
+        [
+          -905,
+          -89,
+          1.5
+        ],
+        [
+          -885,
+          -102,
+          1.6
+        ]
+      ],
+      "interiorTreePositionsEstimated": true,
+      "interiorTreePolicy": "Original positions for the photographed dense-canopy park character; not surveyed tree locations. Keep the fountain and the intro camera-to-cathedral corridor clear."
+    },
+    "hotel": {
+      "id": "way/313286678",
+      "name": "Hotel Plazas Neiva",
+      "center": [
+        -857.3,
+        -43.4
+      ],
+      "lonLat": [
+        -75.2886113,
+        2.9255899
+      ],
+      "bbox": {
+        "min": [
+          -885.3,
+          -89.6
+        ],
+        "max": [
+          -822.8,
+          -7.3
+        ]
+      },
+      "geographicBbox": {
+        "southWest": [
+          -75.2888632,
+          2.9252656
+        ],
+        "northEast": [
+          -75.288301,
+          2.9260049
+        ]
+      },
+      "points": [
+        [
+          -885.3,
+          -76.1
+        ],
+        [
+          -849.3,
+          -89.6
+        ],
+        [
+          -822.8,
+          -19
+        ],
+        [
+          -854.2,
+          -7.3
+        ],
+        [
+          -859.3,
+          -21.1
+        ],
+        [
+          -846.9,
+          -25.8
+        ],
+        [
+          -850.9,
+          -36.3
+        ],
+        [
+          -858.1,
+          -33.6
+        ],
+        [
+          -861.4,
+          -42.2
+        ],
+        [
+          -854.1,
+          -44.9
+        ],
+        [
+          -861.2,
+          -63.8
+        ],
+        [
+          -866.2,
+          -61.9
+        ],
+        [
+          -860,
+          -45.4
+        ],
+        [
+          -872.1,
+          -40.8
+        ]
+      ],
+      "geometrySourceId": "osm-snapshot",
+      "geometryAccuracy": "OSM footprint; no cadastral or survey validation",
+      "frontEdge": [
+        0,
+        1
+      ],
+      "frontStreetId": "way/39365612",
+      "address": "Calle 7 No. 4-62",
+      "estimatedLevels": 6,
+      "height": 19.8,
+      "heightEstimated": true,
+      "sourceIds": [
+        "osm-snapshot",
+        "hotel-official"
+      ]
+    },
+    "colonial": {
+      "id": "way/313286683",
+      "name": "Templo Colonial",
+      "center": [
+        -851.6,
+        -199.9
+      ],
+      "lonLat": [
+        -75.28856,
+        2.9269957
+      ],
+      "bbox": {
+        "min": [
+          -881.4,
+          -217.3
+        ],
+        "max": [
+          -821.7,
+          -182.5
+        ]
+      },
+      "geographicBbox": {
+        "southWest": [
+          -75.2888281,
+          2.9268394
+        ],
+        "northEast": [
+          -75.2882911,
+          2.927152
+        ]
+      },
+      "points": [
+        [
+          -876.2,
+          -182.5
+        ],
+        [
+          -821.7,
+          -204.2
+        ],
+        [
+          -826.9,
+          -217.3
+        ],
+        [
+          -881.4,
+          -195.6
+        ]
+      ],
+      "geometrySourceId": "osm-snapshot",
+      "geometryAccuracy": "OSM footprint; no cadastral or survey validation",
+      "frontEdge": [
+        3,
+        0
+      ],
+      "orientationEstimated": true,
+      "sourceIds": [
+        "osm-snapshot",
+        "templo-municipality",
+        "colonial-sityc-2016",
+        "colonial-sityc-2022"
+      ],
+      "height": 14.71,
+      "heightEstimated": true,
+      "naveHeight": 5.8,
+      "roofRidgeHeight": 7.8,
+      "towerSide": "right when facing entrance from the park",
+      "towerFootprintEstimated": true,
+      "note": "Architectural identity is backed by government references; dimensions and unseen surfaces remain interpreted. No measured height or recent full facade survey."
+    },
+    "civicPlaza": {
+      "id": "way/88319128",
+      "name": "Plaza Cívica Los Libertadores",
+      "center": [
+        -1124.3,
+        -68.3
+      ],
+      "lonLat": [
+        -75.2910129,
+        2.9258135
+      ],
+      "bbox": {
+        "min": [
+          -1175.9,
+          -117.3
+        ],
+        "max": [
+          -1043.6,
+          19.2
+        ]
+      },
+      "geographicBbox": {
+        "southWest": [
+          -75.2914771,
+          2.9250275
+        ],
+        "northEast": [
+          -75.290287,
+          2.9262537
+        ]
+      },
+      "points": [
+        [
+          -1175.9,
+          -82.4
+        ],
+        [
+          -1154,
+          -90.2
+        ],
+        [
+          -1150.6,
+          -91.4
+        ],
+        [
+          -1129.4,
+          -99.5
+        ],
+        [
+          -1083.2,
+          -117.3
+        ],
+        [
+          -1043.6,
+          -16.5
+        ],
+        [
+          -1133.7,
+          19.2
+        ]
+      ],
+      "geometrySourceId": "osm-snapshot",
+      "geometryAccuracy": "OSM footprint; no cadastral or survey validation",
+      "distinctFromCourthouseForecourt": true,
+      "sourceIds": [
+        "osm-snapshot"
+      ],
+      "note": "Plaza Cívica Los Libertadores lies west of the courthouse. Do not apply its name/polygon to the small Carrera 4 forecourt."
+    }
+  },
+  "audit": {
+    "counts": {
+      "roads": 6137,
+      "buildings": 35875,
+      "water": 119,
+      "parks": 273,
+      "places": 121,
+      "neighborhoods": 117,
+      "heightsFromOsm": 25,
+      "heightsEstimated": 35850,
+      "buildingsOsm": 878,
+      "buildingsOverture": 34997,
+      "footprintsEstimated": 34997
+    },
+    "geometry": {
+      "testedBuildings": 35875,
+      "duplicateIds": 0,
+      "nonFiniteCoordinates": 0,
+      "degenerateRingsBelow1M2": 0,
+      "minFootprintAreaM2": 9.81,
+      "maxFootprintAreaM2": 43694.67,
+      "alignment": "No global coordinate-origin error detected by OSM road/landmark arrangement and the reference camera positions. Absolute footprint accuracy and registration against independent survey are unverified."
+    },
+    "heights": {
+      "explicitOsmTags": 25,
+      "verifiedMeasuredHeights": 0,
+      "estimated": 35850,
+      "note": "heightEstimated:false in base JSON means a height tag exists; it does NOT certify measurement.",
+      "suspiciousHeightLevelRatios": [
+        {
+          "id": "way/313286678",
+          "sourceHeightM": 40,
+          "sourceLevels": 3,
+          "metresPerLevel": 13.33,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1080757641",
+          "sourceHeightM": 14,
+          "sourceLevels": 2,
+          "metresPerLevel": 7,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1080757643",
+          "sourceHeightM": 17,
+          "sourceLevels": 2,
+          "metresPerLevel": 8.5,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1080757644",
+          "sourceHeightM": 22,
+          "sourceLevels": 3,
+          "metresPerLevel": 7.33,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1080757645",
+          "sourceHeightM": 8,
+          "sourceLevels": 1,
+          "metresPerLevel": 8,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1221117100",
+          "sourceHeightM": 30,
+          "sourceLevels": 5,
+          "metresPerLevel": 6,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1221117102",
+          "sourceHeightM": 30,
+          "sourceLevels": 2,
+          "metresPerLevel": 15,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        },
+        {
+          "id": "way/1221117103",
+          "sourceHeightM": 25,
+          "sourceLevels": 4,
+          "metresPerLevel": 6.25,
+          "reason": "OSM height / OSM levels exceeds 5 m per level. Review flag only: not proof of error; no automatic rescale."
+        }
+      ]
+    },
+    "parkIntersections": {
+      "method": "Vertex-mean building center inside OSM park polygon; may include real facilities, mapped green zones and broad or inaccurate park extents.",
+      "pairs": 812,
+      "uniqueBuildings": 811,
+      "uniqueMlBuildings": 794,
+      "automaticGlobalExclusions": 0,
+      "manuallyTargetedGenericExtrusions": 2
+    },
+    "neighborhoods": {
+      "labelCount": 117,
+      "completeAdministrativeBoundaryCoverage": false,
+      "perNeighborhoodManualReview": false,
+      "note": "117 point labels from OSM, not 117 fully surveyed neighborhoods or the total official barrio count."
+    }
+  },
+  "reviewLimitations": [
+    "One linked Google panorama rendered and was inspected manually. A second navigation resolved 691 Cra. 4 and its camera location but failed to render; architectural observation there relies on the user supplied screenshot.",
+    "Google Street View images examined are dated August 2024, although they were consulted in September 2026.",
+    "Institutional and owner photos have no independently established capture dates.",
+    "No dimensions, roof survey, heights or footprint relocation were extracted from Google imagery. Open-map footprints remain unchanged.",
+    "No mass Street View capture, no panoramic imagery stored in the repository, no claim that the full city was manually verified."
+  ]
+}

@@ -16,14 +16,14 @@ function pointedArch(x, bottom, width, height, Shape = THREE.Shape) {
 }
 
 /** Assign metric UVs after transforms, so all masonry uses the PBR material's real scale. */
-function metricUvs(geometry) {
+function metricUvs(geometry, verticalScale = 1) {
   const position = geometry.getAttribute('position');
   const normal = geometry.getAttribute('normal');
   const uv = new Float32Array(position.count * 2);
   for (let i = 0; i < position.count; i++) {
     const nx = Math.abs(normal.getX(i)), ny = Math.abs(normal.getY(i)), nz = Math.abs(normal.getZ(i));
     uv[i * 2] = nx > nz && nx > ny ? position.getZ(i) : position.getX(i);
-    uv[i * 2 + 1] = ny > nx && ny > nz ? position.getZ(i) : position.getY(i);
+    uv[i * 2 + 1] = ny > nx && ny > nz ? position.getZ(i) : position.getY(i) * verticalScale;
   }
   geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
 }
@@ -48,10 +48,17 @@ export function buildCathedral(scene, footprint, materials) {
   group.name = 'Catedral Inmaculada Concepción — exterior interpretado';
   group.position.set(front[0], 0.035, front[1]);
   group.rotation.y = Math.atan2(-right[1], right[0]);
-  group.scale.y = (footprint.height || 33) / 33;
+  // The Diocese photograph shows a long needle above the clock, not a low roof.
+  // These proportions are interpreted; normalize the complete silhouette,
+  // including its cross, to the existing OSM height without changing its footprint.
+  const spireBase = 27.95, spireHeight = 9.8, crossHeight = .9;
+  const interpretedHeight = spireBase + spireHeight + crossHeight;
+  group.scale.y = (footprint.height || 33) / interpretedHeight;
   group.userData = { landmark: true, osmId: footprint.id, source: REFERENCE,
     interpretation: 'Original architectural model; proportions and details interpreted from a reference photograph, not a measured survey.',
-    footprint: points.map((p) => [...p]), heightFromOsm: footprint.height || 33 };
+    footprint: points.map((p) => [...p]), heightFromOsm: footprint.height || 33,
+    spireProportionsEstimated: true, spireHeightBeforeNormalization: spireHeight,
+    verticalNormalization: group.scale.y };
 
   const cornice = materials.brick.clone(); cornice.name = 'Cathedral darker fired-brick cornices'; cornice.color.set(0x704239);
   const baseBrick = materials.brick.clone(); baseBrick.name = 'Cathedral brick plinth'; baseBrick.color.set(0xba7966);
@@ -69,7 +76,7 @@ export function buildCathedral(scene, footprint, materials) {
     geometry.applyMatrix4(new THREE.Matrix4().compose(new THREE.Vector3(...position),
       new THREE.Quaternion().setFromEuler(new THREE.Euler(...rotation)), new THREE.Vector3(1, 1, 1)));
     if (!geometry.getAttribute('normal')) geometry.computeVertexNormals();
-    metricUvs(geometry);
+    metricUvs(geometry, group.scale.y);
     const nonIndexed = geometry.index ? geometry.toNonIndexed() : geometry;
     if (nonIndexed !== geometry) geometry.dispose();
     if (!buckets.has(material)) buckets.set(material, []);
@@ -200,9 +207,11 @@ export function buildCathedral(scene, footprint, materials) {
     add(new THREE.ConeGeometry(0.49, 1.45, 4), paintedMetal, [side * 3.1, 28.12, 0.12], [0, Math.PI / 4, 0]);
   }
   box(0, 27.2, 3.1, 6.15, 1.5, 6.15);
-  add(new THREE.ConeGeometry(4.35, 4.6, 4), paintedMetal, [0, 30.25, 3.1], [0, Math.PI / 4, 0]);
-  box(0, 32.55, 3.1, 0.075, 0.9, 0.075, metal);
-  box(0, 32.65, 3.1, 0.6, 0.07, 0.075, metal);
+  add(new THREE.ConeGeometry(4.35, spireHeight, 4), paintedMetal,
+    [0, spireBase + spireHeight / 2, 3.1], [0, Math.PI / 4, 0]);
+  const spireTip = spireBase + spireHeight;
+  box(0, spireTip + crossHeight / 2, 3.1, 0.075, crossHeight, 0.075, metal);
+  box(0, spireTip + crossHeight * .7, 3.1, 0.6, 0.07, 0.075, metal);
 
   // Clock dial, bezel, twelve markers and physical hands; no canvas or copied photo.
   add(new THREE.CircleGeometry(0.7, 32), clockFace, [0, 27.53, -0.25]);

@@ -35,7 +35,8 @@ export async function loadMaterials(renderer, onProgress = () => {}) {
   onProgress(0, 'Materiales fotográficos');
   const textureLoader = new THREE.TextureLoader();
   const anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
-  let environmentTarget;
+  const environmentTargets = new Set();
+  let overcastPromise;
   let disposed = false;
 
   const dispose = () => {
@@ -43,7 +44,7 @@ export async function loadMaterials(renderer, onProgress = () => {}) {
     disposed = true;
     for (const material of materials) material.dispose();
     for (const texture of textures) texture.dispose();
-    environmentTarget?.dispose();
+    for (const target of environmentTargets) target.dispose();
   };
 
   const loadTexture = async (file, role, tileMeters) => {
@@ -76,7 +77,8 @@ export async function loadMaterials(renderer, onProgress = () => {}) {
       loadTexture(asset.maps.normal, 'normal', spec.tileMeters),
       loadTexture(asset.maps.arm, 'arm', spec.tileMeters),
     ]);
-    const material = new THREE.MeshStandardMaterial({
+    const SurfaceMaterial = key === 'asphalt' ? THREE.MeshPhysicalMaterial : THREE.MeshStandardMaterial;
+    const material = new SurfaceMaterial({
       name: `Neiva photographic ${key}`, color: 0xffffff, map, normalMap,
       normalScale: new THREE.Vector2(spec.normalStrength, spec.normalStrength),
       roughnessMap: packed, roughness: 1,
@@ -111,17 +113,19 @@ export async function loadMaterials(renderer, onProgress = () => {}) {
     return material;
   };
 
-  const loadEnvironment = async () => {
-    const file = assets.get('environment').maps.hdr;
+  const loadEnvironment = async (overcast = false) => {
+    const file = overcast ? 'overcast_sky_2k.hdr' : assets.get('environment').maps.hdr;
     const sky = await new RGBELoader().loadAsync(new URL(file, base).href);
     textures.add(sky);
-    sky.name = 'Neiva clear daylight HDR sky, Poly Haven';
+    sky.name = `Neiva ${overcast ? 'overcast' : 'clear daylight'} HDR sky, Poly Haven`;
     sky.mapping = THREE.EquirectangularReflectionMapping;
-    progress(file);
+    if (!overcast) progress(file);
     const generator = new THREE.PMREMGenerator(renderer);
+    let environmentTarget;
     try {
       generator.compileEquirectangularShader();
       environmentTarget = generator.fromEquirectangular(sky);
+      environmentTargets.add(environmentTarget);
       environmentTarget.texture.name = 'Neiva physical environment PMREM';
     } finally {
       generator.dispose();
@@ -150,7 +154,10 @@ export async function loadMaterials(renderer, onProgress = () => {}) {
     });
     glass.userData = { physical: true, note: 'Physical glass shader, no synthetic photographic texture.' };
     materials.add(glass);
-    return { ...loaded, glass, environment, sky, dispose, manifest };
+    const loadOvercast = () => overcastPromise ||= loadEnvironment(true).catch(error => {
+      overcastPromise = undefined; throw error;
+    });
+    return { ...loaded, glass, environment, sky, loadOvercast, dispose, manifest };
   } catch (error) {
     dispose();
     throw new Error(`No se pudieron cargar los materiales fotográficos: ${error.message}`, { cause: error });

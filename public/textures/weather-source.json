@@ -1,0 +1,25 @@
+{
+  "assetId": "overcast_soil_puresky",
+  "name": "Overcast Soil (Pure Sky)",
+  "authors": {
+    "Jarod Guest": "Sky edits",
+    "Sergej Majboroda": "Original"
+  },
+  "license": "CC0-1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "sourcePage": "https://polyhaven.com/a/overcast_soil_puresky",
+  "downloadedAt": "2026-09-07T04:55:13.027057+00:00",
+  "files": [
+    {
+      "path": "overcast_sky_2k.hdr",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/overcast_soil_puresky_2k.hdr",
+      "bytes": 4568000,
+      "sha256": "5414e1ac0c35e451d28595b2a2cba05e2ca301fdeb755b0a469408443093dafc",
+      "dimensions": [
+        2048,
+        1024
+      ]
+    }
+  ],
+  "modifications": "Original HDR preserved unchanged. Runtime PMREM filtering only. This is a lighting reference, not a photograph taken in Neiva."
+}

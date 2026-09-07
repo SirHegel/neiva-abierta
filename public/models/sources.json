@@ -90,6 +90,13 @@
       "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/LICENSES/LicenseRef-LegalMark-Khronos.txt",
       "sha256": "2ea9821de870cf8d3faaa115ffc47f56632bf9f98d54d2ac1ce61592040b765c",
       "bytes": 589
+    },
+    {
+      "file": "run.fbx",
+      "url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/0943055db6ec570bcef9f2c8b41c9e5467c808f9/Assets/Animations/all_animations_max_motextr_xy/m_run_neutral.max.fbx",
+      "sha256": "2f5647b86022ddbb702819ce939c7012e3636796fff93d1b979ea716a71dff5f",
+      "bytes": 877760,
+      "downloadedAt": "2026-09-07T04:55:13.027057+00:00"
     }
   ],
   "sourceCommits": {
@@ -104,8 +111,8 @@
   "distributedFiles": [
     {
       "path": "ATTRIBUTION.txt",
-      "bytes": 1287,
-      "sha256": "8435494be8b07522cc8a686da3767ba1b48129b8c72bef0a9ae22c4c52771f22"
+      "bytes": 1386,
+      "sha256": "de9723ddb78d41435fb558cc230456859ed6e877e6bf0b94b5b0a3574e3a111d"
     },
     {
       "path": "car/LICENSE-CAR.txt",
@@ -186,6 +193,11 @@
       "path": "character/walk.fbx",
       "bytes": 958512,
       "sha256": "93089851a370e3a117a6bd04c002815f7133fce41c6271e9eb448ca1228b154f"
+    },
+    {
+      "path": "character/run.fbx",
+      "sha256": "2f5647b86022ddbb702819ce939c7012e3636796fff93d1b979ea716a71dff5f",
+      "bytes": 877760
     }
   ]
 }

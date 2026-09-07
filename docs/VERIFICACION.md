@@ -1,44 +1,73 @@
-# Verificación de la edición 0.2
+# Verificación de la edición 0.3
 
-Realizada el 6 de septiembre de 2026 en Colombia (7 de septiembre UTC).
-Esta revisión sustituye el render inicial por modelos detallados, materiales
-fotográficos, fachadas con textura y geometría, tejados, vegetación con hojas
-recortadas, una Catedral específica y sombras solares.
+Revisión del 7 de septiembre de 2026, hora de Colombia. La edición incorpora
+una capa de revisión del centro, modelos específicos del Palacio de Justicia,
+Hotel Neiva Plaza y Templo Colonial, corrección de la aguja de la Catedral,
+pavimento y fuente del Santander, vegetación más densa, carrera animada,
+Pointer Lock, ajustes de sensibilidad y ambiente después de lluvia.
+
+## Comprobaciones de datos y código
+
+- 30 pruebas Node aprobadas: cartografía, física, aplicación no destructiva de
+  la revisión urbana y nueve casos de cámara/captura de mouse.
+- 7 pruebas Python del contrato de importación de arte para Unreal aprobadas.
+  El contrato comprueba fuentes e importación prevista; no compila Unreal.
+- SHA-256 del mapa base conservado. Las dos exclusiones residenciales afectan
+  también las colisiones. Sólo el segmento de Calle 7 frente al Santander cambia
+  a adoquín. Las alturas corregidas conservan la altura original y se marcan
+  como estimadas.
+- Geometría cívica comprobada sin coordenadas, normales ni UV no finitas; 38
+  mallas y 45 árboles entre parque y plazoleta. La aguja mantiene la altura
+  nominal OSM de 33 m, que no equivale a una medida verificada.
+- Raycast posterior del Templo Colonial: la tapa bajo el tejado recibe el rayo
+  a 3 m, donde antes existía una abertura accidental.
+- La fuente comparte su contorno irregular entre render y colisión, sin una
+  barrera circular mayor que el vaso. Los postes de la cubierta y los troncos
+  cívicos tienen colisión; el centro de la cubierta permanece transitable.
+- Fuentes y hashes del HDR cubierto y la animación de carrera verificados.
+  El automóvil mantiene sus 213.347 triángulos y reduce sus mallas de 97 a 45.
+
+## Recorrido integrado en navegador
+
+`HEADLESS=1 node scripts/check-browser.mjs` terminó con código 0 contra el
+build local. El renderer efectivo fue Intel UHD, sin render por software.
 
 | Comprobación | Resultado observado |
 | --- | --- |
-| Pruebas Node de cartografía y física | 17 aprobadas, 0 omitidas |
-| Contrato de importación de arte para Unreal | 7 pruebas Python aprobadas |
-| Fuentes de arte y mapas | Validados; 46 entradas del manifiesto de texturas verificadas por SHA-256 |
-| Compilación web | Aprobada |
-| Navegador, 1440 × 960 | Versión gráfica `0.2-photographic` cargada |
-| Caminar y vehículo | Desplazamiento, entrada, avance y salida sin colisión comprobados |
-| Estudio ficticio | Panel y enlace de correo público comprobados; no se envía correo |
-| Pausa y regreso | Estado detenido y reanudado |
-| Mapa | Viaje al acceso del Parque Santander y visita registrada |
-| Móvil emulado, 320 × 844 y 390 × 844 | Palanca, estudio y viaje con mapa comprobados |
-| Desbordamiento móvil | 0 en ambos tamaños |
-| Palanca, interacción, mapa y menú | Dentro de pantalla, blancos de al menos 44 px |
-| Errores JavaScript/console.error | 0 en los tres recorridos |
-| Unreal | Fuentes, contrato de arte y sintaxis Python validados; C++ sin compilar |
+| Escritorio 1440 × 960 | Carga inicial 12.379 ms; versión `0.3-wet-city` |
+| Mouse | Captura real al entrar; giro sin pulsar; Esc pausa y libera |
+| Carrera | 2 m/s caminando, 5,4 m/s corriendo |
+| Automóvil | Entrada, avance, frenado de 5,76 a 0,34 m/s y salida segura |
+| Menús | Mapa, sensibilidad, clima, calidad, hora y pantalla completa |
+| Destinos revisados | Lista de los cuatro edificios; viaje a Palacio y Colonial sin quedar dentro de colisiones |
+| Contacto y foto | Panel del estudio, enlace mailto y PNG descargado; ningún correo enviado |
+| Móvil emulado 320 × 844 y 390 × 844 | Palanca, carrera 5,4 m/s, botón de carrera, cámara táctil, estudio y viajes |
+| Controles móviles | Todos los comprobados dentro de pantalla y de al menos 44 px; desbordamiento horizontal 0 |
+| Errores no controlados y recursos fallidos | 0 errores JavaScript/console.error y 0 respuestas HTTP ≥400 en los tres recorridos |
 
-Las capturas se inspeccionaron para comprobar la carga del humano animado,
-el automóvil detallado, las fachadas, las hojas con transparencia y las sombras.
-`public/preview.webp` es una captura real del canvas, sin la interfaz; se utiliza
-también en la tarjeta de Juegos del sitio. Las fachadas generadas y la Catedral
-son recreaciones, no evidencia de un levantamiento fotográfico de Neiva.
+Las cargas móviles observadas fueron 7.161 y 7.172 ms, respectivamente, en
+el mismo equipo, sin limitar red ni emular potencia de un teléfono. Son una
+observación por tamaño. Los resultados detallados están en
+`artifacts/browser-results.json`, con capturas de escritorio y móvil.
 
-El recorrido local completo usó Chrome real con Mesa Intel UHD Graphics
-ADL-S GT0.5. La primera carga observada fue de 10.143 ms, incluyendo materiales,
-modelos y cartografía. Es una sola observación, sin simulación de red móvil ni
-medición de dispersión; no garantiza ese tiempo en otros equipos.
+## Diagnóstico gráfico
 
-El render detallado tiene un costo apreciable en GPU integrada. Auto conserva
-modelos, materiales y sombras, y omite la oclusión ambiental adicional en GPU
-integrada, móvil o no identificada. Alta la activa. El alcance visible es de
-700 m en escritorio y 450 m en móvil, con niebla progresiva; el mapa completo
-sigue disponible para desplazarse y viajar. No se afirma una tasa garantizada
-de fotogramas ni se han probado teléfonos físicos.
+Los shaders de asfalto mojado y reflexión planar se compilaron sin errores JS/GL
+con Chrome y GPU Mesa Intel UHD Graphics ADL-S GT0.5. Las capturas del canvas
+comprueban que los charcos reflejan geometría de la escena. El pase se programa
+antes del render principal para evitar contaminar la refracción del automóvil.
+
+Un diagnóstico aislado a 1440 × 960, DPR 1 y calidad Auto tomó doce muestras por
+ambiente con espera de finalización de GPU: media de 16,13 ms en seco y 22,43 ms
+después de lluvia. Las capturas de reflexión produjeron picos de 38–45 ms.
+Son muestras de una escena durante la integración, no una medición completa de
+la partida final ni una garantía de FPS. La simulación, el HUD y la carga tienen
+costes adicionales. Auto omite AO en GPU integrada y móvil; Alta lo activa.
+
+Los teléfonos se comprueban mediante emulación de entrada táctil y viewport;
+no se han probado dispositivos físicos. La reconstrucción conserva un suelo
+plano, tráfico de recorridos simples y exteriores interpretados. Estas pruebas
+no certifican una réplica exacta de cada barrio, fachada o interior.
 
 ## Reproducir
 
@@ -63,7 +92,18 @@ GAME_TEST_URL=https://neiva-abierta.vercel.app node scripts/check-browser.mjs
 ```
 
 El script escribe capturas y resultados en `artifacts/`, excluido de Git.
-Necesita Chrome y un servidor gráfico; `HEADLESS=1` permite una alternativa
-para funcionalidad, cuyo render por software puede ser mucho más lento.
-Estas comprobaciones no certifican una build Unreal ni una réplica exacta de
-cada barrio, fachada o interior.
+Necesita Chrome. `HEADLESS=1` activa los argumentos de GPU que se comprobaron
+con Intel UHD en este entorno; el script registra el renderer efectivo. Esa
+configuración no garantiza aceleración en otro equipo. Pointer Lock se verifica
+por `document.pointerLockElement` y movimientos reales del mouse del navegador,
+no mediante una bandera simulada.
+
+La batería distingue un rechazo nativo por exceso de solicitudes de un fallo
+de la aplicación. [Chromium documentó una corrección de su limitador el
+31 de agosto de 2026](https://chromium.googlesource.com/chromium/src/third_party/+/044cd9be23eca0c909c7a0c60c047ab7e1a669f1%5E%21/).
+Ante ese rechazo concreto, se comprueba que mover el mouse sin botón sigue
+girando la cámara y que un clic posterior recupera la captura. No se desactiva
+la protección del navegador ni se fuerza una recaptura automática.
+
+El proyecto C++ de Unreal sigue sin compilar en este entorno. La publicación
+Vercel corresponde a la edición Three.js/WebGL.
