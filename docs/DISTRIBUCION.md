@@ -90,6 +90,18 @@ con `python` en un equipo con UE y Visual Studio compatibles produce el paquete
 Win64. **Este Linux no compila un ejecutable Windows mediante ese comando.**
 Los requisitos mínimos del juego quedan pendientes de pruebas reales.
 
+La descarga Linux incluirá el lanzador
+[`publishing/linux/Jugar-Neiva.sh`](../publishing/linux/Jugar-Neiva.sh) en la raíz,
+junto a la carpeta `Linux/` completa. Solicita Vulkan y selecciona NVIDIA mediante
+PRIME sólo para el proceso del juego cuando `nvidia-smi` confirma su disponibilidad;
+`NEIVA_GPU=default` conserva la selección normal del sistema. La
+[`plantilla de instrucciones`](../publishing/linux/README-distribucion.md) se
+copiará como `README.md`; el
+[`aviso de Unreal`](../publishing/linux/UNREAL-AVISO.txt) irá a `Licenses/` junto
+a las atribuciones legibles de `Content/Data/Licenses`. Se incluirán también los
+metadatos cartográficos y sus límites de cobertura. Estos archivos preparan la
+distribución; no sustituyen la prueba del paquete independiente antes de publicarlo.
+
 Fuentes: [flujo Linux de Epic](https://dev.epicgames.com/documentation/unreal-engine/linux-development-quickstart-for-unreal-engine),
 [Python en el editor](https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python?application_version=5.5)
 y [empaquetado con UAT](https://dev.epicgames.com/documentation/unreal-engine/build-operations-cooking-packaging-deploying-and-running-projects-in-unreal-engine).
