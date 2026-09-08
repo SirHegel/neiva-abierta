@@ -1,8 +1,10 @@
-# Clima y diálogos: desarrollo 0.3
+# Clima y diálogos · alfa Unreal 0.3
 
 ## Clima nativo
 
-Unreal Engine 5.5.4 ejecuta un ciclo de lluvia propio del juego. No consulta servicios meteorológicos ni representa el clima actual de Neiva. La prueba jugable completa de esta versión sigue en curso; compilar e importar recursos no acredita por sí solo su aspecto, rendimiento o funcionamiento en un paquete distribuido.
+La [alfa Linux 0.3.0](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha) está publicada. Unreal Engine 5.5.4 ejecuta un ciclo de lluvia propio del juego: no consulta servicios meteorológicos ni representa el clima actual de Neiva. La revisión del paquete local y la copia pública descargada confirmaron clima, pausa, peatones, conversación y vehículo. La descarga pública pasó 19 comprobaciones de juego y seis de integridad y cerró con código 0, en Linux con RTX 4050 Laptop a 1920 × 1080. El límite de 30 FPS de esta revisión no es un benchmark sin límite.
+
+[Recibo del paquete 0.3](../data/verification/unreal-03.json) · [Recibo de descarga](../data/verification/unreal-03-download.json). El archivo publicado mide 743.035.069 bytes; su SHA-256 y la fuente compilada se conservan en [DISTRIBUCION.md](DISTRIBUCION.md).
 
 El ciclo automático dura 140 segundos de juego:
 
@@ -15,7 +17,7 @@ El ciclo automático dura 140 segundos de juego:
 
 La humedad se integra con una constante de tiempo de 18 s durante la entrada y la lluvia, y de 55 s durante la salida y el período seco. El suelo conserva humedad al escampar. El cálculo integra las transiciones cúbicas y el secado sin depender de cómo se reparta el tiempo entre cuadros. Forzar lluvia o seco también conserva una transición gradual; volver al modo automático reanuda el ciclo.
 
-El actor se guía por el personaje o el carro que posee el jugador. Usa el tiempo de juego, y la pausa detiene tanto el ciclo como el reloj de desplazamiento de las gotas. Esta es la intención implementada; su comprobación nativa de pausa y conducción se registra por separado.
+El actor se guía por el personaje o el carro que posee el jugador. Usa el tiempo de juego, y la pausa detiene tanto el ciclo como el reloj de desplazamiento de las gotas. La revisión nativa confirmó que la pausa congela el tiempo del mundo, las gotas y la humedad; las comprobaciones del editor, paquete y descarga se mantienen separadas.
 
 ### Materiales, cielo y gotas
 
@@ -48,7 +50,7 @@ Comprobaciones realizadas:
 - Compilación real de los tipos C++ y el puente en Unreal 5.5.4.
 - Ocho [pruebas CPU](../unreal/NeivaAbierta/Scripts/tests/test_weather.py) aprobadas: ciclo, continuidad, cambios manuales, integración con distintas particiones temporales, tiempo detenido, secado, límites numéricos y orientación/dimensiones de las gotas.
 - Preparación e importación nativas aprobadas. La cuarta ejecución verificó explícitamente `rain mesh bounds verified Z=2400.0`; el informe del preparador está en `Saved/NeivaWeather-prepared.json`.
-- La captura nativa de revisión muestra lluvia y cielo atenuado, con los materiales del personaje conservados. La validación completa de interacción, pausa, conducción, rendimiento y paquete corresponde a los recibos de QA de esta versión.
+- La captura nativa de revisión muestra lluvia y cielo atenuado, con los materiales del personaje conservados. El recibo del paquete local también comprueba lluvia, humedad restante, secado, pausa, conversación y conducción. No constituye un benchmark sin límite de FPS.
 
 Los registros de trabajo locales están en `artifacts/upgrade-03/`. No se presentan como archivos públicos de la entrega ni como una medición de rendimiento por sí solos.
 
@@ -66,7 +68,7 @@ El informe declara el modo y el instante efectivo de inicio; en el modo experime
 
 El límite es de 60 s y 32 MiB. El IVF conserva ticks exactos de 90 kHz; WebM cuantiza los tiempos a milisegundos. La comprobación compara cantidad y orden de cuadros, SHA-256 de cada payload y PTS tras remultiplexar. Once [pruebas del grabador](../tests/stream-encoded-recording.test.mjs) están aprobadas, incluidas opciones incompatibles, ambos modos, fronteras de vuelta RTP, paquetes antiguos y decodificación real de un fixture VP8 con FFmpeg/ffprobe. El fixture se genera sólo para la prueba; no representa una captura del juego.
 
-Estas comprobaciones del contenedor no prueban la identidad del proceso Unreal, fidelidad geográfica, rendimiento del juego ni validez de una interacción. La restauración del modo predeterminado no se presenta como corrección de los timestamps del stream. La evidencia de esta entrega puede usar `--record` con MediaRecorder, declarando su recodificación, y capturas PNG del juego.
+Estas comprobaciones del contenedor no prueban la identidad del proceso Unreal, fidelidad geográfica, rendimiento del juego ni validez de una interacción. La restauración del modo predeterminado no se presenta como corrección de los timestamps del stream. La evidencia audiovisual de esta entrega usa `--record` con MediaRecorder y capturas PNG del juego. El vídeo con audio se recodifica y normaliza a 30 FPS para publicarlo; esa cadencia no mide los cuadros originales. La captura fuente `observation-rfNzJq` produjo un paquete Opus inválido y DTS duplicados: el procesamiento no elimina ese hecho del registro ni convierte el resultado en copia bit a bit. Las PNG conservan su imagen nativa. La entrega usa vídeo VP8 y audio Vorbis; su decodificación completa terminó sin avisos y se reprodujo hasta el final en Chrome y Firefox. No se realizó una prueba auditiva humana.
 
 ## Conversaciones y comprobación local del editor
 
@@ -111,11 +113,19 @@ recodificó Opus y FFmpeg notificó un error de encabezado en un paquete;
 por tanto acredita señal recibida y correlación con el diálogo, **no una
 decodificación sin errores ni una prueba auditiva humana**.
 
-Los recibos locales son `artifacts/upgrade-03/editor-review-verified.json`
-y `audio-observations/observation-LlZjJM/audio-rms.json`. Esta sesión
-usó el suplemento automático de alturas; la revisión manual única se
-aplicó después y debe comprobarse en el paquete final. Estos ensayos
-no se presentan como prueba de una descarga pública 0.3.
+Los recibos locales del editor son `artifacts/upgrade-03/editor-review-verified.json`
+y `audio-observations/observation-LlZjJM/audio-rms.json`. Esa sesión usó el
+suplemento automático de alturas; la revisión manual única se aplicó después.
+La revisión posterior del archivo local, de fuente
+`e7a7e280e3e9887df70557ac56aa89318617aeab`, comprobó ocho peatones, siete voces
+cargadas, los cuatro temas, bloqueo de caminar/saltar/reiniciar durante diálogo,
+recuperación del movimiento, conducción, clima, pausa y cierre con código 0.
+Su recibo se publica en [unreal-03.json](../data/verification/unreal-03.json).
+La [copia descargada de GitHub](../data/verification/unreal-03-download.json)
+se instaló y ejecutó por separado: pasó 19/19 comprobaciones de juego y 6/6 de
+integridad, con cierre normal. Las observaciones `SmQf8k` y `Weplzz` se
+correlacionaron con el registro del ejecutable instalado; no se infirió ese
+resultado del éxito del archivo local.
 
 La importación automática con `-nosound` detectó un aviso real: el editor no
 había registrado la fábrica del decodificador Bink al configurar las voces.
@@ -123,6 +133,8 @@ El importador ahora carga explícitamente `BinkAudioDecoder` antes de procesar
 los clips, sin iniciar el mezclador ni un dispositivo de salida. La API Python
 5.5 devuelve `None`; el informe registra que terminó la llamada, **no** que
 verificó la fábrica. Dos pruebas CPU adicionales comprueban el orden de carga
-y que un módulo ausente impide importar o preparar el JSON del diálogo. La
-confirmación de ausencia del aviso requiere una ejecución nativa posterior;
-el cook anterior terminó con código 0, pero ese resultado no borra el aviso.
+y que un módulo ausente impide importar o preparar el JSON del diálogo. El
+paquete posterior cargó las siete voces sin un aviso de decodificador ausente;
+el registro del primer intento conserva el ensure, aunque su cook terminara
+con código 0. La ausencia del aviso y la señal recibida son comprobaciones
+distintas de una prueba auditiva humana.

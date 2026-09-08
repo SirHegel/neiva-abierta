@@ -1,22 +1,19 @@
 # Neiva Abierta
 
-El código **0.3 está en validación nativa**: lluvia periódica y secado gradual,
-conversaciones con voz sintética, recorridos cercanos dentro del Santander y
-17.696 alturas estimadas de Google Research 2023 más una revisión manual
-documentada. Se retiró el edificio ficticio. El launcher prepara compilaciones
-en Linux, Windows y macOS desde sus anfitriones respectivos; **eso no acredita
-ejecutables Windows/Mac**. [Estado de plataformas](docs/PLATAFORMAS.md) ·
-[Reconstrucción y límites](docs/RECONSTRUCCION-0.3.md).
+**Alfa Unreal 0.3.0 para Linux x86_64.** Explora Neiva a pie o en coche,
+con un personaje anónimo, ocho peatones y conversaciones con siete clips de
+voz sintética sobre Jhon y sus servicios. La lluvia llega por ciclos y las
+superficies se mojan y secan gradualmente. Creada y empaquetada con
+**Unreal Engine 5.5.4**.
 
-**Alfa Unreal 0.2.0 para Linux x86_64 disponible.** Explora Neiva a pie o en
-coche, con un personaje anónimo, peatones, colores de ropa y un pequeño estudio
-ficticio para contactar a Jhon. Creada y empaquetada con **Unreal Engine 5.5.4**.
+[Descargar gratis la alfa Linux 0.3](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha)
 
-[Descargar gratis la alfa Linux en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
-
-[Ver vídeo real de la descarga, en 1080p](https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/#descarga-unreal) ·
-[Juegos: Neiva Abierta y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/).
-La ficha y el vídeo se adaptan a móvil; el ejecutable se descarga para Linux.
+La copia pública se descargó sin credenciales y pasó **19 comprobaciones de
+juego y seis de integridad**, con cierre normal. Se revisó a 1080p en una
+RTX 4050 Laptop con límite de 30 FPS; no es un benchmark sin límite.
+El archivo preparado es `Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz`.
+[Estado del paquete](data/verification/unreal-03.json) ·
+[Comprobación de la descarga](data/verification/unreal-03-download.json).
 
 Extrae el archivo completo y, desde la carpeta extraída, ejecuta:
 
@@ -24,38 +21,48 @@ Extrae el archivo completo y, desde la carpeta extraída, ejecuta:
 ./Jugar-Neiva.sh
 ```
 
-Conserva `Linux/` junto al lanzador. Para jugar no necesitas instalar el editor;
-se requiere Linux x86_64 con GPU y controlador Vulkan. Esta descarga no contiene
-versiones para Windows ni celulares. Los requisitos mínimos todavía no están
-establecidos.
+Conserva `Linux/` junto al lanzador. No necesitas instalar el editor para jugar.
+Se requiere Linux x86_64 con GPU y controlador Vulkan; los requisitos mínimos
+no están establecidos. **No hay ejecutables Windows, macOS ni móviles de esta
+entrega.** [Estado de plataformas](docs/PLATAFORMAS.md).
 
-**Controles Unreal:** WASD para caminar o conducir; ratón para mirar; Shift
-para correr; Espacio para saltar o frenar; E para interactuar, entrar o salir
-del coche; C/V para cambiar colores de ropa; R para volver al inicio;
-Esc/P para pausar y continuar.
+**Controles:** WASD para caminar o conducir; ratón para mirar; Shift para
+correr; Espacio para saltar o frenar; E para conversar, entrar o salir del coche;
+1–4 o botones para elegir tema; C/V para cambiar colores de ropa; R para volver
+al inicio; Esc/P para pausar. E/Esc/P cierran primero una conversación activa.
 
-La descarga pública 0.2 se comprobó por tamaño y SHA-256 y se ejecutó a
-1080p en una NVIDIA RTX 4050 Laptop. Se verificaron suelo, cámara sin mantener
-clic, pausa, conducción y salida del coche. Una muestra nativa de la vista del
-parque promedió 21,14 ms por cuadro (47,31 FPS derivados), con límite de 60;
-no es una garantía para otras vistas o equipos.
-[Descarga comprobada](data/verification/unreal-visual-download.json) ·
-[Mejoras y mediciones](docs/MEJORA-VISUAL-0.2.md).
+La versión 0.3 añade **17.696 alturas estimadas de Google Research 2023 y una
+revisión manual separada**, con procedencia conservada; se retiró el edificio
+ficticio. El contacto de Jhon está en los diálogos. La ciudad conserva 35.873
+huellas y cuatro hitos interpretados. **No es una réplica idéntica ni una ciudad
+con calidad visual AAA:** hay fachadas y alturas estimadas, terreno plano e
+interiores pendientes. Los avisos VSM tampoco se consideran resueltos.
+[Reconstrucción y límites](docs/RECONSTRUCCION-0.3.md) ·
+[Clima y diálogos](docs/CLIMA-DIALOGOS-0.3.md).
 
-La ciudad carga 35.873 huellas y cuatro hitos interpretados; **no es una réplica
-idéntica ni hiperrealista de toda Neiva**. Hay alturas y fachadas estimadas,
-terreno plano e interiores pendientes. El perfil de sombras del lanzador reduce
-su resolución; los avisos VSM pueden reaparecer al desplazarse y no se consideran
-resueltos. [Alcance nativo y controles](docs/UNREAL.md) ·
-[Proyecto, transmisión y publicación](docs/DISTRIBUCION.md) ·
-[Revisar referencias sin usar el teclado o mouse del escritorio](docs/NAVEGACION-AISLADA.md).
+[Ficha del proyecto y vídeo](https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/#descarga-unreal) ·
+[Juegos: Neiva Abierta y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/).
+La ficha se adapta a móvil; el ejecutable es para Linux. El vídeo de revisión
+0.3 incluye audio y se recodifica desde MediaRecorder a 30 FPS; esa cadencia
+no mide el rendimiento original. Las PNG conservan la captura nativa.
+No se realizó una prueba auditiva humana.
 
-Para reconstruir la mejora visual 0.2, sigue el
-[orden completo de descarga, importación y horneado](docs/UNREAL.md#orden-completo-desde-un-clon-limpio).
-`scripts/unreal.py package` ejecuta sólo la importación base: los árboles y
-bancos CC0 y el horneado de hitos requieren los pasos previos documentados.
-La [evidencia 0.2](docs/MEJORA-VISUAL-0.2.md) se mantiene separada de la alfa
-0.1.0 anterior, que conserva su propia descarga.
+Para reconstruir esta versión, sigue el
+[orden de importación y horneado](docs/UNREAL.md#orden-completo-desde-un-clon-limpio).
+`scripts/unreal.py package` ejecuta la importación base, clima y voces; los
+árboles y bancos CC0 y el horneado de hitos requieren los pasos previos
+indicados. [Proyecto y controles](docs/UNREAL.md) ·
+[Distribución, tamaño y SHA-256](docs/DISTRIBUCION.md) ·
+[Consulta aislada de referencias](docs/NAVEGACION-AISLADA.md).
+
+### Historial de la alfa 0.2
+
+La [descarga anterior 0.2](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
+se verificó por tamaño y hash y se ejecutó a 1080p en una RTX 4050 Laptop.
+Su muestra del parque promedió 21,14 ms por cuadro (47,31 FPS derivados) con
+límite de 60. **Esa medición pertenece a 0.2, no a 0.3 ni a otros equipos.**
+[Recibo histórico](data/verification/unreal-visual-download.json) ·
+[Mejoras y mediciones de 0.2](docs/MEJORA-VISUAL-0.2.md).
 
 ## Prototipo web anterior 0.4 · Three.js
 
@@ -211,7 +218,7 @@ licencia de Epic: la descarga nativa incorpora su runtime, no el editor ni el
 código fuente del motor. Datos y atribuciones: [MAPAS.md](docs/MAPAS.md).
 Personaje Microsoft Rocketbox: MIT; automóvil Car Concept de Eric Chadwick,
 Darmstadt Graphics Group GmbH, 2024: CC BY 4.0, con sus condiciones de marcas
-conservadas. Materiales y HDR de Poly Haven: CC0. Atribuciones también disponibles
+conservadas. Materiales y HDR de Poly Haven: CC0. Las [voces sintéticas](public/audio/dialogue/README.md) conservan su procedencia y ficha de origen. Atribuciones también disponibles
 en `Licenses/` dentro de la descarga nativa y en Sobre este mundo del prototipo
 web. El código abierto del juego no cambia
 la licencia de los proveedores externos.

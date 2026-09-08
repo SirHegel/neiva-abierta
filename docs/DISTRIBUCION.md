@@ -1,12 +1,16 @@
 # Ejecutable Unreal, descarga y transmisión
 
-La [alfa Unreal 0.2.0 para Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
-ya se puede descargar gratis. Está compilada y empaquetada con **Unreal Engine
+La [alfa Unreal 0.3.0 para Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha)
+está publicada gratuitamente. Está compilada y empaquetada con **Unreal Engine
 5.5.4** e incluye el runtime necesario para jugar sin instalar el editor.
+La copia pública se descargó sin credenciales, coincidió por tamaño y SHA-256,
+y pasó 19 comprobaciones de juego y seis de integridad. Se ejecutó a 1920 × 1080
+en Linux con RTX 4050 Laptop y terminó con código 0. El límite de revisión fue
+30 FPS; no constituye un benchmark nativo sin límite.
 
 ## Descargar y jugar
 
-Descarga `Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz` desde la release, extrae
+Descarga `Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz` desde la release, extrae
 el archivo completo y ejecuta desde la carpeta extraída:
 
 ```sh
@@ -15,30 +19,55 @@ el archivo completo y ejecuta desde la carpeta extraída:
 
 Mantén la carpeta `Linux/`, los datos y las licencias junto al lanzador.
 Se requiere Linux x86_64 con sesión gráfica y GPU/controlador Vulkan.
-No hay ejecutables de esta versión para Windows, Android o iOS ni requisitos
-mínimos del juego establecidos. Los [controles nativos](UNREAL.md#abrir-y-jugar)
-incluyen WASD, ratón, Shift, Espacio, E, C/V, R y Esc/P.
+No hay ejecutables Windows, macOS, Android o iOS ni requisitos mínimos del
+juego establecidos. Los [controles nativos](UNREAL.md#abrir-y-jugar) incluyen
+WASD, ratón, Shift, Espacio, E, temas 1–4, C/V, R y Esc/P.
 
-El archivo publicado ocupa **741.359.235 bytes**. Su SHA-256 es:
+El archivo publicado ocupa **743.035.069 bytes**. Su SHA-256 es:
 
 ```text
-2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d
+65a11768f536f81d9c47ab62788d28e054007e6eb7ec05c4bd9ce28f1cda4cfb
 ```
 
 La release incluye `SHA256SUMS`. El código compilado corresponde a
-[`3d42c1f7ab113544f90a2934fcb52b8797f32143`](https://github.com/SirHegel/neiva-abierta/commit/3d42c1f7ab113544f90a2934fcb52b8797f32143).
+[`e7a7e280e3e9887df70557ac56aa89318617aeab`](https://github.com/SirHegel/neiva-abierta/commit/e7a7e280e3e9887df70557ac56aa89318617aeab).
 Se omiten únicamente los archivos externos `.debug`; se conservan binarios,
-bibliotecas, contenedores de datos y atribuciones.
+bibliotecas, contenedores de datos, voces y atribuciones.
+[Verificación del paquete 0.3](../data/verification/unreal-03.json) ·
+[Comprobación de su descarga pública](../data/verification/unreal-03-download.json).
+
+La versión 0.3 incorpora lluvia periódica, secado gradual, ocho peatones,
+siete clips de voz sintética y conversaciones sobre Jhon. Se aplicaron 17.696
+alturas estimadas y una corrección manual separada; se retiró el estudio
+ficticio. Conserva las huellas y los cuatro hitos interpretados, no una réplica
+exacta de toda la ciudad. [Clima y diálogos](CLIMA-DIALOGOS-0.3.md) ·
+[Procedencia y límites](RECONSTRUCCION-0.3.md).
+
+La evidencia audiovisual final de 0.3 usa capturas PNG del juego y vídeo
+MediaRecorder recodificado con audio. Se normaliza la presentación a 30 FPS:
+no es la cadencia medida de los cuadros originales. El archivo de origen tenía
+un paquete Opus inválido y DTS repetidos; se conserva ese diagnóstico y no se
+presenta el vídeo final como copia sin pérdidas ni como escucha humana.
+Las cifras siguientes pertenecen
+a versiones anteriores y no se atribuyen a 0.3.
+
+## Historial de 0.2
+
+La [alfa 0.2.0](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
+conserva su descarga `Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz`, de
+741.359.235 bytes y SHA-256
+`2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d`.
+Su código compilado fue
+[`3d42c1f7ab113544f90a2934fcb52b8797f32143`](https://github.com/SirHegel/neiva-abierta/commit/3d42c1f7ab113544f90a2934fcb52b8797f32143).
 La copia pública se descargó sin autenticación, coincidió por tamaño y hash,
-y abrió con salida normal. Cámara, pausa y vehículo pasaron las comprobaciones
-registradas en el [recibo 0.2](../data/verification/unreal-visual-download.json).
-Las mejoras, capturas 1080p y métricas nativas están en
-[MEJORA-VISUAL-0.2.md](MEJORA-VISUAL-0.2.md).
+y pasó cámara, pausa, conducción y salida normal. El
+[recibo histórico](../data/verification/unreal-visual-download.json) y
+[MEJORA-VISUAL-0.2.md](MEJORA-VISUAL-0.2.md) conservan sus capturas y mediciones.
 
 ## Estado comprobado
 
 El historial siguiente corresponde a la **alfa 0.1.0 anterior**; sus cifras y
-pruebas se conservan separadas de la descarga 0.2 indicada arriba.
+pruebas se conservan separadas de las descargas 0.2 y 0.3 indicadas arriba.
 
 El 7 de septiembre de 2026 pasaron la compilación C++, la importación de activos
 y el flujo UAT de cook, staging, empaquetado y archivo para Linux. UAT terminó
@@ -83,7 +112,7 @@ sombras para reducir el trabajo de las mallas procedurales; sacrifica nitidez.
 **Los avisos VSM no están resueltos:** vuelven a verse en capturas de entrada,
 conducción y salida del coche de la prueba B. Un único mensaje de arranque en
 el log no demuestra que el problema haya desaparecido. La división de fachadas
-y el horneado a StaticMesh/Nanite siguen pendientes.
+y el horneado a StaticMesh/Nanite estaban pendientes en 0.1; los cuatro hitos se hornearon para 0.2. El resto de la ciudad conserva sectores procedurales.
 
 La recepción H.264/NVENC quedó congelada en pruebas anteriores; VP8 es la ruta
 con vídeo continuo comprobado. El terreno es plano, muchas alturas y fachadas
@@ -107,11 +136,11 @@ En otro equipo, instalar la distribución oficial de **UE 5.5.4** desde
 de Epic en Windows. El proyecto y la infraestructura están fijados a 5.5;
 no se cambia la versión del motor sin compilar y revisar la migración.
 
-Para incluir la mejora visual 0.2 desde un clon limpio, completar primero el
+Para incluir los recursos visuales conservados en 0.3 desde un clon limpio, completar primero el
 [orden de descarga, importación CC0 y horneado completo](UNREAL.md#orden-completo-desde-un-clon-limpio).
 Los comandos siguientes describen la automatización base; **`import` y
 `package` ejecutan sólo `bootstrap_editor.py`**, no `import_visual_assets.py`
-ni `bake_landmarks_editor.py`. Esos dos scripts deben terminar dentro del editor
+ni `bake_landmarks_editor.py`. El bootstrap sí prepara clima e importa las siete voces. Esos dos scripts deben terminar dentro del editor
 antes del comando `package`. Los recursos generados no están en Git.
 
 ```sh
@@ -237,7 +266,7 @@ el escritorio. El PC debe permanecer encendido mientras transmite.
 
 | Destino | Qué aloja | Estado de esta entrega |
 | --- | --- | --- |
-| GitHub | Código y ejecutable compilado | [Alfa Linux 0.2.0 pública](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha) |
+| GitHub | Código y ejecutable compilado | [Alfa Linux 0.3.0 pública](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha) |
 | Sitio personal en Vercel | Ficha y enlace de descarga | [Sala de juegos](https://jhonstevenalvarezruiz.vercel.app/juegos/); el ejecutable se aloja en GitHub |
 | itch.io | Juego descargable sin coste de alojamiento | Alternativa comprobada; no se ha creado una cuenta ni publicado |
 | Epic Games Store | Juego descargable gratuito para el jugador | Borrador local; sin envío ni pago |

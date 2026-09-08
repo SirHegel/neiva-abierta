@@ -1,13 +1,15 @@
 # Paquetes Windows y macOS
 
 Revisión del 8 de septiembre de 2026, UE **5.5.4**. Sólo Linux x64 tiene un
-paquete publicado, descargado y ejecutado. Windows y macOS requieren una
+paquete publicado, descargado y ejecutado. La alfa 0.3 pasó 19 comprobaciones
+de juego y seis de integridad sobre la copia pública, a 1080p con RTX 4050 Laptop.
+Las descargas anteriores conservan su propia evidencia de ejecución. Windows y macOS requieren una
 construcción y una comprobación propias; el archivo Linux no se puede renombrar
 para esas plataformas.
 
 | Destino | Herramientas necesarias | Disponibilidad comprobada |
 | --- | --- | --- |
-| Linux x64 | Editor Linux 5.5.4 y toolchain v23 clang 18.1.0 | Instalados; paquete 0.2 verificado |
+| Linux x64 | Editor Linux 5.5.4 y toolchain v23 clang 18.1.0 | Instalados; [alfa 0.3 publicada](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha), [descarga comprobada](../data/verification/unreal-03-download.json) |
 | Windows x64 | Editor Windows 5.5.4, VS 2022, MSVC 14.38.33130 y Windows SDK | Sin Editor/SDK ni anfitrión Windows preparado |
 | macOS arm64 | Editor Mac 5.5.4, macOS 13.5+, Xcode 15.2+; M2+ para el perfil Nanite/VSM actual | Sin Editor Mac/Xcode ni Mac preparado |
 

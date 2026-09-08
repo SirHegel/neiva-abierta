@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "version": "0.3.0-linux-alpha",
+  "checkedAtUtc": "2026-09-08T09:28:06.243231+00:00",
+  "releaseUrl": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha",
+  "download": {
+    "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz",
+    "bytes": 743035069,
+    "sha256": "65a11768f536f81d9c47ab62788d28e054007e6eb7ec05c4bd9ce28f1cda4cfb",
+    "httpStatus": 200,
+    "withoutAuthentication": true,
+    "platform": "Linux x64",
+    "launchPassed": true
+  },
+  "build": {
+    "engine": "Unreal Engine 5.5.4",
+    "sourceCommit": "e7a7e280e3e9887df70557ac56aa89318617aeab",
+    "binarySha256": "004dc3c5c2fecfea83827f19664f9fa85e28635692718cb160fbc5f5c7d86855"
+  },
+  "runtime": {
+    "executable": "NeivaAbierta",
+    "mode": "packaged-public-download",
+    "nativeExitCode": 0,
+    "physicalDesktopInput": false,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "backend": "Vulkan SM6",
+    "testedGpu": "NVIDIA RTX 4050 Laptop",
+    "gameplayChecks": {
+      "footLookWithoutHeldMouseButtons": true,
+      "footPauseStopsPositionAndTime": true,
+      "footResumeAdvancesTime": true,
+      "carLookWithoutHeldMouseButtons": true,
+      "carPauseStopsPositionAndTime": true,
+      "carResumeAdvancesTime": true,
+      "carEntered": true,
+      "carExited": true,
+      "allMouseMovesWithoutHeldButtons": true,
+      "fourTopicsActiveWithVoice": true,
+      "walkJumpResetBlockedDuringConversation": true,
+      "dialogueCloseRestoresInputAndStopsVoice": true,
+      "walkAfterDialogue": true,
+      "rainTransition": true,
+      "weatherFreezesInPause": true,
+      "dryAfterTransitionStillWet": true,
+      "dryingContinues": true,
+      "eightGroundedPedestrians": true,
+      "nativeExitZero": true
+    },
+    "gameplayCheckCount": 19,
+    "nativeLog": {
+      "path": "artifacts/upgrade-03/downloaded-review-03/game.log",
+      "bytes": 434130,
+      "sha256": "aa3a12abc77e7e377618c832e6bf54213f1ac2feabecfb22a843e6c212172936"
+    },
+    "controlsProof": {
+      "path": "artifacts/upgrade-03/downloaded-verified-03.json",
+      "bytes": 25188,
+      "sha256": "fe60339c8851cc9034091f0caa55e7972139982e2a6c9e86122fc1a943c79476"
+    },
+    "scope": "Verified against native log timestamps. First automated NPC pursuit did not reach conversation and was retained as a failed observer attempt; a corrected ordinary movement approach completed the scenario."
+  },
+  "websiteDeploymentVerified": false,
+  "limitations": [
+    "This is an alpha, substantially below the requested Cyberpunk/AAA visual quality.",
+    "Not a whole-city scan or identical Neiva replica: generic facades, estimated heights, flat terrain and no building interiors remain.",
+    "Windows and macOS builds have not been produced or executed; their native build hosts are unavailable.",
+    "The 30 FPS review cap and decoded WebRTC delivery are not an uncapped native renderer benchmark or mobile performance guarantee.",
+    "NPCs and their promotional dialogue are fictional; synthetic voices are not statements from actual residents."
+  ],
+  "detailedEvidence": "data/verification/unreal-03.json"
+}

@@ -1,6 +1,6 @@
-# Reconstrucción documentada de Neiva: preparación de 0.3
+# Reconstrucción documentada de Neiva · alfa 0.3
 
-Revisión del **8 de septiembre de 2026**. Este documento describe fuentes y propuestas en preparación; no acredita una versión 0.3 empaquetada ni una ciudad idéntica. La versión 0.2 conserva su historial de pruebas.
+Revisión del **8 de septiembre de 2026**. Este documento distingue fuentes, estimaciones aplicadas y propuestas pendientes. La [alfa Linux 0.3](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha) está empaquetada y publicada; eso no convierte la ciudad en una réplica idéntica. El [recibo del paquete](../data/verification/unreal-03.json) y el [de descarga](../data/verification/unreal-03-download.json) mantienen sus comprobaciones separadas. La versión 0.2 conserva su historial.
 
 La base tiene huellas cartográficas de edificios, pero no un levantamiento tridimensional completo de Neiva. La nueva instrucción del usuario, **«nada ficticio»**, reemplaza la solicitud anterior del estudio ficticio. Retirar esa construcción y trasladar el contacto a la interfaz o interacción de personaje evita atribuir a la ciudad un inmueble inexistente. Esa retirada corresponde a la implementación nativa, no a una modificación silenciosa del mapa fuente.
 
@@ -90,7 +90,7 @@ La ejecución usó dos trabajadores de descarga/GDAL, `nice=10`, ventanas de has
 
 ### Aplicación en la preparación nativa
 
-La selección fue autorizada para la preparación de 0.3 y aplicada a **17.696 edificios de `Content/Data/neiva.json`**, sin modificar un byte de `public/data/neiva.json`. Aún no acredita una ejecución, empaquetado ni publicación de 0.3. El flujo es:
+La selección fue autorizada para la preparación de 0.3 y aplicada a **17.696 edificios de `Content/Data/neiva.json`**, sin modificar un byte de `public/data/neiva.json`. El staging por sí solo no acredita ejecución: su inclusión en el paquete 0.3 se contrasta con el recibo nativo. El flujo es:
 
 ```sh
 python3 unreal/NeivaAbierta/Scripts/prepare_project.py --check
@@ -102,7 +102,7 @@ python3 -m unittest discover -s tests -p test_stage_map.py -v
 
 El recibo de selección publicado conserva `appliedCount:0`: describe la aprobación antes de la preparación. Sólo el recibo derivado `unreal/NeivaAbierta/Content/Data/neiva-height-staging.json` y `meta.heightSupplement` informan `appliedCount:17696` con los hashes utilizados. `prepare_project.py` incorpora el manifiesto y atribución de Google Research/Copernicus a `Content/Data/Licenses`; la base cartográfica derivada conserva ODbL y la fuente raster elegida CC-BY 4.0.
 
-Se comprobaron **9 pruebas geoespaciales** y **17 pruebas del staging**, incluidas conservación de huellas/patios/vías, no mutación de la base, rechazo de alturas >30 m, falsas confirmaciones, fuentes alteradas y edificios protegidos. No son pruebas de apariencia del nuevo mapa en Unreal; esa fase sigue pendiente.
+Se comprobaron **9 pruebas geoespaciales** y **21 pruebas del staging**, incluidas conservación de huellas/patios/vías, no mutación de la base, rechazo de alturas >30 m, falsas confirmaciones, fuentes alteradas y edificios protegidos. No son pruebas de apariencia. La revisión nativa 0.3 tiene un recibo separado y tampoco valida cada altura frente a una medición real.
 
 ### Auditoría completa de alturas declaradas alrededor del inicio
 

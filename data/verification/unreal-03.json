@@ -1,0 +1,996 @@
+{
+  "schemaVersion": 1,
+  "version": "0.3.0-linux-alpha",
+  "checkedAtUtc": "2026-09-08T09:28:06.243231+00:00",
+  "status": "published-linux-public-download-verified",
+  "releaseUrl": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha",
+  "build": {
+    "engine": "Unreal Engine 5.5.4",
+    "sourceCommit": "e7a7e280e3e9887df70557ac56aa89318617aeab",
+    "binarySha256": "004dc3c5c2fecfea83827f19664f9fa85e28635692718cb160fbc5f5c7d86855"
+  },
+  "platforms": {
+    "Linux x64": {
+      "compiled": true,
+      "publicArchive": true,
+      "runtimeVerified": true
+    },
+    "Windows x64": {
+      "compiled": false,
+      "runtimeVerified": false,
+      "reason": "No Windows build/test host available; host scripts are prepared."
+    },
+    "macOS": {
+      "compiled": false,
+      "runtimeVerified": false,
+      "reason": "No Mac/Xcode build/test host available; host scripts are prepared."
+    }
+  },
+  "portableTests": {
+    "node": 114,
+    "pythonPreparationAndLauncher": 71,
+    "pythonUnrealResources": 63,
+    "geospatialLocalOnly": 9,
+    "total": 257,
+    "githubActions": {
+      "runId": 34206678292,
+      "conclusion": "success",
+      "geospatialTestsIncluded": false
+    }
+  },
+  "localExtractedArchive": {
+    "sourceCommit": "e7a7e280e3e9887df70557ac56aa89318617aeab",
+    "checkCount": 28,
+    "checks": {
+      "bothObservationsShowContinuousRealVideo": true,
+      "walkingBeforeVehicleEntry": true,
+      "vehicleEnteredAndPossessed": true,
+      "vehicleAdvancedOver4Metres": true,
+      "brakeReducedSpeedToZero": true,
+      "vehicleExitRestoredCharacter": true,
+      "walkAfterVehicleExit": true,
+      "fourTopicsActiveWithNativeVoicePlaying": true,
+      "fourCorrectNativeVoiceClipsStarted": true,
+      "walkJumpResetBlockedDuringConversation": true,
+      "closeRestoresInputAndStopsVoice": true,
+      "walkingRestoredAfterConversation": true,
+      "rainWithWetSurfaceAndParticles": true,
+      "pauseFreezesWorldWeatherAndPosition": true,
+      "resumeAdvancesWorld": true,
+      "rainStopsWhileSurfaceRetainsMoisture": true,
+      "surfaceContinuesDrying": true,
+      "eightGroundedPedestriansSpawned": true,
+      "sevenDialogueVoicesLoaded": true,
+      "nativeExitZero": true,
+      "normalEngineShutdownLogged": true,
+      "noFatalOrMissingAudioDecoder": true,
+      "nativeBinaryMatchesAssembledBuildAndUAT": true,
+      "launchReceiptAndEngineLogUseExtractedArchive": true,
+      "sourceCommitMatchesRequested": true,
+      "archivePakMatchesVerifiedCookedData": true,
+      "archiveHashAndBytesMatchAssemblyReceipt": true,
+      "extractedBinaryAndSourceMatchArchiveReceipt": true
+    },
+    "driving": {
+      "travelM": 5.125557784797667,
+      "before": [
+        {
+          "atUtc": "2026-09-08T08:58:02.507000+00:00",
+          "at": 1788857882.507,
+          "world": 1.04,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -88670.0,
+            7880.0,
+            99.7
+          ],
+          "control": [
+            -12.0,
+            20.0
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87740.0,
+              8250.0,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:03.507000+00:00",
+          "at": 1788857883.507,
+          "world": 2.04,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -88638.526,
+            7891.456,
+            99.7
+          ],
+          "control": [
+            -12.0,
+            20.0
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87740.0,
+              8250.0,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:04.506000+00:00",
+          "at": 1788857884.506,
+          "world": 3.04,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -88450.586,
+            7959.86,
+            99.194
+          ],
+          "control": [
+            -12.0,
+            20.0
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87740.0,
+              8250.0,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:05.506000+00:00",
+          "at": 1788857885.506,
+          "world": 4.04,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -88262.643,
+            8028.266,
+            97.679
+          ],
+          "control": [
+            -12.0,
+            20.0
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87740.0,
+              8250.0,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        }
+      ],
+      "carStates": [
+        {
+          "atUtc": "2026-09-08T08:58:06.506000+00:00",
+          "at": 1788857886.506,
+          "world": 5.04,
+          "pawn": "NeivaCar_2147481773",
+          "position": [
+            -87740.0,
+            8250.0,
+            70.0
+          ],
+          "control": [
+            -15.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87740.0,
+              8250.0,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "NeivaCharacter_2147482463"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:07.507000+00:00",
+          "at": 1788857887.507,
+          "world": 6.04,
+          "pawn": "NeivaCar_2147481773",
+          "position": [
+            -87695.395,
+            8267.731,
+            70.0
+          ],
+          "control": [
+            -15.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87695.395,
+              8267.731,
+              70.0
+            ],
+            "speed": 240.0,
+            "passenger": "NeivaCharacter_2147482463"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:08.507000+00:00",
+          "at": 1788857888.507,
+          "world": 7.04,
+          "pawn": "NeivaCar_2147481773",
+          "position": [
+            -87293.537,
+            8427.476,
+            70.0
+          ],
+          "control": [
+            -15.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87293.537,
+              8427.476,
+              70.0
+            ],
+            "speed": 253.333,
+            "passenger": "NeivaCharacter_2147482463"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:09.506000+00:00",
+          "at": 1788857889.506,
+          "world": 8.04,
+          "pawn": "NeivaCar_2147481773",
+          "position": [
+            -87263.697,
+            8439.338,
+            70.0
+          ],
+          "control": [
+            -15.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "NeivaCharacter_2147482463"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        }
+      ],
+      "afterExit": [
+        {
+          "atUtc": "2026-09-08T08:58:10.507000+00:00",
+          "at": 1788857890.507,
+          "world": 9.04,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -87178.735,
+            8225.606,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:11.507000+00:00",
+          "at": 1788857891.507,
+          "world": 10.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86767.949,
+            8388.899,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:12.507000+00:00",
+          "at": 1788857892.507,
+          "world": 11.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:13.507000+00:00",
+          "at": 1788857893.507,
+          "world": 12.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:14.507000+00:00",
+          "at": 1788857894.507,
+          "world": 13.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:15.508000+00:00",
+          "at": 1788857895.508,
+          "world": 14.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:15.775000+00:00",
+          "at": 1788857895.775,
+          "world": 14.308,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        },
+        {
+          "atUtc": "2026-09-08T08:58:16.508000+00:00",
+          "at": 1788857896.508,
+          "world": 15.041,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          }
+        }
+      ],
+      "nativeQuery": {
+        "after-native-state": {
+          "atUtc": "2026-09-08T08:58:15.775000+00:00",
+          "at": 1788857895.775,
+          "world": 14.308,
+          "pawn": "NeivaCharacter_2147482463",
+          "position": [
+            -86725.313,
+            8405.848,
+            95.15
+          ],
+          "control": [
+            0.0,
+            21.678587
+          ],
+          "car": {
+            "name": "NeivaCar_2147481773",
+            "position": [
+              -87263.697,
+              8439.338,
+              70.0
+            ],
+            "speed": 0.0,
+            "passenger": "None"
+          },
+          "weather": {
+            "ready": 1,
+            "phase": "Despejado",
+            "rain": 0.0,
+            "wetness": 0.0,
+            "drops": 512
+          },
+          "dialogue": {
+            "active": 0,
+            "speaker": "None",
+            "voicePlaying": 0,
+            "moveIgnored": 0,
+            "lookIgnored": 0
+          },
+          "queryExecutedAtUtc": "2026-09-08T08:58:15.770Z",
+          "correlationDeltaSeconds": 0.005
+        }
+      }
+    },
+    "proof": {
+      "path": "artifacts/upgrade-03/archive-local-verified.json",
+      "bytes": 40427,
+      "sha256": "442deda0a985e576eb68b8a310c14cfbb3e7a443eb80f92a0e46244469b36dba"
+    }
+  },
+  "publicDownload": {
+    "receipt": "data/verification/unreal-03-download.json",
+    "nativeChecks": {
+      "footLookWithoutHeldMouseButtons": true,
+      "footPauseStopsPositionAndTime": true,
+      "footResumeAdvancesTime": true,
+      "carLookWithoutHeldMouseButtons": true,
+      "carPauseStopsPositionAndTime": true,
+      "carResumeAdvancesTime": true,
+      "carEntered": true,
+      "carExited": true,
+      "allMouseMovesWithoutHeldButtons": true,
+      "fourTopicsActiveWithVoice": true,
+      "walkJumpResetBlockedDuringConversation": true,
+      "dialogueCloseRestoresInputAndStopsVoice": true,
+      "walkAfterDialogue": true,
+      "rainTransition": true,
+      "weatherFreezesInPause": true,
+      "dryAfterTransitionStillWet": true,
+      "dryingContinues": true,
+      "eightGroundedPedestrians": true,
+      "nativeExitZero": true
+    },
+    "nativeCheckCount": 19,
+    "integrityChecks": {
+      "anonymousHTTP200": true,
+      "downloadShaAndBytesMatchAssembledArchive": true,
+      "installedBinaryMatchesTransferBuildAndUAT": true,
+      "installedPakMatchesVerifiedCookedData": true,
+      "nativeLogAndLaunchReceiptIdentifyInstalledDownload": true,
+      "sourceCommitMatches": true
+    },
+    "proof": {
+      "path": "artifacts/upgrade-03/downloaded-verified-03.json",
+      "bytes": 25188,
+      "sha256": "fe60339c8851cc9034091f0caa55e7972139982e2a6c9e86122fc1a943c79476"
+    }
+  },
+  "cookedDataAudit": {
+    "checks": {
+      "mapShaMatchesExpected": true,
+      "automaticCount17696": true,
+      "manualCount1": true,
+      "combinedCount17697": true,
+      "manualBuildingHeight6_5": true,
+      "manualPriorHeight30AndLevels2": true,
+      "manualStillUnconfirmedEstimate": true,
+      "courtyardsPreservedFromBase": true,
+      "threePopulationRoutes": true,
+      "sevenDialogueClips": true,
+      "allExtractedBytesMatchStaging": true
+    },
+    "mapCounts": {
+      "buildings": 35873,
+      "roads": 6141,
+      "automaticRasterHeights": 17696,
+      "manualRasterHeights": 1,
+      "combinedRasterHeights": 17697,
+      "courtyardFootprints": 3,
+      "courtyardBuildingIds": [
+        "overture/6882a0b0-83d4-449f-be66-f91d62d2164c",
+        "overture/f0eee10d-f312-477c-bb44-5a280457d44c",
+        "relation/9534101"
+      ],
+      "openCanopies": 22
+    },
+    "proof": {
+      "path": "artifacts/upgrade03/pak-data-audit/receipt.json",
+      "bytes": 6280,
+      "sha256": "3eff9a7ddc89c854185360b36f2d04c054daf4921ba259473b299d9e37433343"
+    },
+    "stagedMapSha256": "7e58b7f286013e4ba5cf522fff6b9f09c423e60527bfc7c284add69cddfa4087",
+    "automaticEstimatedHeights": 17696,
+    "manualEstimatedHeights": 1,
+    "physicallyMeasuredHeightsConfirmed": 0,
+    "heightSource": "Google Research Open Buildings 2.5D Temporal V1, 2023; not Google Maps meshes"
+  },
+  "features": {
+    "weather": {
+      "drySeconds": 45,
+      "rainInSeconds": 15,
+      "rainSeconds": 60,
+      "rainOutSeconds": 20,
+      "wetnessAndDrying": true,
+      "dropsInTest": 512,
+      "realCurrentWeather": false
+    },
+    "population": {
+      "groundedNpcCount": 8,
+      "scriptedLocalParkRoutes": 3,
+      "dialogueWavClips": 7,
+      "syntheticVoices": true,
+      "wholeCityAutonomousNavigation": false
+    },
+    "fictionalStudioRemoved": true,
+    "wardrobe": "Four tint choices per existing polo/shorts; no new garment meshes or facial customization."
+  },
+  "nativeMedia": {
+    "schemaVersion": 1,
+    "approved": true,
+    "approvedFor": "Accurate preview of the 0.3 alpha; not approval as a hyperrealistic or identical-city result",
+    "checkedAtUtc": "2026-09-08T09:26:47.531096+00:00",
+    "observation": "observation-rfNzJq",
+    "nativeRuntime": "packaged-public-download",
+    "sourceBinarySha256": "004dc3c5c2fecfea83827f19664f9fa85e28635692718cb160fbc5f5c7d86855",
+    "sourceCommit": "e7a7e280e3e9887df70557ac56aa89318617aeab",
+    "physicalDesktopInput": false,
+    "video": {
+      "name": "Neiva-Abierta-0.3-Linux-1080p.webm",
+      "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-0.3-Linux-1080p.webm",
+      "httpStatus": 200,
+      "withoutAuthentication": true,
+      "bytes": 19522814,
+      "sha256": "98701845b7bd3006d69ff333b0f77ca8734ba8191f5b65e5ddc9039fce6a3247",
+      "width": 1920,
+      "height": 1080,
+      "durationSeconds": 18.5,
+      "videoCodec": "VP8",
+      "audioCodec": "Vorbis",
+      "audioChannels": 2,
+      "audioSampleRate": 48000,
+      "encodedFrames": 555,
+      "deliveryFrameRate": 30,
+      "nativeRendererBenchmark": false,
+      "reencoded": true,
+      "method": "Native WebRTC video and received audio tracks recorded by MediaRecorder, then FFmpeg normalization to 30 FPS VP8 and Vorbis audio. Original timing jitter is normalized; no AI images, scene replacement, upscaling or color retouching.",
+      "sourceRecordingSha256": "f7cb145660ca9dca25c08e0e2a5efa9010daeede919988218f71a9a0ac42d946",
+      "sourceRecordingWarnings": [
+        "One Opus packet-header warning.",
+        "Repeated source frame timestamps triggered null-muxer DTS warnings."
+      ],
+      "deliveredFullDecodeExitCode": 0,
+      "deliveredFullDecodeWarningBytes": 0
+    },
+    "poster": {
+      "name": "Neiva-Abierta-0.3-Linux-1080p.png",
+      "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-0.3-Linux-1080p.png",
+      "httpStatus": 200,
+      "withoutAuthentication": true,
+      "bytes": 2864670,
+      "sha256": "5753ac5f47428afd5899eb07f6cc837dbc1715bdef955a0890d4166e8ed953e3",
+      "width": 1920,
+      "height": 1080,
+      "sourceFrame": "jhon-dialogue-native.png",
+      "method": "PNG copied from decoded native video at original dimensions; no resize or visual editing."
+    },
+    "visualReview": {
+      "posterViewed": true,
+      "deliveryFrameAt17SecondsViewed": true,
+      "scene": "Rain in the park, scripted conversation about Jhon, then return to walking. Generic repeated building facades remain visible."
+    },
+    "receivedAudioSignal": {
+      "samples": 1775232,
+      "durationSeconds": 18.492,
+      "rmsDbFS": -25.959274044223555,
+      "peakDbFS": -8.981771783793903,
+      "nonSilenceVerified": true,
+      "humanListeningTest": false,
+      "fullDecodeExitCode": 0,
+      "fullDecodeWarningBytes": 0
+    },
+    "browserPlaybackVerification": {
+      "passed": true,
+      "physicalInput": false,
+      "humanListeningTest": false,
+      "browsers": [
+        {
+          "name": "chrome",
+          "version": "Chrome/152.0.7977.64",
+          "checks": {
+            "resolution1080": true,
+            "timeAdvanced": true,
+            "decodedFramesAdvanced": true,
+            "reachedEnd": true,
+            "noMediaError": true,
+            "remainedMuted": true,
+            "audioTrackDetected": true
+          },
+          "end": {
+            "time": 18.5,
+            "paused": true,
+            "ended": true,
+            "width": 1920,
+            "height": 1080,
+            "muted": true,
+            "volume": 0,
+            "error": null,
+            "errors": [],
+            "totalFrames": 555,
+            "droppedFrames": 3,
+            "audioDecodedBytes": 148890,
+            "capturedTracks": []
+          }
+        },
+        {
+          "name": "firefox",
+          "version": "firefox/154.0.1",
+          "checks": {
+            "resolution1080": true,
+            "timeAdvanced": true,
+            "decodedFramesAdvanced": true,
+            "reachedEnd": true,
+            "noMediaError": true,
+            "remainedMuted": true,
+            "audioTrackDetected": true
+          },
+          "end": {
+            "time": 18.512333,
+            "paused": true,
+            "ended": true,
+            "width": 1920,
+            "height": 1080,
+            "muted": true,
+            "volume": 0,
+            "error": null,
+            "errors": [],
+            "totalFrames": 555,
+            "droppedFrames": 0,
+            "audioDecodedBytes": null,
+            "capturedTracks": []
+          }
+        }
+      ]
+    },
+    "publicAnonymousDownloadsVerified": true,
+    "websiteDeploymentVerified": false
+  },
+  "websiteDeploymentVerified": false,
+  "limitations": [
+    "This is an alpha, substantially below the requested Cyberpunk/AAA visual quality.",
+    "Not a whole-city scan or identical Neiva replica: generic facades, estimated heights, flat terrain and no building interiors remain.",
+    "Windows and macOS builds have not been produced or executed; their native build hosts are unavailable.",
+    "The 30 FPS review cap and decoded WebRTC delivery are not an uncapped native renderer benchmark or mobile performance guarantee.",
+    "NPCs and their promotional dialogue are fictional; synthetic voices are not statements from actual residents."
+  ],
+  "knownIssues": [
+    "The first automated public-download NPC pursuit stopped at its attempt budget; corrected test timing reached the moving NPC through normal WASD/sprint input.",
+    "VP8 encoded-copy recording can fail with backwards initial RTP timestamps; experimental warmup keyframe requests are unreliable in UE 5.5. The published preview is explicitly re-encoded by MediaRecorder.",
+    "Virtual shadow map warnings and procedural building/lighting limitations remain; successful cook/runtime checks do not prove AAA quality."
+  ]
+}

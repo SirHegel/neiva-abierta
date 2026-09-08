@@ -2,18 +2,28 @@
 
 El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, compilado con **Unreal Engine 5.5.4**. Incluye personaje anónimo, coche arcade conducible, peatones, colores de ropa, colisiones y geometría cartográfica. El código 0.3 añade lluvia periódica y conversaciones con voz sintética sobre Jhon; retira el edificio ficticio. Los peatones recorren caminos OSM y trayectos simulados dentro del parque Santander. El tema Contacto permite abrir el correo público `alvarezruizj289@gmail.com` mediante un botón explícito. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
 
-**Alfa Linux 0.2.0 disponible:**
-[descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha).
-La compilación, importación y empaquetado UAT terminaron correctamente el
-8 de septiembre de 2026. La copia descargada públicamente coincidió por tamaño
-y SHA-256 y se ejecutó a 1080p con Vulkan SM6. Carga las **35.873 huellas** en
-682 sectores, los hitos preparados, vegetación y personajes; se verificaron
-cámara, pausa y vehículo. El límite inicial es 60 FPS, sin garantía de sostenerlo.
+**Alfa Linux 0.3.0 publicada:**
+[descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha).
+La compilación, importación y empaquetado UAT de esta versión terminaron
+correctamente. La partida nativa del editor y el paquete tienen comprobaciones
+separadas. La copia pública descargada sin credenciales pasó 19 comprobaciones
+de juego y seis de integridad, con cierre normal: cámara, pausa, vehículo,
+conversaciones, ocho peatones, lluvia y secado. La revisión usó Linux,
+RTX 4050 Laptop y 1920 × 1080 con límite de 30 FPS; no es un benchmark.
+[Recibo 0.3 del paquete](../data/verification/unreal-03.json) ·
+[Recibo de descarga 0.3](../data/verification/unreal-03-download.json).
 
-La [evidencia 0.2](MEJORA-VISUAL-0.2.md) distingue los ensayos del Editor,
-el paquete y la copia pública. El [recibo de descarga](../data/verification/unreal-visual-download.json)
-registra la integridad y ejecución. Las pruebas anteriores de 0.1 permanecen
-separadas en el [historial de distribución](DISTRIBUCION.md#estado-comprobado).
+La versión carga **35.873 huellas**, los cuatro hitos preparados, vegetación,
+ocho peatones, siete voces y el clima cíclico. Aplica 17.696 alturas estimadas
+por raster y una revisión manual separada; ninguna equivale a un levantamiento
+métrico confirmado. [Reconstrucción](RECONSTRUCCION-0.3.md) ·
+[Clima, diálogos y comprobaciones](CLIMA-DIALOGOS-0.3.md).
+
+La [evidencia histórica 0.2](MEJORA-VISUAL-0.2.md) y su
+[recibo de descarga](../data/verification/unreal-visual-download.json) conservan
+sus propias capturas y mediciones. Las pruebas 0.1 permanecen en el
+[historial de distribución](DISTRIBUCION.md#estado-comprobado); no se usan como
+prueba de rendimiento de 0.3.
 
 Los recursos importados incluyen el humano con esqueleto y animaciones,
 el coche, materiales PBR, fachadas generadas y las mallas de Catedral,
@@ -24,7 +34,7 @@ comprobaciones del editor, el paquete independiente y la descarga pública.
 
 ## Abrir y jugar
 
-Descarga la [alfa Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha),
+Descarga la [alfa Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha),
 extrae el archivo completo y ejecuta desde su carpeta:
 
 ```sh
@@ -33,7 +43,7 @@ extrae el archivo completo y ejecuta desde su carpeta:
 
 Conserva `Linux/` junto al lanzador. El paquete incluye el runtime y no requiere
 instalar el editor. Necesita GPU/controlador Vulkan; no hay requisitos mínimos
-establecidos ni binarios Windows o móviles en esta descarga. Las licencias y
+establecidos ni binarios Windows, macOS o móviles en esta descarga. Las licencias y
 los metadatos cartográficos están legibles en `Licenses/` y `Datos/`.
 
 | Acción | Control |
@@ -44,7 +54,7 @@ los metadatos cartográficos están legibles en `Licenses/` y `Datos/`.
 | Saltar / frenar el coche | Espacio |
 | Entrar o salir del coche / conversar con un peatón visible cercano | E |
 | Seleccionar tema durante una conversación (0.3) | 1–4 o botones |
-| Cerrar conversación y recuperar movimiento (0.3) | E / Esc |
+| Cerrar conversación y recuperar movimiento (0.3) | E / Esc / P |
 | Volver al punto de inicio / recuperar coche | R |
 | Pausar, continuar y acceder a Salir | Esc / P |
 | Cambiar color del polo / de la bermuda | C / V y botones del HUD |
@@ -70,7 +80,7 @@ clima e importa los siete WAV incluidos. No se necesita Piper para compilar:
 sólo se usó para generar esos archivos offline. El importador comprueba hashes,
 formato y referencias antes de guardar los recursos. Consulta las licencias
 en `public/audio/dialogue/` y las limitaciones en [RECONSTRUCCION-0.3.md](RECONSTRUCCION-0.3.md).
-Estos pasos no cambian el contenido de la alfa 0.1.0 ya publicada.
+Las versiones 0.1 y 0.2 mantienen sus archivos e informes históricos separados.
 
 ### Orden completo desde un clon limpio
 
@@ -170,7 +180,7 @@ en Windows; los controles táctiles no equivalen a un paquete móvil validado.
 
 ## Datos y límites del modelo
 
-`Scripts/prepare_project.py` valida el mapa, aplica primero `neiva-corrections.json` y después `neiva-survey.json`, y escribe el resultado en `Content/Data/neiva.json`. Conserva los metadatos de procedencia de cada corrección. También valida y copia `SourceArt/landmarks/neiva-landmarks.json` a `Content/Data/`. La configuración de empaquetado incluye ese directorio como UFS y los materiales generados. `Content/Data/Licenses` recibe las atribuciones, licencias y manifiestos de recursos, con las modificaciones específicas del importador nativo. No se distribuyen copias innecesarias del mapa en Git. Para actualizar la cartografía, ejecuta primero el proceso de actualización descrito en la documentación de datos del repositorio y repite la copia.
+`Scripts/prepare_project.py` valida el mapa, aplica primero `neiva-corrections.json`, después `neiva-survey.json`, el suplemento aprobado de 17.696 alturas estimadas y la revisión manual de un edificio, y escribe el resultado en `Content/Data/neiva.json`. Conserva los metadatos de procedencia de cada corrección. También valida y copia `SourceArt/landmarks/neiva-landmarks.json` a `Content/Data/`. La configuración de empaquetado incluye ese directorio como UFS y los materiales generados. `Content/Data/Licenses` recibe las atribuciones, licencias y manifiestos de recursos, con las modificaciones específicas del importador nativo. No se distribuyen copias innecesarias del mapa en Git. Para actualizar la cartografía, ejecuta primero el proceso de actualización descrito en la documentación de datos del repositorio y repite la copia.
 
 La preparación genera también `Content/Data/neiva-environment.json` con las
 posiciones estimadas de árboles y bancos, y copia `SourceArt/visual/manifest.json`
@@ -181,9 +191,9 @@ originales CC0, autores, URLs, tamaños y SHA-256. `DefaultGame.ini` incluye
 licencias y el manifiesto de horneado. La distribución externa debe conservar
 también el subdirectorio `visual/` al copiar `Content/Data/Licenses` a
 `Licenses/`; no copiar sólo los archivos de primer nivel. Esta revisión del
-flujo no acredita un nuevo paquete 0.2 publicado.
+flujo conserva las licencias para cada paquete nuevo; no sustituye sus comprobaciones nativas.
 
-El JSON expresa metros: X hacia el este, Z hacia el sur. El código convierte a centímetros de Unreal con **X = x × 100, Y = −z × 100, Z = altura × 100**. Lee `meta.spawn`, `meta.car`, `meta.carYaw` y `meta.studio` para mantener las mismas posiciones de juego que la web.
+El JSON expresa metros: X hacia el este, Z hacia el sur. El código convierte a centímetros de Unreal con **X = x × 100, Y = −z × 100, Z = altura × 100**. Lee `meta.spawn`, `meta.car` y `meta.carYaw` para colocar al jugador y al coche. El estudio ficticio se retiró de la partida 0.3; los metadatos históricos no implican que siga construido.
 
 El mapa base combinado contiene **35.875 huellas de edificios** antes de las remociones documentadas del centro: 878 de OpenStreetMap y 34.997 añadidas desde Overture Maps, release `2026-08-19.0`. Las huellas añadidas proceden de detección automática y no deben interpretarse como mediciones de fachadas. `meta.sources` conserva las atribuciones de Overture, Microsoft ML Buildings y Google Open Buildings y sus licencias. La cartografía combinada es ODbL; se conserva además la atribución CC-BY-4.0 de Google Open Buildings.
 
@@ -193,11 +203,11 @@ Las **22 cubiertas OSM abiertas** se construyen como losa con grosor y columnas,
 
 La exportación detallada revisada del centro contiene **47 secciones, 119.886 vértices y 71.311 triángulos**, más tres rótulos convertidos a `TextRenderComponent`. Las posiciones y normales originales se conservan al convertir los ejes; las UV pasan a U=u/tileU y V=1−v/tileV para adaptar el origen vertical de las imágenes de Three a Unreal; los cuatro IDs sólo sustituyen sus extrusiones después de validar todo el conjunto y localizar los materiales. El archivo y sus fuentes están en [SourceArt/landmarks](../unreal/NeivaAbierta/SourceArt/landmarks/README.md). El Palacio conserva el modelo bajo revisado, sin torre inventada. La geometría de plaza está incluida; los árboles y chorros animados del cliente anterior no se exportan.
 
-El nuevo [flujo de horneado](../unreal/NeivaAbierta/Scripts/BAKE-LANDMARKS.md) **pasó en Unreal 5.5.4**: genera 150 recursos `StaticMesh`, de los cuales 149 usan Nanite y uno representa agua, conservando todos los triángulos. Una partida posterior del editor confirmó su carga desde disco, los tres rótulos y el hash de la fuente. Las normales, UV, colores y parámetros PBR se conservan; la compilación offline genera campos de distancia y tarjetas Lumen. El manifiesto sólo se publica después de completar las colas de compilación y guardar todos los recursos. El estudio no se duplica; si falta algún recurso o cambia la fuente, se conserva la ruta procedural. **Este cambio está en validación local y aún no forma parte del alfa público anterior.**
+El nuevo [flujo de horneado](../unreal/NeivaAbierta/Scripts/BAKE-LANDMARKS.md) **pasó en Unreal 5.5.4**: genera 150 recursos `StaticMesh`, de los cuales 149 usan Nanite y uno representa agua, conservando todos los triángulos. Una partida posterior del editor confirmó su carga desde disco, los tres rótulos y el hash de la fuente. Las normales, UV, colores y parámetros PBR se conservan; la compilación offline genera campos de distancia y tarjetas Lumen. El manifiesto sólo se publica después de completar las colas de compilación y guardar todos los recursos. Si falta algún recurso o cambia la fuente, se conserva la ruta procedural. Este horneado se entregó en 0.2 y se conserva en 0.3; no convierte el resto de la ciudad en Nanite.
 
 ### Importación de toda la ciudad y rendimiento
 
-Por defecto se importan **todos** los edificios, sin límite silencioso. Se agrupan en componentes de malla por sectores de **500 m**, con un corte adicional al alcanzar aproximadamente **60.000 vértices triangulados** por componente. No se crea un actor por edificio. Cada sector tiene sus propios límites de renderizado y su colisión; las matrices temporales se liberan después de construir cada fragmento. La generación inicial sigue siendo síncrona y puede tardar en una máquina real.
+Por defecto se importan **todos** los edificios, sin límite silencioso. Se agrupan en componentes por sectores de **100 m dentro de 500 m del inicio y 500 m más lejos**, con un corte adicional al alcanzar aproximadamente **60.000 vértices triangulados** por componente. No se crea un actor por edificio. Cada sector tiene sus propios límites de renderizado y su colisión; las matrices temporales se liberan después de construir cada fragmento. La generación inicial sigue siendo síncrona y puede tardar en una máquina real.
 
 La división en sectores y las cuentas del archivo exportado son datos estructurales, **no mediciones de memoria, tiempo de carga ni FPS**. Los datos, mallas de CPU/GPU y colisiones siguen ocupando memoria; la división en sectores no equivale a World Partition ni a streaming de contenido.
 
@@ -220,13 +230,13 @@ la nueva partida de revisión: no se da el problema por resuelto. La comparació
 visual actual evalúa también iluminación sin el relleno directo aproximado;
 hornear los cuatro hitos no sustituye la validación de toda la iluminación.
 
-Para una vista previa más ligera, el actor `NeivaCity` expone `BuildingRadiusMeters`: **0 carga todo**. También se puede iniciar el juego/editor con `-NeivaBuildingRadius=1500` para seleccionar edificios cuyo centro está a 1.500 m del punto inicial. El HUD muestra el número cargado frente al total y el radio activo. Ese límite permanece fijo durante la sesión: **no carga sectores nuevos al caminar**. Los cuatro hitos detallados y el resto de superficies geográficas permanecen cargados. `BuildingTileSizeMeters` permite variar el tamaño de sector entre 100 y 2.000 m. Estos ajustes requieren verificación de rendimiento en el equipo final.
+Para una vista previa más ligera, el actor `NeivaCity` expone `BuildingRadiusMeters`: **0 carga todo**. También se puede iniciar el juego/editor con `-NeivaBuildingRadius=1500` para seleccionar edificios cuyo centro está a 1.500 m del punto inicial. El HUD muestra el número cargado frente al total y el radio activo. Ese límite permanece fijo durante la sesión: **no carga sectores nuevos al caminar**. Los cuatro hitos detallados y el resto de superficies geográficas permanecen cargados. `-NeivaBuildingTileMeters=`, `-NeivaBuildingFarTileMeters=` y `-NeivaBuildingFineRadius=` controlan las celdas cercanas, lejanas y el radio fino; los tamaños se acotan entre 100 y 2.000 m. Estos ajustes requieren verificación de rendimiento en el equipo final.
 
 El coche usa un integrador arcade de paso fijo de 1/60 s, 20 m/s máximos hacia delante y 4,5 m/s marcha atrás; el reloj conserva el tiempo pendiente ante un frame largo. La colisión usa barrido de traslación de una caja invisible. Antes de girar se consulta el solapamiento de la rotación candidata; no se afirma que Unreal haga un barrido de rotación. Al salir se prueban ambos lados, suelo transitable y espacio para la cápsula; una salida bloqueada conserva al jugador dentro. El control cambia mediante `Possess` y el personaje queda detenido, oculto y sin colisión durante la conducción. El render usa el coche importado completo; sus ruedas quedan unidas a la malla y no giran independientemente en esta alfa Unreal. El humano usa el rig y las animaciones originales de Rocketbox, con bloqueo de raíz para que el movimiento proceda de CharacterMovement. Los cambios entre idle, walk y run son directos: quedan pendientes BlendSpace, IK y validación de pisada. La arquitectura fuera de los cuatro hitos continúa basada en huellas extruidas y necesita revisión artística y medición para una ciudad fotorealista. Activar Lumen por sí solo no produce fotorealismo: los componentes procedurales tampoco equivalen a mallas estáticas horneadas con Nanite y campos de distancia. Para producción, convierte sectores validados a Static Mesh, añade LOD/HLOD y mide iluminación y rendimiento sobre hardware real.
 
 ## Peatones y personalización
 
-`PedestrianCount=8` solicita hasta ocho peatones con el mismo recurso humano, con variaciones de color; el límite configurable es 24. Se eligen caminos OSM `footway`, `pedestrian` o `path` cerca del inicio. Se descartan posiciones sin suelo o ocupadas. `CharacterMovement` lleva el suelo y las colisiones; el actor envía input cada frame, camina a 1,25 m/s, espera en los extremos y vuelve por el mismo recorrido. Ante un obstáculo persistente invierte el recorrido sin teletransportarse. El HUD y el log informan de cuántos se pudieron crear. Es una población acotada: no hay navegación autónoma de toda la ciudad, tráfico ni conversaciones generativas.
+`PedestrianCount=8` solicita hasta ocho peatones con el mismo recurso humano, con variaciones de color; el límite configurable es 24. Se eligen caminos OSM `footway`, `pedestrian` o `path` cerca del inicio y tres recorridos simulados dentro del polígono pavimentado del Santander. La revisión nativa 0.3 confirmó ocho peatones creados, cinco dentro o cerca del parque. Se descartan posiciones sin suelo o ocupadas. `CharacterMovement` lleva el suelo y las colisiones; el actor envía input cada frame, camina a 1,25 m/s, espera en los extremos y vuelve por el mismo recorrido. Ante un obstáculo persistente invierte el recorrido sin teletransportarse. El HUD y el log informan de cuántos se pudieron crear. Es una población acotada: no hay navegación autónoma de toda la ciudad, tráfico ni conversaciones generativas.
 
 C y V recorren cuatro colores del polo y de la bermuda. Una máscara RGB auditada separa tela de piel y conserva los pliegues del color original; cada personaje tiene su propia instancia de material. La selección del jugador se guarda con `USaveGame`, slot local `NeivaAppearance_v1`. No se cambian cuerpo, identidad, corte de prendas ni piezas de ropa. El canal de calzado está disponible como parámetro `ShoesTint`, pero no tiene selector en este HUD. La [auditoría de máscara](../unreal/NeivaAbierta/SourceArt/README.md) conserva hash, regiones de piel excluidas y generadores reproducibles. Se importa lineal, sin mipmaps, con filtrado nearest y compresión sin pérdidas de datos para evitar mezcla en las costuras; queda pendiente validar visualmente estas opciones en Unreal.
 
@@ -309,7 +319,7 @@ Se incluye una conexión real opcional para inspección dentro del editor:
 4. Ejecuta `Scripts/preview_google_tiles.py` desde **Tools → Execute Python Script**. Crea una georreferencia en el origen real del JSON y conecta un `Cesium3DTileset` a `https://tile.googleapis.com/v1/3dtiles/root.json`. Activa los créditos en pantalla y la generación de colisiones. La altura elipsoidal inicial de **442 m es provisional** y se puede cambiar con `NEIVA_ELLIPSOID_HEIGHT`; necesita calibración con el terreno recibido.
 5. Inspecciona la cobertura en el viewport. Ejecuta `Scripts/clear_google_preview.py` **antes de guardar el nivel**, porque la URL temporal del actor contiene la clave. La vista previa no se guarda automáticamente y no empaqueta datos de Google.
 
-El script es una vista previa geográfica separada. Cesium usa por defecto ejes locales **este, sur, arriba**; el juego procedural usa **este, norte, arriba**. Antes de combinar ambas escenas hay que adaptar esa transformación, georreferenciar el avatar/estudio y ajustar el movimiento a la elevación real. No superpongas ambas mallas suponiendo que ya coinciden ni publiques una clave dentro de un `.umap`. El flujo de producción debe inyectar la conexión en runtime y mantener la atribución. [Guía de Cesium y créditos](https://cesium.com/learn/unreal/unreal-photorealistic-3d-tiles/), [API fuente de Cesium3DTileset](https://github.com/CesiumGS/cesium-unreal/blob/main/Source/CesiumRuntime/Public/Cesium3DTileset.h).
+El script es una vista previa geográfica separada. Cesium usa por defecto ejes locales **este, sur, arriba**; el juego procedural usa **este, norte, arriba**. Antes de combinar ambas escenas hay que adaptar esa transformación, georreferenciar al personaje y al coche y ajustar el movimiento a la elevación real. No superpongas ambas mallas suponiendo que ya coinciden ni publiques una clave dentro de un `.umap`. El flujo de producción debe inyectar la conexión en runtime y mantener la atribución. [Guía de Cesium y créditos](https://cesium.com/learn/unreal/unreal-photorealistic-3d-tiles/), [API fuente de Cesium3DTileset](https://github.com/CesiumGS/cesium-unreal/blob/main/Source/CesiumRuntime/Public/Cesium3DTileset.h).
 
 ## Publicación Unreal y Pixel Streaming
 
@@ -366,7 +376,14 @@ El IVF conserva los ticks RTP exactos; WebM cuantiza el tiempo a milisegundos.
 No se reescala ni se añade audio. Incluye el arranque de la conexión y tiene
 límites de 32 MiB y 60 segundos; `coveredObservation` indica si abarcó toda la
 observación o se detuvo antes. Requiere VP8 y la API `createEncodedStreams` de
-Chrome; no activa una recodificación alternativa si falla.
+Chrome; no activa una recodificación alternativa si falla. En 0.3 se observaron
+retrocesos durante el arranque que invalidan algunas grabaciones. La opción
+`--record-after-warmup` es experimental: el codificador VP8 de UE 5.5 no consume
+el flag que activa la petición de keyframe del frontend. Para el vídeo de esta
+entrega se usa `--record` con MediaRecorder y se recodifican vídeo y audio,
+normalizando la presentación a 30 FPS. Esa cadencia no reproduce una medición
+de FPS originales; las PNG conservan la imagen nativa y no se hizo escucha humana.
+[Diagnóstico y límites del grabador](CLIMA-DIALOGOS-0.3.md#grabación-de-evidencia-vp8).
 
 Los FPS recibidos por WebRTC no equivalen a los FPS de renderizado nativo. El
 [registro visual de 0.2](MEJORA-VISUAL-0.2.md) separa ambas mediciones. Para cerrar
@@ -378,8 +395,9 @@ comprueba después la salida del proceso antes de cerrar su pantalla virtual.
 La revisión 0.2 y su grabador pasaron **207 pruebas: 109 Node, 57 Python
 de raíz y 41 Python de scripts Unreal**. Por separado, se completaron UHT,
 compilación C++, importación y UAT, y se probaron partidas del ejecutable Linux.
-El [registro del paquete](../data/verification/unreal-package-log.txt) conserva
-evidencia de esas ejecuciones; las pruebas portables no las sustituyen.
+Es un recuento histórico. La construcción, las partidas y las comprobaciones
+de 0.3 se registran por separado en [unreal-03.json](../data/verification/unreal-03.json);
+las pruebas portables no sustituyen las del ejecutable.
 
 ```bash
 python3 unreal/NeivaAbierta/Scripts/prepare_project.py --check
