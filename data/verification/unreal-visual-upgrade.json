@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "checkedAtUtc": "2026-09-08T05:47:48.998821+00:00",
+  "checkedAtUtc": "2026-09-08T06:09:12.417932+00:00",
   "releaseCandidate": "0.2",
-  "status": "released-package-and-public-download-runtime-verified-site-pending",
-  "scope": "Visual-upgrade Editor history, first locally extracted package driving test, and separately downloaded publicLinux0.2 controls/runtime test. Both packaged sessions terminated normally. Website deployment remains pending; alpha0.1 evidence is preserved separately.",
+  "status": "released-package-public-download-runtime-video-and-site-verified",
+  "scope": "Visual-upgrade Editor history, scoped nativeLinux0.2 package/public-download gameplay tests, final encoded video and published website verification. Alpha quality and incomplete geographic fidelity are explicitly retained; alpha0.1 evidence is separate.",
   "previousReleaseEvidence": {
     "path": "data/verification/unreal-native.json",
     "sha256WhenThisManifestWasCreated": "f25d85136b957011fae8a7f3da12cf660b75d2493e8c1723e01ec62e1596c706",
@@ -21,7 +21,7 @@
     "renderOffscreenRuntimeVerified": true,
     "version02Packaged": true,
     "version02PublicDownloadVerified": true,
-    "version02SiteDeployed": false,
+    "version02SiteDeployed": true,
     "wholeCityPhysicalDimensionsVerified": false,
     "requestedHyperrealisticQualityAchieved": false,
     "nativeCsvPerformanceB2Collected": true,
@@ -33,7 +33,9 @@
     "version02RuntimePackagedVerified": true,
     "version02GithubReleasePublished": true,
     "version02PublicHttpDownloadIntegrityVerified": true,
-    "version02PublicDownloadRuntimeVerified": true
+    "version02PublicDownloadRuntimeVerified": true,
+    "finalNativeEncodedVideoVerified": true,
+    "finalNativeVideoPublicDownloadVerified": true
   },
   "engine": {
     "version": "5.5.4-40574608+++UE5+Release-5.5",
@@ -55,7 +57,7 @@
     "streamingFrameLimit": 30,
     "cleanExitVerified": true,
     "nativeGamePackage": true,
-    "note": "Latest session is the independent GitHub HTTP download, extracted separately and executed with the matching packaged binarySHA. Both native package sessions exited normally. Website deployment is pending.",
+    "note": "The independent public0.2 download and final video process were verified against the matching ELF SHA and native logs. Both earlier package test sessions exited normally; the final clip is separate from renderer performance measurement.",
     "packaged": true,
     "runtimePackagedVerified": true,
     "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
@@ -589,6 +591,161 @@
       },
       "nativeIdentityCrossCheck": "Independent public archive download, matching packaged binarySHA and native log timestamps. The raw browser report alone is not a controls or engine-identity proof.",
       "recording": null
+    },
+    {
+      "id": "tROZAC",
+      "session": "downloaded-visual-02-final",
+      "observedAtUtc": "2026-09-08T05:55:36.750Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/report.json",
+        "bytes": 13086,
+        "sha256": "7b3248bc529cefc082eef919bce70bd1f9feda69e9dbed841ef9e21e8cc046d2"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/before-native.png",
+          "bytes": 2292145,
+          "sha256": "99ed0660fc40f43748872cfa592d447f721dff2e284dbd7be4a9310c9e3903cd",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/after-native.png",
+          "bytes": 2734573,
+          "sha256": "8d8ee728e2d068a814f62e07b31254323105b377efea4fc03a37e0aae74726fe",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 29.778589555856858,
+      "receivedDecodedFrames": 494,
+      "observationSeconds": 16.589099999964237,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Launch record identifies the separately installed publicLinux0.2 download; native entry/exit timestamps match this observation. BinarySHA matches the public receipt.",
+      "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/downloaded-visual-02-final/command.json",
+        "bytes": 1756,
+        "sha256": "c758b866156c0363b18a778385f2c0c78b47f3632224bf29325984377dbbb1a3"
+      },
+      "nativeLog": {
+        "path": "artifacts/visual-upgrade/downloaded-visual-02-final/game.log",
+        "bytes": 123676,
+        "sha256": "fd986aa1473e6a37bf9472a6ba4c6c779703fcb15b053bd0c1c186ef090a95f5"
+      },
+      "safeRuntimeSnippets": [
+        {
+          "line": 1228,
+          "text": "[2026.09.08-05.55.39:512][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 682 mesh chunks (682 cells); tiles near 100 m / far 500 m, fine radius 500 m around initial spawn (567 near / 35302 far procedural buildings); preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1286,
+          "text": "[2026.09.08-05.55.44:970][241]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm."
+        },
+        {
+          "line": 1294,
+          "text": "[2026.09.08-05.55.48:443][440]LogTemp: Display: Neiva: exited vehicle at V(X=-87223.70, Y=8207.73, Z=96.00) cm; car at V(X=-87308.66, Y=8421.46, Z=70.00) cm."
+        },
+        {
+          "line": 1287,
+          "text": "[2026.09.08-05.55.45:670][283]LogTemp: Display: NeivaState: world_seconds=5.021 pawn=NeivaCar_2147481769 location_cm=X=-87740.000 Y=8250.000 Z=70.000 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-15.000000 Y=21.678587 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1291,
+          "text": "[2026.09.08-05.55.46:668][337]LogTemp: Display: NeivaState: car=NeivaCar_2147481769 location_cm=X=-87522.473 Y=8336.470 Z=70.000 yaw=21.679 speed_property=530.000 passenger=NeivaCharacter_2147482463"
+        },
+        {
+          "line": 1292,
+          "text": "[2026.09.08-05.55.47:674][395]LogTemp: Display: NeivaState: world_seconds=7.025 pawn=NeivaCar_2147481769 location_cm=X=-87308.664 Y=8421.463 Z=70.000 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-15.000000 Y=21.678587 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1295,
+          "text": "[2026.09.08-05.55.48:677][453]LogTemp: Display: NeivaState: world_seconds=8.028 pawn=NeivaCharacter_2147482463 location_cm=X=-87223.702 Y=8207.731 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=0.000000 Y=21.678587 R=-0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        }
+      ],
+      "encodedRecording": {
+        "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/stream-encoded.webm",
+        "bytes": 18486318,
+        "sha256": "7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc",
+        "mime": "video/webm",
+        "codec": "VP8",
+        "width": 1920,
+        "height": 1080,
+        "durationSeconds": 17.206,
+        "encodedFrames": 529,
+        "ffprobeDecodedFrames": 529,
+        "ffprobeDecodePassed": true,
+        "ivf": {
+          "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/stream-encoded.ivf",
+          "bytes": 18487990,
+          "sha256": "fc9402a0cf4d417c89186a659f1f9b08606229c33d5a6a1a2e01e4544665ad86"
+        },
+        "source": "Incoming VP8 encoded frames after RTP depacketization from the publicly downloaded nativeLinux0.2 executable.",
+        "reencoded": false,
+        "rescaled": false,
+        "framesInsertedByRecorder": 0,
+        "originalPayloadsAndOrderVerified": true,
+        "ptsVerified": true,
+        "rtpClockRate": 90000,
+        "rtpSpanTicks": 1548540,
+        "sourceRepeatedPtsRetained": 13,
+        "sourceDistinctPts": 516,
+        "sourceBackwardsPts": 0,
+        "rtpWraps": 0,
+        "webmTimeBase": "1/1000",
+        "webmTimestampToleranceMs": 1.01,
+        "independentAuditMaximumPtsDifferenceMs": 1.8189894035458565e-12,
+        "completedStop": true,
+        "stopReason": "observation-ended",
+        "includesConnectionPreroll": true,
+        "coveredObservation": true,
+        "desktopCapture": false,
+        "approvedForWebsite": true,
+        "publicUploadVerified": true,
+        "validation": "IVF parsed independently;529 WebM packets match every source payloadSHA in the same order and retain13 equal adjacentPTS. ffprobe decoded529frames at1920x1080. WebM quantizes timestamps to milliseconds.",
+        "nativeRendererBenchmark": false,
+        "qualityScope": "Approved evidence of the alpha visual state; not AAA/hyperrealism or whole-city exactness.",
+        "publicAnonymousDownloadVerified": true,
+        "publicUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-0.2-Linux-1080p.webm",
+        "siteUrl": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.webm",
+        "releaseFilename": "Neiva-Abierta-0.2-Linux-1080p.webm"
+      },
+      "note": "The recording interval includes connection preroll and differs from the inbound-rtp observation interval. Source repeatedPTS are retained, not invented frames; neither529/17.206 nor the29.7786receivedFPS is a native renderer benchmark.",
+      "externalNativeIdentityVerified": true,
+      "rawObserverGameplayVerified": false,
+      "externalNativeGameplayVerified": true,
+      "identityVerification": {
+        "method": "Publishing agent resolved the running process executable through/proc and hashed the ELF from the public-download installation; matched the launch record and native engine log.",
+        "runtimeExecutable": "NeivaAbierta",
+        "engineVersion": "5.5.4-40574608",
+        "binarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558"
+      },
+      "nativeGameplayMeasurements": {
+        "carStartCm": [
+          -87740,
+          8250,
+          70
+        ],
+        "carAfterBrakeCm": [
+          -87308.664,
+          8421.463,
+          70
+        ],
+        "carAdvanceMetres": 4.641662474426593,
+        "carSpeedPropertyBeforeBrakeCmPerSecond": 530,
+        "carSpeedPropertyAfterBrakeCmPerSecond": 0,
+        "carStartWorldSeconds": 5.021,
+        "carStoppedWorldSeconds": 7.025,
+        "characterAfterExitWorldSeconds": 8.028,
+        "characterMovementModeAfterExit": 1
+      }
     }
   ],
   "nativePerformance": {
@@ -890,12 +1047,12 @@
     }
   },
   "checks": {
-    "nodeTestsPassed": 103,
+    "nodeTestsPassed": 109,
     "nativePythonTestsPassed": 41,
     "nodeLog": {
-      "path": "artifacts/visual-upgrade/node-tests-final-20260908.log",
-      "bytes": 10052,
-      "sha256": "344acf9d083b8b4b8c7a4840473e0f44124b2033cd916cbee6a4ad43c8471be3"
+      "path": "artifacts/visual-upgrade/node-tests-encoded-final-20260908.log",
+      "bytes": 10709,
+      "sha256": "ccf8ad80123d5018852a52f6c57e6d2b0d93dd550d74debcebf488edef7bb59f"
     },
     "nativePythonLog": {
       "path": "artifacts/visual-upgrade/native-python-final-20260908.log",
@@ -904,9 +1061,9 @@
     },
     "landmarkByteForByteReproductionPassed": true,
     "allTriangleWindingAndTopologyChecksRetained": true,
-    "scope": "Current pre-package test logs:103Node+41NativePython+57RootPython=201. The web build is the previous static prototype and does not verify Unreal packaging. Historical alpha0.1 tests are not added again.",
+    "scope": "Latest encoded-recorder Node suite109PASS with0skips plus the previously completed41NativePython and57RootPython suites=207game/tool tests. Site102tests are recorded separately. No historical alpha0.1 tests are added again.",
     "rootPythonTestsPassed": 57,
-    "totalTestsInTheseSuites": 201,
+    "totalTestsInTheseSuites": 207,
     "rootPythonLog": {
       "path": "artifacts/visual-upgrade/root-python-20260908-final.log",
       "bytes": 156,
@@ -960,14 +1117,14 @@
     "B2/B4 verify near100m/far500m sectors and3/8NPCs spawned in a playable offscreen session; individual NPC route coverage remains unverified.",
     "The initial B descriptor-limit failure and B3 Vulkan OOM failure are preserved. Later successful sessions do not erase them or prove a single cause.",
     "The package recording agp4KQ is diagnostic only and not approved as the final website clip. Recording bitrate and receivedFPS are not measurements of native renderer FPS.",
-    "Package02 and the independently downloaded public copy passed their scoped native tests; deployment of the0.2 website remains unverified."
+    "Package/public-download scoped tests, final encoded video and site publication are verified. The clip preserves sourceVP8 frames/PTS; WebRTC29.7786receivedFPS and529clipframes are not renderer benchmark results. Production full playback logged23dropped playback frames while reaching the end without a video error."
   ],
   "distribution": {
     "version02PackageUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz",
     "version02PackageSha256": "2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d",
     "version02PackageBytes": 741359235,
     "version02GithubReleaseUrl": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha",
-    "version02WebsiteDeploymentUrl": null,
+    "version02WebsiteDeploymentUrl": "https://jhonstevenalvarezruiz-lu9jesn1i-sir-hegel.vercel.app",
     "platform": "Linux x64",
     "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
     "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
@@ -985,13 +1142,24 @@
       "launchPassed": true
     },
     "publicDownloadLaunchVerified": true,
-    "websiteDeploymentVerified": false,
+    "websiteDeploymentVerified": true,
     "publicDownloadSourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
     "compactPublicReceipt": {
       "path": "data/verification/unreal-visual-download.json",
       "bytes": 2591,
       "sha256": "1ea4b6d7c8d7da2fe0de5f2034183172ed76e0006e86bd7e2c1b50c0c659736b"
-    }
+    },
+    "websiteCanonicalUrls": [
+      "https://jhonstevenalvarezruiz.vercel.app/juegos/",
+      "https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/"
+    ],
+    "websiteDeploymentId": "dpl_EkGFPBrxDRqKJAgEXD7d4Nu4qti8",
+    "websiteSourceCommit": "abf0c60733f9822ca9884fcae7854b70685b247f",
+    "websiteDeploymentStatus": "READY",
+    "finalVideoUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-0.2-Linux-1080p.webm",
+    "finalVideoSha256": "7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc",
+    "finalVideoBytes": 18486318,
+    "compactPublicReceiptScope": "Download/runtime-only receipt frozen before site deployment; its historical websiteDeploymentVerifiedfalse is not the current site status. Current site verification is recorded here."
   },
   "documentation": "docs/MEJORA-VISUAL-0.2.md",
   "failedAttempts": [
@@ -1114,7 +1282,7 @@
       "note": "B3 started with a much lower reported GPU memory budget. Operator observed that terminating the B2 wrapper had not guaranteed native process exit. The record does not establish that as the sole cause or blame the shadow profile."
     }
   ],
-  "phaseScope": "UAT, first local package extraction and independent public HTTP download execution all passed. The public-download route proves9controls checks; driving/braking was tested earlier with the identical binary. Site deployment and individual NPC route coverage remain pending.",
+  "phaseScope": "UAT, package extraction, public executable download/runtime, final video remux/public download, and site production checks passed. Fullcity physical accuracy, individualNPC route coverage and AAA quality remain unverified/unachieved.",
   "runtimeSessions": [
     {
       "id": "A",
@@ -1639,5 +1807,195 @@
     ],
     "runtimeValidatedByPackageScript": false,
     "note": "The package script reports UAT and file checks. The separate runtime session below supplies gameplay evidence; the original report is not rewritten."
+  },
+  "approvedFinalVideo": {
+    "observationId": "tROZAC",
+    "approved": true,
+    "artifact": {
+      "path": "artifacts/unreal-native/stream-observations/observation-tROZAC/stream-encoded.webm",
+      "bytes": 18486318,
+      "sha256": "7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc"
+    },
+    "codec": "VP8",
+    "width": 1920,
+    "height": 1080,
+    "durationSeconds": 17.206,
+    "frames": 529,
+    "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+    "nativeRuntime": "packaged-public-download",
+    "receivedDecodedFps": 29.778589555856858,
+    "remuxWithoutReencoding": true,
+    "payloadOrderAndPtsVerified": true,
+    "sourceRepeatedPtsRetained": 13,
+    "publicationStatus": "release-upload-anonymous-download-and-site-playback-verified",
+    "publicUploadVerified": true,
+    "siteDeploymentVerified": true,
+    "notNativeRendererBenchmark": true,
+    "publicUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-0.2-Linux-1080p.webm",
+    "publicAnonymousDownloadVerified": true,
+    "siteUrl": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.webm",
+    "githubDownload": {
+      "httpStatus": 200,
+      "bytes": 18486318,
+      "sha256": "7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc",
+      "withoutAuthentication": true,
+      "verificationSource": "Publishing agent verified Release API digest and downloaded the full public video; recorded in this update."
+    },
+    "releaseFilename": "Neiva-Abierta-0.2-Linux-1080p.webm"
+  },
+  "siteVerification": {
+    "checkedAtUtc": "2026-09-08T06:06:09.723Z",
+    "origin": "https://jhonstevenalvarezruiz.vercel.app",
+    "sourceCommit": "abf0c60733f9822ca9884fcae7854b70685b247f",
+    "deploymentId": "dpl_EkGFPBrxDRqKJAgEXD7d4Nu4qti8",
+    "deploymentStatus": "READY",
+    "deploymentUrl": "https://jhonstevenalvarezruiz-lu9jesn1i-sir-hegel.vercel.app",
+    "siteTestsPassed": 102,
+    "responsiveChecksPassed": 8,
+    "widths": [
+      320,
+      390,
+      960,
+      1440
+    ],
+    "routes": [
+      "/juegos/",
+      "/proyectos/neiva-abierta/"
+    ],
+    "allOverflowPixels": 0,
+    "javascriptErrors": 0,
+    "failedResources": 0,
+    "analyticsRequestsExcluded": true,
+    "analyticsScope": "Excluded to avoid synthetic visit records; all page/media responses use production",
+    "qaReport": {
+      "path": "artifacts/visual-upgrade/site-production-02/report.json",
+      "bytes": 8518,
+      "sha256": "07cec83a1701fc4a37660a88ca751460c88b83cb395d6051c11baf197791d253"
+    },
+    "httpReport": {
+      "path": "artifacts/visual-upgrade/site-production-02/http-assets.json",
+      "bytes": 1682,
+      "sha256": "3ae2e12f9d45fe7d06d8bc279e96aaa617547e704df3f3d066ca22736ee5681d"
+    },
+    "pageHttpResults": [
+      {
+        "route": "/juegos/",
+        "status": 200,
+        "bytes": 17587,
+        "contentType": "text/html; charset=utf-8",
+        "sha256": "ca3b2883e7a031eb5e7218f256c65e07885639896151747217a09675455e619e",
+        "canonical": "https://jhonstevenalvarezruiz.vercel.app/juegos/",
+        "downloadUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz"
+      },
+      {
+        "route": "/proyectos/neiva-abierta/",
+        "status": 200,
+        "bytes": 17504,
+        "contentType": "text/html; charset=utf-8",
+        "sha256": "c0d4ce85dcc1ffef1019535ba6a161fb34ff5ffefbb52bb0406a14f5c9ea3bcb",
+        "canonical": "https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/",
+        "downloadUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz"
+      }
+    ],
+    "image": {
+      "route": "/activos/neiva-unreal-linux.png",
+      "status": 200,
+      "bytes": 3632115,
+      "contentType": "image/png",
+      "sha256": "49d93585ed0bcd9457e381db6e70fc48bed82b40f5fc8fc8a927ee5092f0eb5f"
+    },
+    "video": {
+      "route": "/activos/neiva-unreal-linux.webm",
+      "status": 200,
+      "bytes": 18486318,
+      "contentType": "video/webm",
+      "sha256": "7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc"
+    },
+    "fullVideoPlayback": {
+      "ended": true,
+      "time": 17.206,
+      "duration": 17.206,
+      "frames": 529,
+      "dropped": 23,
+      "error": null
+    },
+    "fullPlaybackNote": "The production1440px browser test reached the end of the17.206s clip and reported529 total frames with23 dropped playback frames, no video error. This is playback validation, not a claim of drop-free playback or native renderer performance.",
+    "responsiveResults": [
+      {
+        "width": 320,
+        "route": "/juegos/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": null
+      },
+      {
+        "width": 320,
+        "route": "/proyectos/neiva-abierta/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": true
+      },
+      {
+        "width": 390,
+        "route": "/juegos/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": null
+      },
+      {
+        "width": 390,
+        "route": "/proyectos/neiva-abierta/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": true
+      },
+      {
+        "width": 960,
+        "route": "/juegos/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": null
+      },
+      {
+        "width": 960,
+        "route": "/proyectos/neiva-abierta/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": true
+      },
+      {
+        "width": 1440,
+        "route": "/juegos/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": null
+      },
+      {
+        "width": 1440,
+        "route": "/proyectos/neiva-abierta/",
+        "overflow": 0,
+        "errors": [],
+        "failed": [],
+        "videoLoaded": true
+      }
+    ],
+    "bloquitosHttpStatus": 200,
+    "archiveRangeProbe": {
+      "route": "GitHub release archive",
+      "status": 206,
+      "contentRange": "bytes 0-3/741359235",
+      "contentLength": "4",
+      "readBytes": 4,
+      "gzipHeader": true,
+      "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz"
+    },
+    "archiveRangeProbeScope": "The siteQA archive request read only4bytes withHTTP206/gzip signature. Full741359235byte anonymous download+SHA+native launch were verified earlier by the separate public receipt."
   }
 }

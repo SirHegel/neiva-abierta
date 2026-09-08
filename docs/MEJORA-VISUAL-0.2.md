@@ -1,6 +1,6 @@
 # Mejora visual 0.2: evidencia y trabajo pendiente
 
-La **alfa Unreal 0.2.0 para Linux ya está empaquetada y publicada en [GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)**. Pasaron la primera extracción local y una **segunda ejecución desde la descarga HTTP pública**, con el mismo SHA-256 de archivo y binario. **Sólo el despliegue del sitio sigue pendiente** en este registro de distribución. El [recibo público compacto](../data/verification/unreal-visual-download.json) reúne enlaces, hashes y controles comprobados.
+La **alfa Unreal 0.2.0 para Linux ya está empaquetada y publicada en [GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)**. Pasaron la primera extracción local y una **segunda ejecución desde la descarga HTTP pública**, con el mismo SHA-256 de archivo y binario. **El vídeo final y el sitio también están publicados y verificados**. El [recibo público compacto](../data/verification/unreal-visual-download.json) conserva los controles y la descarga a su fecha; la verificación posterior del sitio se recoge aquí y en el manifiesto detallado.
 
 Este documento conserva las pruebas del 7 y 8 de septiembre de 2026 UTC en Unreal Engine 5.5.4: primero `UnrealEditor -game`, después el ejecutable `NeivaAbierta`, en Linux con Vulkan SM6. La evidencia histórica de la alfa 0.1.0 conserva su alcance y no acredita esta nueva versión.
 
@@ -101,11 +101,29 @@ La grabación diagnóstica `agp4KQ` usó MediaRecorder con una tasa solicitada d
 
 El [archivo público Linux](https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz) mide **741.359.235 bytes** y tiene SHA-256 `2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d`. El recibo `download-public-02.json`, actualizado a las **05:45:01 UTC**, registra HTTP 200 sin autenticación, coincidencia de bytes/hash, el binario esperado y **`launchPassed: true`**. La copia descargada se extrajo por separado, abrió y terminó con código **0** en `downloaded-visual-02`, sin fallo fatal observado.
 
-La observación `b1g3Oa` se contrastó con `downloaded-controls-02-verified.json`: **nueve comprobaciones pasaron**. Mirar sin mantener botones del ratón cambió el yaw unos **82,24°**, tanto a pie como en el coche. Durante las entradas W con pausa, posición y tiempo del mundo permanecieron iguales —8,428 s a pie y 14,370 s en el coche—; al reanudar volvió a avanzar el tiempo del juego. También se confirmaron entrada al coche y retorno al personaje. Los estados nativos se asociaron a los comandos con diferencias temporales de hasta 30 ms. No se atribuye este resultado al mero envío de teclas ni se reutiliza como un benchmark. El despliegue del sitio 0.2 sigue sin acreditarse.
+La observación `b1g3Oa` se contrastó con `downloaded-controls-02-verified.json`: **nueve comprobaciones pasaron**. Mirar sin mantener botones del ratón cambió el yaw unos **82,24°**, tanto a pie como en el coche. Durante las entradas W con pausa, posición y tiempo del mundo permanecieron iguales —8,428 s a pie y 14,370 s en el coche—; al reanudar volvió a avanzar el tiempo del juego. También se confirmaron entrada al coche y retorno al personaje. Los estados nativos se asociaron a los comandos con diferencias temporales de hasta 30 ms. No se atribuye este resultado al mero envío de teclas ni se reutiliza como un benchmark.
+
+## Vídeo final aprobado
+
+La observación **`tROZAC`**, iniciada el **8 de septiembre a las 05:55:36 UTC**, produjo el [WebM final publicado](https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-0.2-Linux-1080p.webm) del **binario público descargado 0.2**. Se capturaron los cuadros VP8 entrantes después de reconstruirlos desde RTP y se cambiaron de contenedor IVF a WebM **sin recodificar, reescalar ni insertar cuadros**. El registro de lanzamiento y la inspección del ejecutable del proceso mediante `/proc` identificaron la instalación descargada, con el SHA del binario ya verificado. El log de UE 5.5.4 confirma avance de **4,642 m**, velocidad del coche de 530 a 0 cm/s al frenar y retorno al personaje en modo `WALKING`. El informe del navegador por sí solo no acredita esa identidad o jugabilidad.
+
+El archivo tiene **18.486.318 bytes**, **1920 × 1080**, **17,206 s** y **529 cuadros VP8**, decodificados también con `ffprobe`. SHA-256: `7790e20d2102de6db45dde5af2d77d8448c700ca036082c228ea883d3f7308bc`. Una comparación independiente comprobó el hash de los datos de **cada cuadro y su orden**, así como los tiempos de presentación antes y después del remux. Los **13 PTS repetidos de la fuente se conservaron**: no se añadieron cuadros para completar una tasa objetivo. El IVF retiene los ticks originales de 90 kHz; WebM expresa los tiempos en milisegundos.
+
+WebRTC recibió **29,778589555856858 FPS decodificados** durante su intervalo de observación. El clip incluye un breve tramo anterior a ese intervalo al establecerse la conexión, por lo que sus conteos no son idénticos. Ni la tasa recibida ni dividir 529 cuadros entre la duración constituye un benchmark del render nativo. Es evidencia visual de esta alfa; **no demuestra gráficos AAA, hiperrealismo ni una réplica idéntica de Neiva**. La grabación anterior `agp4KQ` y los intentos fallidos se conservan como antecedentes y no sustituyen este archivo aprobado.
+
+El archivo **`Neiva-Abierta-0.2-Linux-1080p.webm`** ya está adjunto a la [misma release 0.2](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha). La API de GitHub confirmó tamaño y digest, y la descarga completa sin autenticación devolvió **HTTP 200**, los 18.486.318 bytes y el SHA esperado.
+
+## Sitio publicado y comprobado
+
+La [sala de juegos](https://jhonstevenalvarezruiz.vercel.app/juegos/) y la [ficha de Neiva Abierta](https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/) responden HTTP 200 con la alfa 0.2, descarga real y medios aprobados. El despliegue Vercel `dpl_EkGFPBrxDRqKJAgEXD7d4Nu4qti8` está **READY**, procede del commit de sitio `abf0c60733f9822ca9884fcae7854b70685b247f` y tiene [URL de despliegue](https://jhonstevenalvarezruiz-lu9jesn1i-sir-hegel.vercel.app).
+
+Pasaron **102 pruebas del sitio y ocho comprobaciones responsive de producción**: ambas rutas a 320, 390, 960 y 1440 píxeles, sin desbordamiento horizontal, errores JavaScript ni recursos fallidos. La captura pública y el vídeo coinciden exactamente con los hashes aprobados. La reproducción completa a 1440 píxeles llegó a los 17,206 s y registró 529 cuadros, **23 descartados durante reproducción**, sin error del vídeo; no se afirma reproducción sin pérdidas ni rendimiento nativo a partir de esa prueba. Bloquitos sigue respondiendo HTTP 200. Se excluyeron solicitudes de analítica para no registrar visitas sintéticas.
+
+Los informes se conservan en [report.json](../artifacts/visual-upgrade/site-production-02/report.json) y [http-assets.json](../artifacts/visual-upgrade/site-production-02/http-assets.json), comprobados a las **06:06:09 UTC**. El sondeo del archivo grande realizado por esta QA leyó sólo cuatro bytes con HTTP 206 y cabecera gzip: **la descarga completa de 741 MB, su SHA y la ejecución se verificaron antes**, mediante el recibo independiente. Los recibos históricos conservan su fecha y no se reescriben como si hubieran incluido estas pruebas posteriores.
 
 ## Validación y fases pendientes
 
-El último conjunto previo al empaquetado pasó **103 pruebas Node, 41 pruebas Python de los scripts nativos y 57 pruebas Python de la raíz: 201 en total**. Incluyen reproducción byte a byte de los hitos, orientación de triángulos, conservación de normales/UV y comprobaciones de topología. `npm run build` también pasó para el prototipo web anterior; no acredita un paquete Unreal. Los logs `node-tests-final-20260908.log`, `native-python-final-20260908.log` y `root-python-20260908-final.log` están bajo `artifacts/visual-upgrade/`. No se suman otra vez las pruebas históricas de la alfa 0.1.0.
+La última suite del juego y grabador pasó **109 pruebas Node, sin omitidas**. Junto a las **41 pruebas Python nativas y 57 de la raíz** ya completadas, son **207 comprobaciones**; las 102 del sitio se registran por separado. Incluyen reproducción byte a byte de los hitos, orientación de triángulos, conservación de normales/UV, topología y grabación VP8. `npm run build` también pasó para el prototipo web anterior; no acredita un paquete Unreal. Los logs `node-tests-encoded-final-20260908.log`, `native-python-final-20260908.log` y `root-python-20260908-final.log` están bajo `artifacts/visual-upgrade/`. No se suman otra vez las pruebas históricas de la alfa 0.1.0.
 
 | Fase | Estado acreditado por esta revisión |
 | --- | --- |
@@ -119,7 +137,8 @@ El último conjunto previo al empaquetado pasó **103 pruebas Node, 41 pruebas P
 | Empaquetado y ejecución de la primera extracción local 0.2 | Verificados, UAT y partida con salida 0 |
 | Publicación GitHub y descarga HTTP sin autenticación | Verificados, tamaño y SHA coinciden |
 | Ejecución de la copia descargada públicamente | Verificada: binario coincidente, nueve controles y salida 0 |
-| Despliegue del sitio para 0.2 | **No verificado** |
+| Vídeo VP8 final del binario público, sin recodificar | Verificados archivo, publicación y descarga anónima |
+| Despliegue del sitio para 0.2 | Verificado: READY, ocho casos responsive y medios exactos |
 
 ## Límite principal de fidelidad
 

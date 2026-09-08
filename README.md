@@ -6,6 +6,10 @@ ficticio para contactar a Jhon. Creada y empaquetada con **Unreal Engine 5.5.4**
 
 [Descargar gratis la alfa Linux en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
 
+[Ver vídeo real de la descarga, en 1080p](https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/#descarga-unreal) ·
+[Juegos: Neiva Abierta y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/).
+La ficha y el vídeo se adaptan a móvil; el ejecutable se descarga para Linux.
+
 Extrae el archivo completo y, desde la carpeta extraída, ejecuta:
 
 ```sh
