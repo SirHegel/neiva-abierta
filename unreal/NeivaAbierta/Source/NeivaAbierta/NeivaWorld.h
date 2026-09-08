@@ -66,7 +66,6 @@ public:
     float CarYaw = 0;
     TArray<TArray<FVector>> PedestrianRoutes;
     int32 ActivePedestrians = 0;
-    FVector StudioPoint = FVector(0, 1400, 0);
     FString Status = TEXT("Cargando datos abiertos...");
     UPROPERTY(EditAnywhere, Category="Neiva") bool bGenerateMapGeometry = true;
     // Zero imports the entire dataset. Nonzero is an explicitly selected preview radius.
@@ -109,6 +108,7 @@ public:
     void CycleShirt();
     void CycleTrousers();
     void SetAppearance(int32 Shirt, int32 Trousers, bool bPersist = false);
+    virtual void Jump() override;
     FString AppearanceLabel() const;
 protected:
     bool bPedestrian = false;
@@ -140,7 +140,11 @@ public:
     ANeivaPedestrian();
     virtual void Tick(float DeltaSeconds) override;
     void SetRoute(const TArray<FVector>& Points, int32 AppearanceSeed, int32 FirstTargetPoint = 1);
+    void SetConversationPartner(ANeivaCharacter* Partner);
+    int32 GetDialogueSeed() const { return DialogueSeed; }
 private:
+    int32 DialogueSeed = 0;
+    TWeakObjectPtr<ANeivaCharacter> ConversationPartner;
     TArray<FVector> Route;
     int32 TargetPoint = 1;
     int32 Direction = 1;

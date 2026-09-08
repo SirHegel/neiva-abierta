@@ -7,7 +7,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 REPO = PROJECT.parents[1]
 
 
-def prepare():
+def prepare(*, write=True):
     source = REPO / 'public/data/neiva-survey.json'
     raw = source.read_bytes()
     survey = json.loads(raw)
@@ -28,9 +28,10 @@ def prepare():
             'note': 'Park canopy interpretation. Tree species/heights and all bench placements are estimates, not a copy of a surveyed streetscape.',
             'trees': trees, 'benches': benches}
     destination = PROJECT / 'Content/Data/neiva-environment.json'
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
-    print(f'Environment staged: {len(trees)} trees, {len(benches)} benches; estimates explicitly labelled')
+    if write:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+        print(f'Environment staged: {len(trees)} trees, {len(benches)} benches; estimates explicitly labelled')
     return data
 
 

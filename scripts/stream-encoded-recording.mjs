@@ -11,19 +11,38 @@ const runFile = promisify(execFile);
 export const ENCODED_LIMIT_BYTES = 32 * 1024 * 1024;
 
 // Self-contained so the identical collector runs in the page and CPU tests.
-export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs = 60000} = {}) {
+export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs = 60000,
+  deferStart = false, stableRtpAdvances = 3} = {}) {
   if (!Number.isInteger(maxBytes) || maxBytes < 64 || maxBytes > 32 * 1024 * 1024 ||
-      !Number.isInteger(maxDurationMs) || maxDurationMs < 1 || maxDurationMs > 60000)
+      !Number.isInteger(maxDurationMs) || maxDurationMs < 1 || maxDurationMs > 60000 ||
+      typeof deferStart !== 'boolean' || !Number.isInteger(stableRtpAdvances) || stableRtpAdvances < 1 || stableRtpAdvances > 120)
     throw Error('Encoded recording requires 64..33554432 bytes and 1..60000 ms.');
   const frames = [];
   let bytes = 32, width = 0, height = 0, firstRtp = null, lastRtp = null, ticks = 0;
   let wraps = 0, source = null, startedAt = null, endedAt = null, reason = null, error = null;
   let ignoredBeforeKey = 0, invisibleFrames = 0, timer = null, blob = null;
   let repeatedRtpTimestamps = 0, backwardsRtpTimestamps = 0;
+  let armed = !deferStart, armedAt = null, firstObservedAt = null;
+  let prerollFrames = 0, prerollKeys = 0, prerollRepeats = 0, prerollBackwards = 0, prerollWraps = 0;
+  let probeRtp = null, probeSource = null, forwardAdvances = 0, rejectedUnstableKeys = 0;
+  let lastTimestampDiscontinuity = null;
   const timestampDiagnostics = [];
+  const prerollTimestampDiagnostics = [];
   function noteTimestamp(kind, previous, current, delta) {
-    if (timestampDiagnostics.length < 8)
-      timestampDiagnostics.push({kind, frameIndex: frames.length, previous, current, delta});
+    const preroll = firstRtp === null && deferStart;
+    const entry = {kind, frameIndex: preroll ? prerollFrames : frames.length, previous, current, delta};
+    const entries = preroll ? prerollTimestampDiagnostics : timestampDiagnostics;
+    if (kind !== 'repeated') lastTimestampDiscontinuity = {...entry, stage: preroll ? 'preroll' : 'recording'};
+    if (entries.length < 8) entries.push(entry);
+    else if (kind !== 'repeated') {
+      // A burst of repeated timestamps must not hide the actual discontinuity.
+      const repeatedIndex = entries.findIndex(item => item.kind === 'repeated');
+      entries.splice(repeatedIndex < 0 ? 0 : repeatedIndex, 1); entries.push(entry);
+    }
+  }
+  function arm() {
+    if (!reason && !armed) { armed = true; armedAt = performance.now(); }
+    return status();
   }
   function stop(why = 'observation-ended') {
     if (!reason) { reason = why; endedAt = performance.now(); clearTimeout(timer); }
@@ -36,6 +55,15 @@ export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs =
       rtpClockRate: 90000, rtpWraps: wraps, rtpSpanTicks: ticks, rtpSpanMs: ticks / 90,
       rateFromRtpSpan: ticks > 0 ? (frames.length - 1) * 90000 / ticks : null,
       repeatedRtpTimestamps, backwardsRtpTimestamps, timestampDiagnostics,
+      lastTimestampDiscontinuity, deferredStart: deferStart, armed,
+      waitingForKeyframe: armed && firstRtp === null && !reason,
+      startAfterWarmup: deferStart, firstFramePerformanceMs: startedAt, armedPerformanceMs: armedAt,
+      discardedConnectionPreroll: {frames: prerollFrames, keyframes: prerollKeys,
+        repeatedRtpTimestamps: prerollRepeats, backwardsRtpTimestamps: prerollBackwards,
+        rtpWraps: prerollWraps,
+        timestampDiagnostics: prerollTimestampDiagnostics, rejectedUnstableKeys,
+        requiredForwardAdvances: stableRtpAdvances, currentForwardAdvances: forwardAdvances,
+        durationMs: firstObservedAt === null ? 0 : (startedAt ?? endedAt ?? performance.now()) - firstObservedAt},
       distinctRtpTimestamps: frames.length - repeatedRtpTimestamps,
       distinctTimestampRateFromRtpSpan: ticks > 0 ? (frames.length - repeatedRtpTimestamps - 1) * 90000 / ticks : null,
       observedWallMs: startedAt === null ? 0 : (endedAt ?? performance.now()) - startedAt,
@@ -56,6 +84,29 @@ export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs =
       keyWidth = (view[6] | (view[7] << 8)) & 0x3fff;
       keyHeight = (view[8] | (view[9] << 8)) & 0x3fff;
       if (!keyWidth || !keyHeight) return fail('Invalid VP8 frame dimensions.');
+    }
+    if (firstRtp === null && deferStart) {
+      firstObservedAt ??= performance.now();
+      if (probeSource !== sourceId) { probeRtp = null; forwardAdvances = 0; probeSource = sourceId; }
+      if (probeRtp !== null) {
+        const delta = (timestamp - probeRtp + 0x100000000) % 0x100000000;
+        if (delta >= 0x80000000) {
+          prerollBackwards++; forwardAdvances = 0;
+          noteTimestamp('backwards', probeRtp, timestamp, delta - 0x100000000);
+        } else if (delta === 0) {
+          prerollRepeats++; noteTimestamp('repeated', probeRtp, timestamp, 0);
+        } else { forwardAdvances++; prerollWraps += Number(timestamp < probeRtp); }
+      }
+      probeRtp = timestamp;
+      // The caller arms only after decoded-video warmup. A subsequent keyframe
+      // starts an independent recording; discarded connection replay is counted
+      // explicitly and is never presented as part of the captured observation.
+      if (!armed || !key || forwardAdvances < stableRtpAdvances) {
+        prerollFrames++; prerollKeys += Number(key);
+        if (armed && key && forwardAdvances < stableRtpAdvances) rejectedUnstableKeys++;
+        if (armed && !key) ignoredBeforeKey++;
+        return;
+      }
     }
     if (firstRtp === null && !key) { ignoredBeforeKey++; return; }
     if (firstRtp !== null && sourceId !== source) return stop('stream-changed');
@@ -111,7 +162,7 @@ export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs =
     }
     return blob;
   }
-  return {push, stop, fail, status, getBlob, isStopped: () => reason !== null};
+  return {push, arm, stop, fail, status, getBlob, isStopped: () => reason !== null};
 }
 
 // Inject before the local player's JavaScript creates its first peer. Both
@@ -127,6 +178,7 @@ export function installRecorderInPage(factory, options) {
   let receiverNumber = 0, videoPipes = 0, forwardedFrames = 0;
   window[name] = {
     status: () => ({available, videoPipes, forwardedFrames, ...collector.status()}),
+    start: () => { collector.arm(); return window[name].status(); },
     stop: why => { collector.stop(why); return window[name].status(); },
     readChunk: async (offset, length) => {
       if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(length) || length < 1 || length > 262144)
@@ -190,9 +242,66 @@ export function installRecorderInPage(factory, options) {
 }
 
 export async function installEncodedRecording(page, options = {}) {
+  const deferred = {deferStart: true, ...options};
   // Validate without keeping a timer or any frame buffers in Node.
-  createVp8Collector(options);
-  return page.evaluateOnNewDocument(`(${installRecorderInPage.toString()})(${createVp8Collector.toString()},${JSON.stringify(options)});`);
+  createVp8Collector(deferred);
+  return page.evaluateOnNewDocument(`(${installRecorderInPage.toString()})(${createVp8Collector.toString()},${JSON.stringify(deferred)});`);
+}
+
+// Call after decoded-video warmup and before any action that must be recorded.
+// Epic UE5.5 PixelStreaming.requestIframe() sends IFrameRequest, handled by
+// FStreamer::ForceKeyFrame; this is transport control, not game/desktop input.
+export async function startEncodedRecording(page, {timeoutMs = 8000} = {}) {
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 15000)
+    throw Error('Keyframe wait must be 100..15000 ms.');
+  const requestedAtUtc = new Date().toISOString(), started = performance.now(), requests = [];
+  let lastRequestMs = -Infinity, status;
+  try {
+    // Duplicates alone do not demonstrate an advancing RTP clock. Wait for
+    // three genuine advances after the last discontinuity before requesting
+    // the new keyframe, so a premature request cannot strand the recorder.
+    while (performance.now() - started < timeoutMs) {
+      const elapsedMs = performance.now() - started;
+      const result = await page.evaluate(canRequest => {
+        const recorder = window.__neivaEncodedRecording;
+        if (!recorder || !recorder.status().available) throw Error('Encoded recorder is not available.');
+        const current = recorder.status();
+        if (current.frames || current.stopped) return {status: current};
+        const stable = current.discardedConnectionPreroll.currentForwardAdvances >=
+          current.discardedConnectionPreroll.requiredForwardAdvances;
+        if (!canRequest || !stable) return {status: current};
+        if (typeof window.pixelStreaming?.requestIframe !== 'function')
+          throw Error('This player does not expose the verified Epic keyframe request API.');
+        recorder.start();
+        return {status: recorder.status(), requestAccepted: window.pixelStreaming.requestIframe() === true};
+      }, requests.length < 3 && elapsedMs - lastRequestMs >= 1000);
+      status = result.status;
+      if ('requestAccepted' in result) {
+        lastRequestMs = elapsedMs;
+        requests.push({elapsedMs: Math.round(elapsedMs), accepted: result.requestAccepted});
+      }
+      if (status.error || status.stopped) throw Error(status.error || 'Encoded recording stopped before a stable keyframe.');
+      if (status.frames) break;
+      // A keyframe can be refused during peer initialization or rejected after
+      // a subsequent preroll clock reset. Retry at most twice after RTP becomes
+      // stable again; no request alters payload order or recorded timestamps.
+      await new Promise(resolve => setTimeout(resolve, Math.min(100, Math.max(1, timeoutMs - (performance.now() - started)))));
+    }
+    if (!status?.frames) throw Error(requests.some(request => request.accepted)
+      ? 'No stable VP8 keyframe arrived after decoded-video warmup.'
+      : 'No keyframe request was accepted with a stable RTP clock after decoded-video warmup.');
+  } catch (cause) {
+    const stopped = await page.evaluate(() => window.__neivaEncodedRecording?.stop('keyframe-timeout')).catch(() => status);
+    const error = Error(cause.message, {cause});
+    error.recordingStatus = {...stopped, keyframeRequests: requests}; throw error;
+  }
+  status = await page.evaluate(() => window.__neivaEncodedRecording.status());
+  if (status.error || !status.frames) {
+    const error = Error(status.error || 'Encoded recording stopped before a stable keyframe.');
+    error.recordingStatus = status; throw error;
+  }
+  return {...status, keyframeRequested: requests.some(request => request.accepted), keyframeRequests: requests, requestedAtUtc,
+    note: 'Capture starts at the first accepted keyframe after warmup; connection preroll is excluded and counted.'};
 }
 
 export function parseIvf(data) {
@@ -288,5 +397,6 @@ export async function finishEncodedRecording(page, outputDirectory, {stem = 'str
     sha256: createHash('sha256').update(webm).digest('hex'),
     ivfSha256: createHash('sha256').update(ivf).digest('hex'), remux,
     source: 'Incoming VP8 encoded frames after RTP depacketization; video only, no re-encode/rescale/frame duplication.',
-    includesConnectionPreroll: true, coveredObservation: completed.stopReason === 'observation-ended'};
+    includesConnectionPreroll: !completed.deferredStart,
+    coveredObservation: completed.stopReason === 'observation-ended' && completed.frames > 0};
 }

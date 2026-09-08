@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": 1,
+  "reviewedAt": "2026-09-08",
+  "status": "approved-for-native-staging",
+  "origin": [
+    -75.2809,
+    2.9252
+  ],
+  "baseSha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+  "osmSnapshotSha256": "bce278ca5e9ea0ac13becb2eed99f8cd17aec122f8fe2feb84564baa5128137c",
+  "heightSourceManifestSha256": "eac9485730d5377570c1b28a1f9a2a7e4b9891d6d2db0727e0b57a4fe03e1680",
+  "source": {
+    "id": "google-research-open-buildings-temporal-v1-2023",
+    "name": "Google Research Open Buildings 2.5D Temporal V1",
+    "catalogUrl": "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_Research_open-buildings-temporal_v1",
+    "manifestUrl": "https://storage.googleapis.com/open-buildings-temporal-data/v1/manifests/8f_EPSG_32618_2023_06_30.json",
+    "manifestSha256": "64a27f19320d4c9399435c1f60cc1a40305667144f588ed4145d303e9fb82a8b",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Google Research Open Buildings 2.5D Temporal V1; contains modified Copernicus Sentinel-2 data.",
+    "properties": {
+      "s2cell_token": "8f",
+      "imagery_start_time_epoch_s": 1672560000.0,
+      "imagery_end_time_epoch_s": 1703664000.0,
+      "inference_time_epoch_s": 1688108400.0
+    },
+    "inferenceAt": "2023-06-30T07:00:00Z",
+    "sourcePixelSizeM": 0.5,
+    "effectiveResolutionM": 4,
+    "photogrammetricMesh": false,
+    "facadeImages": false,
+    "physicallyMeasuredHeights": false,
+    "limitation": "ML estimates for 2023; not Google Maps, 2026 survey, facade geometry or certified metric accuracy."
+  },
+  "fullSamplesSha256": "89f44cbfb6b8471ad60b1cf1ba1878b75c65c22859cfe6c29f0d83671dc7c2ae",
+  "scope": "Single authorized manual estimate; no other source-declared height changes. No Google Maps geometry extraction.",
+  "reviews": [
+    {
+      "id": "way/1221117102",
+      "height": 6.5,
+      "heightStatus": "estimated",
+      "confirmed": false,
+      "priorHeightM": 30,
+      "priorSourceStatus": "source_declared",
+      "priorSourceTags": {
+        "height": "30",
+        "building:levels": "2"
+      },
+      "sample": {
+        "interiorPixels": 4572,
+        "validPixels": 3866,
+        "validFraction": 0.845582,
+        "validAreaM2": 966.5,
+        "presenceMedian": 0.82,
+        "heightMedianM": 6.5,
+        "heightP10M": 5.5,
+        "heightP90M": 7.5,
+        "heightMinM": 4.0,
+        "heightMaxM": 8.5,
+        "tile": 3
+      },
+      "reason": "OSM height=30 conflicts with building:levels=2. Google Research 2023 footprint median 6.5 m (P10-P90 5.5-7.5, maximum 8.5, coverage 84.5582%) supports a low-volume estimate compatible with two levels. Neither source certifies metre measurements.",
+      "visualContext": {
+        "usedForDimensions": false,
+        "targetFacadeIdentityConfirmed": false,
+        "note": "Nearby Street View panoramas provide local visual context only; the target facade is not securely matched. No panorama-derived geometry or texture."
+      }
+    }
+  ]
+}

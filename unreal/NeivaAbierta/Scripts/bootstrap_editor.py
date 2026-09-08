@@ -337,6 +337,12 @@ def main():
         for part, maps in plan["characterTextures"].items()}
     bind_character_materials(character, character_materials)
     import_car(plan["models"][1])
+    # These additions run after dry PBR exists, and fail the import if any
+    # generated weather resources or audited dialogue WAVs cannot be saved.
+    from prepare_weather_editor import prepare as prepare_weather
+    from import_dialogue_editor import main as import_dialogue
+    prepare_weather()
+    import_dialogue()
     levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     if not editor.does_asset_exist("/Game/Maps/Neiva"):
         if not levels.new_level("/Game/Maps/Neiva"):

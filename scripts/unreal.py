@@ -10,11 +10,13 @@ import json
 import os
 from pathlib import Path
 import platform
+import plistlib
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
+from xml.parsers.expat import ExpatError
 import xml.etree.ElementTree as ET
 
 REPO = Path(__file__).resolve().parents[1]
@@ -26,17 +28,22 @@ DESKTOP_VARIABLES = ("DISPLAY", "WAYLAND_DISPLAY", "XAUTHORITY", "DBUS_SESSION_B
 
 def native_platform(system=None):
     system = system or platform.system()
-    if system not in ("Linux", "Windows"):
-        raise ValueError("Este flujo admite Linux o Windows; no hay paquete móvil validado.")
-    return "Win64" if system == "Windows" else "Linux"
+    targets = {"Linux": "Linux", "Windows": "Win64", "Darwin": "Mac"}
+    if system not in targets:
+        raise ValueError("Este flujo admite anfitriones Linux, Windows o macOS; no hay paquete móvil validado.")
+    return targets[system]
 
 
 def engine_files(root, target):
     base = Path(root) / "Engine"
+    if target not in ("Linux", "Win64", "Mac"):
+        raise ValueError("Plataforma de motor no admitida")
+    editor = ("UnrealEditor.exe" if target == "Win64" else
+              "UnrealEditor.app/Contents/MacOS/UnrealEditor" if target == "Mac" else "UnrealEditor")
     return {
         "version": base / "Build/Build.version",
-        "editor": base / "Binaries" / target / ("UnrealEditor.exe" if target == "Win64" else "UnrealEditor"),
-        "build": base / "Build/BatchFiles" / ("Build.bat" if target == "Win64" else "Linux/Build.sh"),
+        "editor": base / "Binaries" / target / editor,
+        "build": base / "Build/BatchFiles" / ("Build.bat" if target == "Win64" else f"{target}/Build.sh"),
         "uat": base / "Build/BatchFiles" / ("RunUAT.bat" if target == "Win64" else "RunUAT.sh"),
     }
 
@@ -48,11 +55,16 @@ def find_engine(explicit=None):
         return Path(os.environ["NEIVA_UE_ROOT"]).expanduser().resolve()
     executable = shutil.which("UnrealEditor")
     if executable:
-        return Path(executable).resolve().parents[3]
+        # A Mac app bundle adds Contents/MacOS; a fixed parent index is wrong there.
+        for ancestor in Path(executable).resolve().parents:
+            if ancestor.name == "Engine":
+                return ancestor.parent
     candidates = [Path.home() / "UnrealEngine", Path.home() / "Unreal/UE_5.5",
                   Path("/opt/UnrealEngine"), Path("/opt/unreal-engine")]
     if os.name == "nt":
         candidates.insert(0, Path(os.environ.get("ProgramFiles", "C:/Program Files")) / "Epic Games/UE_5.5")
+    if platform.system() == "Darwin":
+        candidates.insert(0, Path("/Users/Shared/Epic Games/UE_5.5"))
     return next((path for path in candidates if (path / "Engine/Build/Build.version").is_file()), None)
 
 
@@ -304,16 +316,47 @@ def require_import(project, started):
         raise RuntimeError("El editor no guardó Content/Maps/Neiva.umap")
 
 
+def mac_package_binaries(directory):
+    """Check bundle metadata/header presence, not signing, architecture or execution."""
+    directory = Path(directory)
+    binaries = []
+    for bundle in directory.rglob("NeivaAbierta*.app"):
+        if not bundle.is_dir():
+            continue
+        metadata = bundle / "Contents/Info.plist"
+        try:
+            with metadata.open("rb") as source:
+                info = plistlib.load(source)
+        except (OSError, ValueError, plistlib.InvalidFileException, ExpatError) as error:
+            raise RuntimeError(f"Info.plist ausente o inválido: {metadata}") from error
+        name = info.get("CFBundleExecutable") if isinstance(info, dict) else None
+        if not isinstance(name, str) or name in ("", ".", "..") or any(c in name for c in "/\\:\0"):
+            raise RuntimeError(f"CFBundleExecutable inválido: {metadata}")
+        binary = bundle / "Contents/MacOS" / name
+        if not binary.resolve().is_relative_to(bundle.resolve()) or not bundle.resolve().is_relative_to(directory.resolve()):
+            raise RuntimeError(f"El ejecutable Mac sale de su paquete: {binary}")
+        if not binary.is_file() or not os.access(binary, os.X_OK):
+            raise RuntimeError(f"Falta ejecutable dentro del bundle Mac: {binary}")
+        binaries.append(binary)
+    return binaries
+
+
 def package_files(directory, target):
     directory = Path(directory)
+    if target not in ("Linux", "Win64", "Mac"):
+        raise ValueError("Plataforma de paquete no admitida")
     binary_name = "NeivaAbierta*.exe" if target == "Win64" else "NeivaAbierta*"
-    binaries = [p for p in directory.rglob(binary_name) if p.is_file()
+    binaries = mac_package_binaries(directory) if target == "Mac" else [p for p in directory.rglob(binary_name) if p.is_file()
                 and "Binaries" in p.parts and target in p.parts
                 and (target == "Win64" or (p.suffix == "" and os.access(p, os.X_OK)))]
     for binary in binaries:
         with binary.open("rb") as source:
             magic = source.read(4)
-        if (target == "Win64" and magic[:2] != b"MZ") or (target == "Linux" and magic != b"\x7fELF"):
+        # Thin 64-bit Mach-O and universal headers. Slices/signatures need a real Mac check.
+        mac_magic = (b"\xcf\xfa\xed\xfe", b"\xfe\xed\xfa\xcf", b"\xca\xfe\xba\xbe",
+                     b"\xbe\xba\xfe\xca", b"\xca\xfe\xba\xbf", b"\xbf\xba\xfe\xca")
+        if ((target == "Win64" and magic[:2] != b"MZ") or (target == "Linux" and magic != b"\x7fELF")
+                or (target == "Mac" and magic not in mac_magic)):
             raise RuntimeError(f"Archivo sin cabecera ejecutable nativa: {binary}")
     data = []
     for extension in ("pak", "utoc", "ucas"):

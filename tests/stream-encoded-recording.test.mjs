@@ -4,7 +4,8 @@ import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
-import {createVp8Collector, parseIvf, remuxIvf, finishEncodedRecording} from '../scripts/stream-encoded-recording.mjs';
+import {createContext, runInContext} from 'node:vm';
+import {createVp8Collector, parseIvf, remuxIvf, finishEncodedRecording, startEncodedRecording} from '../scripts/stream-encoded-recording.mjs';
 
 function frame(timestamp, {key = false, width = 160, height = 90, show = true, sourceId = 'one'} = {}) {
   const data = new Uint8Array(key ? 10 : 3);
@@ -70,6 +71,95 @@ test('repeated timestamps preserve every frame at its original instant and diagn
     error.recordingStatus.backwardsRtpTimestamps === 1 && error.message === 'Backwards RTP timestamp.');
 });
 
+test('deferred recording excludes reported startup replay and starts only on a new stable keyframe', async () => {
+  const c = createVp8Collector({deferStart: true});
+  const replay = [frame(1000, {key: true}), ...Array.from({length: 12}, () => frame(1000)), frame(1300), frame(1200)];
+  replay.forEach(value => c.push(value));
+  assert.equal(c.status().error, null);
+  assert.equal(c.status().frames, 0);
+  assert.equal(c.status().discardedConnectionPreroll.backwardsRtpTimestamps, 1);
+  assert.equal(c.status().lastTimestampDiscontinuity.delta, -100);
+  assert.equal(c.status().lastTimestampDiscontinuity.stage, 'preroll');
+  c.arm();
+  c.push(frame(1600)); c.push(frame(1900, {key: true})); c.push(frame(2200));
+  assert.equal(c.status().frames, 0); // Early keyframe is not a stable boundary.
+  assert.equal(c.status().discardedConnectionPreroll.rejectedUnstableKeys, 1);
+  c.push(frame(2500, {key: true})); c.push(frame(2600)); c.stop();
+  const parsed = parseIvf(Buffer.from(await c.getBlob().arrayBuffer()));
+  assert.deepEqual(parsed.frames.map(f => f.pts), [0, 100]);
+  assert.equal(c.status().firstRtpTimestamp, 2500);
+  assert.equal(c.status().discardedConnectionPreroll.frames, replay.length + 3);
+  assert.equal(c.status().repeatedRtpTimestamps, 0); // Preroll counters remain separate.
+});
+
+test('wrap during warmup is distinct from reordered old packets and repeated frames cannot establish stability', () => {
+  const c = createVp8Collector({deferStart: true});
+  c.push(frame(0xfffffff0, {key: true}));
+  c.arm();
+  for (let i = 0; i < 20; i++) c.push(frame(0xfffffff0, {key: true}));
+  assert.equal(c.status().frames, 0);
+  assert.equal(c.status().discardedConnectionPreroll.currentForwardAdvances, 0);
+  c.push(frame(30)); c.push(frame(60)); c.push(frame(90, {key: true}));
+  assert.equal(c.status().discardedConnectionPreroll.rtpWraps, 1);
+  assert.equal(c.status().frames, 1);
+  for (let i = 0; i < 12; i++) c.push(frame(90));
+  c.push(frame(0xfffffff5)); // An old pre-wrap packet is not another wrap forward.
+  assert.equal(c.status().error, 'Backwards RTP timestamp.');
+  assert.equal(c.status().lastTimestampDiscontinuity.stage, 'recording');
+  assert.equal(c.status().lastTimestampDiscontinuity.delta, -101);
+  assert.ok(c.status().timestampDiagnostics.some(entry => entry.kind === 'backwards'));
+  assert.throws(() => c.getBlob());
+});
+
+test('warmup keyframe requests retry a refusal and a preroll reset without accepting the unstable keyframe', async () => {
+  const collector = createVp8Collector({deferStart: true});
+  let timestamp = 100000, requests = 0;
+  [0, 3000, 6000, 9000].forEach(offset => collector.push(frame(timestamp + offset, {key: offset === 0})));
+  timestamp += 9000;
+  const context = createContext({window: {
+    __neivaEncodedRecording: {status: () => ({available: true, ...collector.status()}),
+      start: () => collector.arm(), stop: why => collector.stop(why)},
+    pixelStreaming: {requestIframe() {
+      requests++;
+      if (requests === 1) return false; // Player not ready despite decoded warmup.
+      if (requests === 2) timestamp -= 9000; // Connection clock resets before the requested keyframe.
+      collector.push(frame(timestamp, {key: true}));
+      return true;
+    }},
+  }});
+  const page = {evaluate: async (fn, arg) => {
+    context.argument = arg; return runInContext(`(${fn.toString()})(argument)`, context);
+  }};
+  const timer = setInterval(() => { timestamp += 3000; collector.push(frame(timestamp)); }, 20);
+  try {
+    const result = await startEncodedRecording(page, {timeoutMs: 3500});
+    assert.deepEqual(result.keyframeRequests.map(request => request.accepted), [false, true, true]);
+    assert.ok(result.frames >= 1);
+    assert.equal(result.backwardsRtpTimestamps, 0);
+    assert.equal(result.discardedConnectionPreroll.backwardsRtpTimestamps, 1);
+    assert.equal(result.discardedConnectionPreroll.rejectedUnstableKeys, 1);
+  } finally { clearInterval(timer); collector.stop(); }
+});
+
+test('a nonadvancing startup clock times out with its diagnostic status and without requesting a keyframe', async () => {
+  const collector = createVp8Collector({deferStart: true});
+  collector.push(frame(10, {key: true})); collector.push(frame(10));
+  const context = createContext({window: {__neivaEncodedRecording: {
+    status: () => ({available: true, ...collector.status()}), stop: why => collector.stop(why),
+  }}});
+  const page = {evaluate: async (fn, arg) => {
+    context.argument = arg; return runInContext(`(${fn.toString()})(argument)`, context);
+  }};
+  await assert.rejects(startEncodedRecording(page, {timeoutMs: 100}), error => {
+    assert.match(error.message, /No keyframe request was accepted/);
+    assert.deepEqual(error.recordingStatus.keyframeRequests, []);
+    assert.equal(error.recordingStatus.discardedConnectionPreroll.currentForwardAdvances, 0);
+    assert.equal(error.recordingStatus.discardedConnectionPreroll.repeatedRtpTimestamps, 1);
+    assert.equal(error.recordingStatus.stopReason, 'keyframe-timeout');
+    return true;
+  });
+});
+
 test('IVF validates frame count and truncation; export cannot delete an existing .part file', async () => {
   const c = createVp8Collector(); c.push(frame(0, {key: true})); c.stop();
   const data = Buffer.from(await c.getBlob().arrayBuffer());
@@ -116,5 +206,23 @@ test('real CPU VP8 fixture remux preserves every payload/PTS and still decodes',
       assert.equal(Number(decoded.streams[0].nb_read_frames), 8);
       await assert.rejects(remuxIvf(ivf, webm), /overwrite/);
     }
+    // An independently decodable new keyframe begins after deliberately bad
+    // connection replay; the recording keeps ALL eight real fixture payloads.
+    const warm = createVp8Collector({deferStart: true});
+    [frame(500, {key: true}), frame(500), frame(450), frame(600), frame(700), frame(800)]
+      .forEach(value => warm.push(value));
+    warm.arm();
+    for (const [index, payload] of payloads.entries())
+      warm.push({data: Uint8Array.from(payload).buffer, timestamp: 1000 + index * 7500,
+        type: (payload[0] & 1) ? 'delta' : 'key', mimeType: 'video/VP8', sourceId: 'one'});
+    warm.stop();
+    const ivf = join(output, 'post-warmup.ivf'), webm = join(output, 'post-warmup.webm');
+    await writeFile(ivf, Buffer.from(await warm.getBlob().arrayBuffer()));
+    const receipt = await remuxIvf(ivf, webm);
+    assert.equal(receipt.frames, 8); assert.equal(receipt.payloadHashesVerified, true);
+    assert.equal(warm.status().discardedConnectionPreroll.frames, 6);
+    const decoded = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-count_frames', '-show_entries',
+      'stream=nb_read_frames', '-of', 'json', webm], {encoding: 'utf8'}));
+    assert.equal(Number(decoded.streams[0].nb_read_frames), 8);
   } finally { await rm(output, {recursive: true, force: true}); }
 });

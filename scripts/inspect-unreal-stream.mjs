@@ -12,7 +12,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {findFirefox, isolatedEnvironment} from './isolated-firefox.mjs';
 import {decodedBetween, inputReadiness} from './stream-progress.mjs';
 import {nativeControlsPlan, validateInteractionModes} from './stream-controls.mjs';
-import {installEncodedRecording, finishEncodedRecording} from './stream-encoded-recording.mjs';
+import {installEncodedRecording, startEncodedRecording, finishEncodedRecording} from './stream-encoded-recording.mjs';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const {values} = parseArgs({options: {
@@ -362,6 +362,10 @@ try {
     if (!report.warmup.passed)
       throw Error('No advancing video before input: required 3 new decoded frames and new bytes within 8 seconds. No input sent.');
   }
+  if (values['record-encoded']) {
+    report.encodedRecordingStart = await startEncodedRecording(page);
+    report.samples[0] = await sample();
+  }
   if (values.controls) {
     report.controlsMouseMode = await page.evaluate(() => ({
       hoveringMouse: window.pixelStreaming?.config?.isFlagEnabled('HoveringMouse') ?? null,
@@ -516,6 +520,7 @@ try {
   if (!report.videoVerified) throw Error('No currently advancing decoded WebRTC video was verified.');
   if (values['native-state']) await queryNativeState('after-native-state');
 } catch (error) {
+  if (error.recordingStatus) report.encodedRecordingDiagnostics = error.recordingStatus;
   report.error = abort.signal.aborted ? 'Observation interrupted.' :
     String(error.message).replace(/(?:https?|wss?):\/\/[^\s"']+/g, '[player URL]').slice(0, 500);
   process.exitCode = 1;

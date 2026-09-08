@@ -1,6 +1,6 @@
 # Neiva Abierta · proyecto Unreal Engine
 
-El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, compilado con **Unreal Engine 5.5.4**. Incluye código C++ original, personaje anónimo en tercera persona, coche arcade conducible, peatones que recorren caminos OSM, colores de ropa persistentes, colisiones, calles y edificios procedurales a partir del mismo JSON que usa la web. Un estudio ficticio de **6 × 4 m, altura 3,5 m** permite abrir un correo a `alvarezruizj289@gmail.com` al acercarse y pulsar **E**. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
+El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, compilado con **Unreal Engine 5.5.4**. Incluye personaje anónimo, coche arcade conducible, peatones, colores de ropa, colisiones y geometría cartográfica. El código 0.3 añade lluvia periódica y conversaciones con voz sintética sobre Jhon; retira el edificio ficticio. Los peatones recorren caminos OSM y trayectos simulados dentro del parque Santander. El tema Contacto permite abrir el correo público `alvarezruizj289@gmail.com` mediante un botón explícito. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
 
 **Alfa Linux 0.2.0 disponible:**
 [descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha).
@@ -42,7 +42,9 @@ los metadatos cartográficos están legibles en `Licenses/` y `Datos/`.
 | Mirar a pie o en el coche | Ratón |
 | Correr | Shift izquierdo |
 | Saltar / frenar el coche | Espacio |
-| Entrar o salir del coche / contactar desde el estudio | E |
+| Entrar o salir del coche / conversar con un peatón visible cercano | E |
+| Seleccionar tema durante una conversación (0.3) | 1–4 o botones |
+| Cerrar conversación y recuperar movimiento (0.3) | E / Esc |
 | Volver al punto de inicio / recuperar coche | R |
 | Pausar, continuar y acceder a Salir | Esc / P |
 | Cambiar color del polo / de la bermuda | C / V y botones del HUD |
@@ -61,7 +63,13 @@ Epic y no está incluido en la licencia MIT del repositorio. El comando
 `scripts/unreal.py package` prepara los datos, compila el editor, ejecuta
 **sólo `bootstrap_editor.py`** y después UAT. **No descarga ni importa el árbol
 y banco CC0 ni ejecuta el horneado de hitos.** Desde un clon limpio, completar
-primero el orden siguiente para incluir la mejora visual 0.2 en desarrollo.
+primero el orden siguiente para incluir los recursos visuales. En 0.3,
+`prepare_project.py` aplica el suplemento de alturas ya incluido y prepara los
+recorridos del parque; `bootstrap_editor.py` también genera los materiales de
+clima e importa los siete WAV incluidos. No se necesita Piper para compilar:
+sólo se usó para generar esos archivos offline. El importador comprueba hashes,
+formato y referencias antes de guardar los recursos. Consulta las licencias
+en `public/audio/dialogue/` y las limitaciones en [RECONSTRUCCION-0.3.md](RECONSTRUCCION-0.3.md).
 Estos pasos no cambian el contenido de la alfa 0.1.0 ya publicada.
 
 ### Orden completo desde un clon limpio

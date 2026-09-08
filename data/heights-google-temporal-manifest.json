@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-08T07:42:12.634011+00:00",
+  "source": {
+    "id": "google-research-open-buildings-temporal-v1-2023",
+    "name": "Google Research Open Buildings 2.5D Temporal V1",
+    "catalogUrl": "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_Research_open-buildings-temporal_v1",
+    "manifestUrl": "https://storage.googleapis.com/open-buildings-temporal-data/v1/manifests/8f_EPSG_32618_2023_06_30.json",
+    "manifestSha256": "64a27f19320d4c9399435c1f60cc1a40305667144f588ed4145d303e9fb82a8b",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Google Research Open Buildings 2.5D Temporal V1; contains modified Copernicus Sentinel-2 data.",
+    "properties": {
+      "s2cell_token": "8f",
+      "imagery_start_time_epoch_s": 1672560000.0,
+      "imagery_end_time_epoch_s": 1703664000.0,
+      "inference_time_epoch_s": 1688108400.0
+    },
+    "inferenceAt": "2023-06-30T07:00:00Z",
+    "sourcePixelSizeM": 0.5,
+    "effectiveResolutionM": 4,
+    "photogrammetricMesh": false,
+    "facadeImages": false,
+    "physicallyMeasuredHeights": false,
+    "limitation": "ML estimates for 2023; not Google Maps, 2026 survey, facade geometry or certified metric accuracy."
+  },
+  "base": {
+    "path": "public/data/neiva.json",
+    "sha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846",
+    "bboxSouthWestNorthEast": [
+      2.86,
+      -75.34,
+      3.015,
+      -75.22
+    ]
+  },
+  "inputs": [
+    {
+      "path": "data/newaudit-geometry.json",
+      "sha256": "3b2c8b6c8f1bd76cc5c10764a07196c822bd0c928958761730451870bec461eb"
+    },
+    {
+      "path": "public/data/neiva-survey.json",
+      "sha256": "f4381c586457b69cb0b2c4b1996247de09a0c226d9b940e60ecee46be6d3c511"
+    },
+    {
+      "path": "public/data/neiva-corrections.json",
+      "sha256": "f54ea705717026c32f08b320a321a99c0b629ea2ca9b28ca3c12892c9e3630ef"
+    }
+  ],
+  "tiles": [
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3b4_2023_06_30/tile_NXMkte3Ekz0.tif",
+      "crs": "EPSG:32618",
+      "bytes": 128832572,
+      "etag": "\"f535d6eaa758d275824fb8c16b87ce2a\"",
+      "sha256": "623fe13216acb55d7f332a426f507fa80acaddcc3a560598d05a261fca4ed566",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_NXMkte3Ekz0.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    },
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3b4_2023_06_30/tile_UNtASoY37s8.tif",
+      "crs": "EPSG:32618",
+      "bytes": 65324444,
+      "etag": "\"c4338550321715ee8056aa4153dbd06d\"",
+      "sha256": "0e42b187da9a0da856580390b37c735826cfbef510016dc884dfba6efff77723",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_UNtASoY37s8.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    },
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3b4_2023_06_30/tile_c473pNnMOks.tif",
+      "crs": "EPSG:32618",
+      "bytes": 236763958,
+      "etag": "\"56e30c5049aabc5a62db2f9f79dc91af\"",
+      "sha256": "a768f60b3516f387d001f388f777cf1e33bed0f664443ffa9ec86bede811c47a",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_c473pNnMOks.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    },
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3b4_2023_06_30/tile_sOYWqC99LAM.tif",
+      "crs": "EPSG:32618",
+      "bytes": 203980729,
+      "etag": "\"75842a47bcf9b28eb117d64c4378c591\"",
+      "sha256": "aed32bc42bbe26658f568fd21c70ddb2b81522285d8611415412b991bc1a5d63",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_sOYWqC99LAM.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    },
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3bc_2023_06_30/tile_ei1cL2O6II0.tif",
+      "crs": "EPSG:32618",
+      "bytes": 54423968,
+      "etag": "\"d5ee2899c530b92bef504cde3a53598c\"",
+      "sha256": "bd2ff721dac49ef50fe4393ee6910454720831561132d46a8980236a7abbd7d0",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_ei1cL2O6II0.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    },
+    {
+      "url": "https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/8e3bc_2023_06_30/tile_nrjnVbZr3VI.tif",
+      "crs": "EPSG:32618",
+      "bytes": 37451680,
+      "etag": "\"22d3f320d46e06e63c169f9f03e3db78\"",
+      "sha256": "2685c125047bc4c8e129bd8b467a8a7064bc0bafd28af383c8cb32c36b997bdc",
+      "cachePath": "artifacts/reconstruction-03/heights-cache/tile_nrjnVbZr3VI.tif",
+      "raster": {
+        "crs": "EPSG:32618",
+        "shape": [
+          25000,
+          25000
+        ],
+        "bands": 3,
+        "pixelSizeM": [
+          0.5,
+          0.5
+        ],
+        "nodata": -99.0
+      }
+    }
+  ],
+  "downloadBytes": 726777351,
+  "limits": {
+    "maxDownloadBytes": 2000000000,
+    "downloadWorkers": 2,
+    "gdalWorkers": 2,
+    "gdalCacheBytes": 134217728,
+    "maxFootprintWindowPixels": 1000000,
+    "nice": 10
+  },
+  "output": {
+    "path": "artifacts/reconstruction-03/heights-full-samples.json",
+    "sha256": "89f44cbfb6b8471ad60b1cf1ba1878b75c65c22859cfe6c29f0d83671dc7c2ae"
+  },
+  "summary": {
+    "buildings": 35875,
+    "eligible": 17716,
+    "applied": 0,
+    "confirmedPhysicalHeights": 0,
+    "rejections": {
+      "no_positive_height_with_presence_mask": 7080,
+      "insufficient_presence_coverage": 10143,
+      "less_than_one_effective_4m_cell_area": 843,
+      "outside_proposal_height_range": 28,
+      "protected_landmark_roof_or_survey_exclusion": 28,
+      "invalid_source_footprint": 1,
+      "preserve_existing_source_height_or_levels_for_review": 36
+    },
+    "baselineStatuses": {
+      "estimated": 35850,
+      "source_declared": 25
+    },
+    "eligibleHeightM": {
+      "min": 2.0,
+      "p10": 3.5,
+      "median": 5.0,
+      "p90": 6.5,
+      "max": 75.5
+    },
+    "peakRssBytes": 263544832
+  },
+  "approvedOutput": {
+    "path": "data/heights-google-temporal-approved.json",
+    "sha256": "7079019d2e3e1c4362e02a07a89644f4c10384249a93ce9ea7e59fc86c302250",
+    "approvedCount": 17696,
+    "manualReviewCount": 20,
+    "appliedCount": 0
+  }
+}

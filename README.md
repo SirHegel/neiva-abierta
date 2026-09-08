@@ -1,5 +1,13 @@
 # Neiva Abierta
 
+El código **0.3 está en validación nativa**: lluvia periódica y secado gradual,
+conversaciones con voz sintética, recorridos cercanos dentro del Santander y
+17.696 alturas estimadas de Google Research 2023 más una revisión manual
+documentada. Se retiró el edificio ficticio. El launcher prepara compilaciones
+en Linux, Windows y macOS desde sus anfitriones respectivos; **eso no acredita
+ejecutables Windows/Mac**. [Estado de plataformas](docs/PLATAFORMAS.md) ·
+[Reconstrucción y límites](docs/RECONSTRUCCION-0.3.md).
+
 **Alfa Unreal 0.2.0 para Linux x86_64 disponible.** Explora Neiva a pie o en
 coche, con un personaje anónimo, peatones, colores de ropa y un pequeño estudio
 ficticio para contactar a Jhon. Creada y empaquetada con **Unreal Engine 5.5.4**.

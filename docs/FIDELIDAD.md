@@ -1,6 +1,6 @@
 # Revisión de fidelidad: centro de Neiva
 
-La revisión iniciada el **6 de septiembre de 2026**, ampliada el **7 de septiembre**, hora de Colombia, distingue cartografía, observación visual e interpretación del modelo. El registro aplicable está en [`public/data/neiva-survey.json`](../public/data/neiva-survey.json). Conserva los identificadores y las huellas de la exportación original; las sustituciones deben aplicarse como una capa separada antes de construir gráficos y colisiones.
+La revisión iniciada el **6 de septiembre de 2026**, ampliada el **7 y 8 de septiembre**, hora de Colombia, distingue cartografía, observación visual e interpretación del modelo. El registro aplicable está en [`public/data/neiva-survey.json`](../public/data/neiva-survey.json). Conserva los identificadores y las huellas de la exportación original; las sustituciones deben aplicarse como una capa separada antes de construir gráficos y colisiones. La investigación y las propuestas nuevas, aún sin certificar dimensiones físicas, están en [RECONSTRUCCION-0.3.md](RECONSTRUCCION-0.3.md).
 
 No se ha recorrido manualmente toda Neiva. Se inspeccionaron una vista pública de Google Street View del centro, la captura de Carrera 4 del usuario, fotografías institucionales y dos posiciones próximas de Carrera 21. Se ejecutaron comprobaciones geométricas sobre las 35.875 huellas del archivo. Son alcances distintos.
 
@@ -124,7 +124,7 @@ python scripts/map-research-audit.py
 node --test tests/cartographic-corrections.test.mjs
 ```
 
-Las fachadas, ventanas, balcones y cubiertas genéricas continúan siendo arquitectura procedural sobre huellas cartográficas: **no son fachadas fotografiadas ni medidas edificio por edificio**. El código no reparte casas mediante posiciones aleatorias; sí decide materiales y detalles que no constan en las fuentes. El pequeño estudio de Jhon es una construcción ficticia solicitada expresamente. Árboles y soportes estimados tampoco equivalen a un inventario real.
+Las fachadas, ventanas, balcones y cubiertas genéricas continúan siendo arquitectura procedural sobre huellas cartográficas: **no son fachadas fotografiadas ni medidas edificio por edificio**. El código no reparte casas mediante posiciones aleatorias; sí decide materiales y detalles que no constan en las fuentes. El pequeño estudio de Jhon presente en 0.2 es una construcción ficticia solicitada en la etapa inicial. **La instrucción posterior «nada ficticio» reemplaza esa solicitud**: debe retirarse de la representación de la ciudad, conservando el registro histórico de lo que contenía 0.2. Árboles y soportes estimados tampoco equivalen a un inventario real.
 
 ## Fuentes oficiales 3D, catastro y ortofotografía: disponibilidad comprobada
 
@@ -228,3 +228,17 @@ Para aportar una entrada, se copia el registro del edificio desde la cola, se a�
 3. Medir frentes, retranqueos, base y remates con control geodésico/local documentado y comprobaciones independientes. Conservar método, fecha, incertidumbre y datum; contrastar alineación de huellas y alturas antes de sustituir el modelo. Un sensor de teléfono o una foto sin escala no recibe categoría confirmada sólo por producir números.
 
 El resultado se entregaría por sectores y por edificio, con cobertura explícita. Hasta disponer de esa evidencia, una réplica de dimensiones idénticas para toda Neiva no está respaldada por los datos obtenidos.
+
+## Nuevas fuentes y cambio de alcance, 8 de septiembre de 2026
+
+La instrucción más reciente exige no añadir construcciones ficticias. La versión 0.2 conserva sus recibos históricos; no se reescriben como si hubiese sido una réplica medida. El trabajo de 0.3 debe retirar el estudio ficticio y distinguir las dimensiones declaradas, estimadas y confirmadas. No se borran masivamente huellas por un solapamiento aproximado ni se reemplazan las fachadas desconocidas por otras inventadas.
+
+La consulta IGAC de **Santander** sí produjo una muestra válida el **08/09/2026 a las 07:29 UTC**: **74 construcciones** dentro de `[-75.2899,2.9249,-75.2882,2.9271]`. Se solicitaron únicamente geometrías, FID técnico y campos de niveles. Por tanto, la falta de respuesta descrita en la revisión anterior ya no debe leerse como el resultado actual para este sector. Carrera 21 continúa devolviendo cero en su recorte específico. El servicio contiene `NUMERO_PIS`, pero no se confirmó fecha/precisión ni licencia particular. La [consulta de la capa oficial](https://mapas.igac.gov.co/server/rest/services/Dato_Fundamental_Catastro/MapServer/2) no equivale a recibir un levantamiento 3D.
+
+La muestra revela un problema práctico: el registro cuya huella solapa fuertemente con el hotel declara un piso, incompatible con una interpretación de «total de niveles visibles» de la fotografía del propietario. No se conoce aún la causa. No se adoptaron esos pisos como alturas ni se copió catastro al mapa. Los IDs técnicos candidatos, el criterio de cruce y la distribución están en [RECONSTRUCCION-0.3.md](RECONSTRUCCION-0.3.md).
+
+La fuente nueva que sí permite un suplemento reproducible es [Google Research Open Buildings 2.5D Temporal V1](https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_Research_open-buildings-temporal_v1). **Es distinta de Google Maps**: ofrece alturas raster estimadas, con licencia CC-BY 4.0 elegida explícitamente. Se descargaron seis GeoTIFF públicos intersectados por Neiva, 726.777.351 bytes, correspondientes a inferencia de 2023. Su grilla de 0,5 m tiene resolución efectiva declarada de 4 m; no proporciona fachadas, alturas certificadas ni fotogrametría actual de la ciudad.
+
+El [importador](../scripts/import-building-heights.py) prepara propuestas por ID sin modificar la base, aplica máscara de presencia y datos ausentes, conserva patios y protege alturas/niveles declarados, hitos y cubiertas. Su recibo y resultados complementarios deben revisarse antes de integrarlos en render y colisión. Una altura ML variable puede ser una mejor hipótesis que 5,8 m uniformes, pero esa mejora debe evaluarse: no queda confirmada por producir un número o por coincidir visualmente con una sola fotografía.
+
+La cobertura pública de [Google Maps Platform](https://developers.google.com/maps/coverage) continúa sin identificar Neiva como ciudad con mosaicos fotogramétricos 3D; la búsqueda pública acotada de escenas ArcGIS volvió a dar cero resultados. No se obtuvo una malla abierta licenciada de la ciudad. Hay fotografías concretas de autor con licencias explícitas para la Catedral y el Colonial, documentadas en el plan de 0.3; son referencias fechadas de fachadas, no sustitutos de escala/control métrico. No se recorrió nuevamente la ciudad ni se extrajeron masivamente imágenes del visor personal del usuario.

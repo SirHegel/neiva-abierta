@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "origin": [
+    -75.2809,
+    2.9252
+  ],
+  "units": "metres",
+  "axes": {
+    "x": "east",
+    "z": "south"
+  },
+  "purpose": "Simulated nearby pedestrian circulation on the existing mapped paved park; not observed real pedestrian routes.",
+  "surface": {
+    "id": "way/39365299",
+    "points": [
+      [
+        -944.3,
+        -55.9
+      ],
+      [
+        -847.7,
+        -94.3
+      ],
+      [
+        -881.7,
+        -172.7
+      ],
+      [
+        -887.3,
+        -196.2
+      ],
+      [
+        -984.3,
+        -156.8
+      ]
+    ],
+    "pavedReference": true,
+    "physicallySurveyed": false
+  },
+  "placementPolicy": {
+    "capsuleRadiusM": 0.36,
+    "capsuleHalfHeightM": 0.92,
+    "lookAheadSweepRadiusM": 0.42,
+    "minimumParkAndStructureClearanceM": 1.5,
+    "minimumTreeAndBenchCenterClearanceM": 2.5,
+    "groundHeight": "Resolve with Unreal GroundedCapsule raycast; no fixed elevation inferred from the map.",
+    "npcSeparationM": 12,
+    "estimatedFurnitureProxies": true
+  },
+  "sources": [
+    {
+      "id": "osm-santander-footprint",
+      "url": "https://www.openstreetmap.org/way/39365299",
+      "license": "ODbL-1.0"
+    },
+    {
+      "id": "municipal-paved-reference",
+      "url": "https://www.alcaldianeiva.gov.co/NuestraAlcaldia/SalaDePrensa/Paginas/Fuente-del-Parque-Santander-se-recupera-gracias-al-trabajo-de-la-alcald%C3%ADa-de-Neiva.aspx",
+      "publishedAt": "2024-03-12",
+      "role": "Previously reviewed paving/fountain identity; no imagery copied or dimensions derived."
+    },
+    {
+      "id": "interpreted-environment",
+      "path": "unreal/NeivaAbierta/Content/Data/neiva-environment.json",
+      "role": "Existing estimated tree/bench placements; conservative obstacle screening, not a municipal inventory."
+    }
+  ],
+  "routes": [
+    {
+      "id": "santander-south",
+      "surfaceId": "way/39365299",
+      "kind": "simulated-pedestrian-route",
+      "closed": true,
+      "points": [
+        [
+          -892,
+          -98
+        ],
+        [
+          -917,
+          -100
+        ],
+        [
+          -920,
+          -111
+        ],
+        [
+          -906,
+          -120
+        ],
+        [
+          -894,
+          -119
+        ],
+        [
+          -892,
+          -98
+        ]
+      ],
+      "units": "metres",
+      "lengthM": 86.262,
+      "distanceFromPlayerSpawnM": 19.918,
+      "clearance2D": {
+        "parkBoundaryM": 19.803,
+        "mappedBuildingM": 22.858,
+        "treeCenterM": 4.314,
+        "benchCenterM": 10.05,
+        "fountainOuterProxyM": 9.763,
+        "shelterFootprintM": 26.154
+      },
+      "sourceIds": [
+        "osm-santander-footprint",
+        "municipal-paved-reference",
+        "interpreted-environment"
+      ],
+      "observedPedestrianPattern": false,
+      "unrealGroundedCapsuleVerified": false
+    },
+    {
+      "id": "santander-north",
+      "surfaceId": "way/39365299",
+      "kind": "simulated-pedestrian-route",
+      "closed": true,
+      "points": [
+        [
+          -929,
+          -146
+        ],
+        [
+          -917,
+          -151
+        ],
+        [
+          -913,
+          -169
+        ],
+        [
+          -935,
+          -170
+        ],
+        [
+          -938,
+          -156
+        ],
+        [
+          -929,
+          -146
+        ]
+      ],
+      "units": "metres",
+      "lengthM": 81.233,
+      "distanceFromPlayerSpawnM": 78.3,
+      "clearance2D": {
+        "parkBoundaryM": 6.323,
+        "mappedBuildingM": 14.347,
+        "treeCenterM": 5.532,
+        "benchCenterM": 9.487,
+        "fountainOuterProxyM": 16.685,
+        "shelterFootprintM": 70.7
+      },
+      "sourceIds": [
+        "osm-santander-footprint",
+        "municipal-paved-reference",
+        "interpreted-environment"
+      ],
+      "observedPedestrianPattern": false,
+      "unrealGroundedCapsuleVerified": false
+    },
+    {
+      "id": "santander-west",
+      "surfaceId": "way/39365299",
+      "kind": "simulated-pedestrian-route",
+      "closed": true,
+      "points": [
+        [
+          -961,
+          -129
+        ],
+        [
+          -960,
+          -112
+        ],
+        [
+          -939,
+          -96
+        ],
+        [
+          -936,
+          -112
+        ],
+        [
+          -961,
+          -129
+        ]
+      ],
+      "units": "metres",
+      "lengthM": 89.941,
+      "distanceFromPlayerSpawnM": 55.056,
+      "clearance2D": {
+        "parkBoundaryM": 6.08,
+        "mappedBuildingM": 15.055,
+        "treeCenterM": 4.28,
+        "benchCenterM": 4.484,
+        "fountainOuterProxyM": 5.259,
+        "shelterFootprintM": 21.667
+      },
+      "sourceIds": [
+        "osm-santander-footprint",
+        "municipal-paved-reference",
+        "interpreted-environment"
+      ],
+      "observedPedestrianPattern": false,
+      "unrealGroundedCapsuleVerified": false
+    }
+  ],
+  "verified": {
+    "geometry2D": true,
+    "groundedCapsule": false,
+    "runtimePopulation": false
+  },
+  "inputHashes": [
+    {
+      "path": "public/data/neiva.json",
+      "sha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846"
+    },
+    {
+      "path": "public/data/neiva-survey.json",
+      "sha256": "f4381c586457b69cb0b2c4b1996247de09a0c226d9b940e60ecee46be6d3c511"
+    },
+    {
+      "path": "unreal/NeivaAbierta/Content/Data/neiva-environment.json",
+      "sha256": "130135ece3bcd7de81801603a01037aac572733b41d02c743cde1023be21baf7"
+    }
+  ]
+}

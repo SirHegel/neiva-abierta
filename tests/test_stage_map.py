@@ -124,9 +124,9 @@ class StageMapTests(unittest.TestCase):
             invalid = deepcopy(survey); invalid['roadOverrides'][0]['segments'] = [index]
             with self.subTest(index=index), self.assertRaises(ValueError): stage.apply_survey(source, invalid)
 
-    def test_actual_neiva_staging_matches_the_existing_javascript_pipeline(self):
+    def test_original_cartographic_and_survey_layers_match_the_existing_javascript_pipeline(self):
         source = json.loads((REPO / 'public/data/neiva.json').read_text())
-        result = stage.stage_map(source, REPO)
+        result = stage.stage_map(source, REPO, include_height_supplement=False)
         script = """import {readFileSync} from 'node:fs';
 import {applyCartographicCorrections} from './src/cartographic-corrections.js';
 import {applyUrbanSurvey} from './src/urban-data.js';
@@ -157,6 +157,153 @@ process.stdout.write(JSON.stringify(applyUrbanSurvey(applyCartographicCorrection
         # duplicate cap triangles. Retain an explicit production-data snapshot.
         self.assertEqual(landmarks['counts']['vertices'], 119886)
         self.assertEqual(landmarks['counts']['triangles'], 71311)
+
+    def height_fixture(self):
+        source = {'meta': {'origin': [0, 0]}, 'buildings': [
+            {'id': 'default', 'height': 5.8, 'heightEstimated': True, 'points': [[0, 0], [10, 0], [10, 10]]}]}
+        supplement = {'schemaVersion': 1, 'origin': [0, 0], 'baseSha256': 'fixture',
+            'heightStatus': 'estimated', 'physicallyConfirmed': False,
+            'source': {'id': 'fixture-raster', 'license': 'CC-BY-4.0', 'inferenceAt': '2023-06-30T07:00:00Z',
+                       'effectiveResolutionM': 4, 'physicallyMeasuredHeights': False},
+            'approval': {'maximumHeightM': 30, 'appliedCount': 0, 'approvedCount': 1},
+            'buildingOverrides': [{'id': 'default', 'height': 6.5, 'priorHeightM': 5.8,
+                'priorBasis': 'game-default-5.8m-no-source-height',
+                'sample': {'validFraction': .8, 'validAreaM2': 20, 'presenceMedian': .7, 'heightP10M': 5.5, 'heightP90M': 7.5}}]}
+        return source, supplement
+
+    def test_height_supplement_preserves_footprint_source_and_false_confirmation(self):
+        source, supplement = self.height_fixture()
+        original = deepcopy(source)
+        result = stage.apply_height_supplement(source, supplement, 'fixture-hash')
+        self.assertEqual(source, original)
+        building = result['buildings'][0]
+        self.assertEqual(building['points'], source['buildings'][0]['points'])
+        self.assertEqual(building['height'], 6.5)
+        self.assertEqual(building['sourceHeight'], 5.8)
+        self.assertFalse(building['heightProvenance']['confirmed'])
+        self.assertEqual(building['heightProvenance']['status'], 'estimated')
+        self.assertEqual(result['meta']['heightSupplement']['appliedCount'], 1)
+        self.assertEqual(result['meta']['heightSupplement']['supplementSha256'], 'fixture-hash')
+
+    def test_supplement_cannot_cap_extremes_change_baseline_or_certify_ml(self):
+        for field, value in [('height', 30.1), ('height', math.nan), ('priorHeightM', 7),
+                             ('priorBasis', 'source-levels-times-3.2-estimate')]:
+            source, supplement = self.height_fixture()
+            supplement['buildingOverrides'][0][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                stage.apply_height_supplement(source, supplement, 'hash')
+        source, supplement = self.height_fixture()
+        supplement['physicallyConfirmed'] = True
+        with self.assertRaises(ValueError): stage.apply_height_supplement(source, supplement, 'hash')
+
+    def test_supplement_rejects_roofs_landmarks_declared_heights_and_duplicate_ids(self):
+        for field, value in [('model', 'hotel'), ('buildingKind', 'roof'), ('heightEstimated', False)]:
+            source, supplement = self.height_fixture()
+            source['buildings'][0][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                stage.apply_height_supplement(source, supplement, 'hash')
+        source, supplement = self.height_fixture()
+        supplement['buildingOverrides'].append(deepcopy(supplement['buildingOverrides'][0]))
+        supplement['approval']['approvedCount'] = 2
+        with self.assertRaises(ValueError): stage.apply_height_supplement(source, supplement, 'hash')
+
+    def test_real_height_stage_applies_only_approved_ids_without_geometry_changes(self):
+        source_path = REPO / 'public/data/neiva.json'
+        original_bytes = source_path.read_bytes()
+        source = json.loads(original_bytes)
+        base = stage.stage_map(source, REPO, include_height_supplement=False)
+        result = stage.stage_map(source, REPO)
+        approved = json.loads((REPO / 'data/heights-google-temporal-approved.json').read_text())
+        records = {item['id']: item for item in approved['buildingOverrides']}
+        self.assertEqual(len(records), 17696)
+        self.assertEqual(result['meta']['heightSupplement']['appliedCount'], len(records))
+        self.assertEqual(result['meta']['manualHeightReviews']['appliedCount'], 1)
+        self.assertEqual(result['meta']['manualHeightReviews']['combinedRasterAppliedCount'], 17697)
+        for before, after in zip(base['buildings'], result['buildings']):
+            self.assertEqual(before['id'], after['id'])
+            self.assertEqual(before['points'], after['points'])
+            self.assertEqual(before.get('holes'), after.get('holes'))
+            if before['id'] in records:
+                self.assertEqual(after['height'], records[before['id']]['height'])
+                self.assertLessEqual(after['height'], 30)
+                self.assertEqual(after['heightProvenance']['priorHeightM'], before['height'])
+            elif before['id'] == 'way/1221117102':
+                self.assertEqual(after['height'], 6.5)
+                self.assertEqual(after['sourceHeight'], 30)
+                self.assertEqual(after['sourceLevels'], 2)
+                self.assertFalse(after['heightProvenance']['confirmed'])
+            else:
+                self.assertEqual(before, after)
+        self.assertEqual(base['roads'], result['roads'])
+        self.assertEqual(source_path.read_bytes(), original_bytes)
+        bad_input = deepcopy(source)
+        bad_input['buildings'][0]['points'][0][0] += 1
+        with self.assertRaisesRegex(ValueError, 'hash mismatch'): stage.stage_map(bad_input, REPO)
+
+    def manual_fixture(self):
+        review = json.loads((REPO / 'data/manual-height-reviews.json').read_text())
+        source = {'meta': {'origin': review['origin'], 'heightSupplement': {'appliedCount': 17696}},
+                  'buildings': [{'id': 'way/1221117102', 'height': 30, 'heightEstimated': False,
+                                 'points': [[0, 0], [10, 0], [10, 10]], 'holes': []},
+                                {'id': 'untouched', 'height': 25, 'heightEstimated': False}], 'roads': []}
+        return source, review, {'way/1221117102': {'height': '30', 'building:levels': '2'}}
+
+    def test_manual_height_is_single_estimate_preserving_source_tags_and_other_buildings(self):
+        source, review, tags = self.manual_fixture()
+        original = deepcopy(source)
+        result = stage.apply_manual_height_reviews(source, review, tags, 'review-sha')
+        self.assertEqual(source, original)
+        self.assertEqual(result['buildings'][1], source['buildings'][1])
+        self.assertEqual(result['buildings'][0]['points'], source['buildings'][0]['points'])
+        record = result['buildings'][0]['heightProvenance']
+        self.assertEqual(record['priorSourceTags'], tags['way/1221117102'])
+        self.assertEqual(record['reviewVersion'], 1)
+        self.assertEqual(record['reviewSha256'], 'review-sha')
+        self.assertFalse(record['confirmed'])
+        self.assertEqual(result['meta']['heightSupplement']['appliedCount'], 17696)
+        self.assertEqual(result['meta']['manualHeightReviews']['combinedRasterAppliedCount'], 17697)
+
+    def test_manual_height_rejects_identity_baseline_levels_and_source_changes(self):
+        for field, value in [('id', 'way/313286677'), ('priorHeightM', 25), ('height', 31),
+                             ('height', 7), ('confirmed', True), ('height', math.nan)]:
+            source, review, tags = self.manual_fixture()
+            review['reviews'][0][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                stage.apply_manual_height_reviews(source, review, tags, 'sha')
+        source, review, tags = self.manual_fixture()
+        tags['way/1221117102']['building:levels'] = '4'
+        with self.assertRaises(ValueError): stage.apply_manual_height_reviews(source, review, tags, 'sha')
+        source, review, tags = self.manual_fixture()
+        review['source']['inferenceAt'] = '2026-09-08'
+        with self.assertRaises(ValueError): stage.apply_manual_height_reviews(source, review, tags, 'sha')
+
+    def test_manual_height_requires_high_coverage_narrow_range_and_no_maps_dimensions(self):
+        for field, value in [('validFraction', .79), ('heightMaxM', 31), ('heightP90M', 12),
+                             ('heightMedianM', 7), ('presenceMedian', .3)]:
+            source, review, tags = self.manual_fixture()
+            review['reviews'][0]['sample'][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                stage.apply_manual_height_reviews(source, review, tags, 'sha')
+        source, review, tags = self.manual_fixture()
+        review['reviews'][0]['visualContext']['usedForDimensions'] = True
+        with self.assertRaises(ValueError): stage.apply_manual_height_reviews(source, review, tags, 'sha')
+
+    def test_manual_review_loader_checks_base_snapshot_and_source_manifest_hashes(self):
+        source = json.loads((REPO / 'public/data/neiva.json').read_text())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in ['public/data/neiva.json', 'public/data/neiva.osm.json.gz',
+                             'public/data/neiva-corrections.json', 'public/data/neiva-survey.json',
+                             'data/heights-google-temporal-approved.json', 'data/heights-google-temporal-manifest.json']:
+                destination = root / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((REPO / relative).read_bytes())
+            for field in ['baseSha256', 'osmSnapshotSha256', 'heightSourceManifestSha256']:
+                review = json.loads((REPO / 'data/manual-height-reviews.json').read_text())
+                review[field] = '0' * 64
+                (root / 'data/manual-height-reviews.json').write_text(json.dumps(review))
+                with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'Manual height review source hash mismatch'):
+                    stage.stage_map(source, root)
 
     def test_landmark_validation_preserves_input_and_accepts_plain_materials(self):
         source, corrections, survey = fixtures()

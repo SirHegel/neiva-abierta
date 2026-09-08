@@ -1,5 +1,7 @@
 #include "NeivaWorld.h"
 #include "NeivaPlayerController.h"
+#include "NeivaDialogue.h"
+#include "NeivaWeather.h"
 
 #include "Algo/Reverse.h"
 #include "Animation/AnimSequence.h"
@@ -45,7 +47,6 @@
 
 namespace Neiva
 {
-    const TCHAR* ContactURL = TEXT("mailto:alvarezruizj289@gmail.com?subject=Desarrollo%20desde%20Neiva%20Abierta");
 
     struct FMapGeometry
     {
@@ -218,60 +219,6 @@ namespace Neiva
         }
     }
 
-    void StudioGeometry(const FVector& Origin, FMapGeometry& Walls, FMapGeometry& Frames,
-        FMapGeometry& Glazing, FMapGeometry& Trim)
-    {
-        const FLinearColor Teal(.12f, .54f, .51f), Stone(.67f, .69f, .65f);
-        const FLinearColor Metal(.055f, .07f, .072f), Glass(.065f, .11f, .12f);
-        auto Solid = [&Origin](FMapGeometry& G, double X0, double Y0, double Z0,
-            double X1, double Y1, double Z1, FLinearColor Color)
-        {
-            TArray<FVector> Base = {Origin + FVector(X0,Y0,Z0), Origin + FVector(X1,Y0,Z0),
-                Origin + FVector(X1,Y1,Z0), Origin + FVector(X0,Y1,Z0)};
-            Extrude(G, Base, Z1 - Z0, Color);
-            G.Quad(Base[3], Base[2], Base[1], Base[0], Color);
-        };
-        // The original six-by-four-metre footprint is unchanged. The front
-        // wall has actual openings; recessed closed panels retain a small office
-        // exterior without pretending that an explorable interior exists.
-        Solid(Walls,-300,-200,20,-288,200,350,Teal);
-        Solid(Walls,288,-200,20,300,200,350,Teal);
-        Solid(Walls,-288,188,20,288,200,350,Teal);
-        Solid(Trim,-300,-200,0,-288,200,20,Stone);
-        Solid(Trim,288,-200,0,300,200,20,Stone);
-        Solid(Trim,-288,188,0,288,200,20,Stone);
-        // Door: 1.10 x 2.32 m; adjacent window: 1.75 x 1.57 m.
-        for (const FVector2D Span : {FVector2D(-288,-55), FVector2D(55,90), FVector2D(265,288)})
-        {
-            Solid(Walls,Span.X,-200,20,Span.Y,-182,232,Teal);
-            Solid(Trim,Span.X,-200,0,Span.Y,-182,20,Stone);
-        }
-        Solid(Walls,90,-200,20,265,-182,75,Teal);
-        Solid(Trim,90,-200,0,265,-182,20,Stone);
-        Solid(Walls,-288,-200,232,288,-182,338,Teal);
-        // A closed roof slab, inset ceiling and thin metal fascia replace the
-        // previous zero-thickness plane which extended beyond the footprint.
-        Solid(Trim,-288,-200,338,288,188,350,Stone);
-        Solid(Frames,-300,-200,350,300,200,360,Metal);
-        Solid(Frames,-55,-200,2,-48,-178,232,Metal);
-        Solid(Frames,48,-200,2,55,-178,232,Metal);
-        Solid(Frames,-48,-200,225,48,-178,232,Metal);
-        Solid(Frames,-48,-198,0,48,-178,2,Metal);
-        Solid(Frames,-48,-184,2,48,-180,68,Metal);
-        Solid(Glazing,-48,-184,68,48,-182,225,Glass);
-        // Door pull projects into the reveal, never into the public pavement.
-        Solid(Frames,34,-196,100,37,-191,143,Stone);
-        Solid(Frames,34,-191,100,37,-180,103,Stone);
-        Solid(Frames,34,-191,140,37,-180,143,Stone);
-        Solid(Frames,90,-200,75,96,-178,232,Metal);
-        Solid(Frames,259,-200,75,265,-178,232,Metal);
-        Solid(Frames,96,-200,75,259,-178,81,Metal);
-        Solid(Frames,96,-200,225,259,-178,232,Metal);
-        Solid(Glazing,96,-184,81,259,-182,225,Glass);
-        Solid(Frames,175,-198,81,180,-178,225,Metal);
-        Solid(Trim,88,-200,70,267,-175,75,Stone);
-    }
-
     bool Canopy(const TSharedPtr<FJsonObject>& O, FMapGeometry& Supports, FMapGeometry& Roofs, double Height)
     {
         const TSharedPtr<FJsonObject>* Structure = nullptr;
@@ -314,6 +261,23 @@ namespace Neiva
     void Message(const FString& Text)
     {
         if (GEngine) GEngine->AddOnScreenDebugMessage(15, 6.0f, FColor::Cyan, Text);
+    }
+
+    TArray<FString> WrapText(AHUD* Hud, const FString& Text, float Width, float Scale)
+    {
+        TArray<FString> Words, Lines;
+        Text.ParseIntoArray(Words, TEXT(" "), true);
+        FString Line;
+        for (const FString& Word : Words)
+        {
+            const FString Next = Line.IsEmpty() ? Word : Line + TEXT(" ") + Word;
+            float W = 0, H = 0;
+            Hud->GetTextSize(Next, W, H, nullptr, Scale);
+            if (W > Width && !Line.IsEmpty()) { Lines.Add(Line); Line = Word; }
+            else Line = Next;
+        }
+        if (!Line.IsEmpty()) Lines.Add(Line);
+        return Lines;
     }
 
     UMaterialInterface* Material(const TCHAR* Name)
@@ -403,7 +367,7 @@ ANeivaCity::ANeivaCity()
     Mesh->SetMobility(EComponentMobility::Static);
     // The flat map spans 24 km. It receives shadows, but submitting those bounds
     // as a VSM caster overflows the non-Nanite marking queue. Buildings and the
-    // studio have their own shadow-casting components.
+    // landmarks have their own shadow-casting components.
     Mesh->SetCastShadow(false);
     Mesh->bUseAsyncCooking = false; // collision must exist before the player is placed
     Mesh->bUseComplexAsSimpleCollision = true;
@@ -435,7 +399,6 @@ void ANeivaCity::BuildCity()
     const TArray<TSharedPtr<FJsonValue>>* Roads = nullptr;
     Data->TryGetArrayField(TEXT("roads"), Roads);
     double Nearest = TNumericLimits<double>::Max();
-    FVector RoadSide(0, 1, 0);
     if (Roads)
     {
         for (const auto& Value : *Roads)
@@ -448,9 +411,7 @@ void ANeivaCity::BuildCity()
                 Nearest = Mid.SizeSquared2D();
                 SpawnPoint = Mid + FVector(0, 0, 150);
                 const FVector Dir = (P[I] - P[I - 1]).GetSafeNormal();
-                RoadSide = FVector(-Dir.Y, Dir.X, 0);
                 CarPoint = Mid + Dir * 700 + FVector(0, 0, 70);
-                StudioPoint = Mid + RoadSide * 1800;
             }
         }
     }
@@ -458,7 +419,6 @@ void ANeivaCity::BuildCity()
     if (Data->TryGetObjectField(TEXT("meta"), Meta))
     {
         if ((*Meta)->HasField(TEXT("spawn"))) SpawnPoint = Neiva::ReadPoint((*Meta)->TryGetField(TEXT("spawn")), 150);
-        if ((*Meta)->HasField(TEXT("studio"))) StudioPoint = Neiva::ReadPoint((*Meta)->TryGetField(TEXT("studio")));
         if ((*Meta)->HasField(TEXT("car"))) CarPoint = Neiva::ReadPoint((*Meta)->TryGetField(TEXT("car")), 70);
         double Yaw = HALF_PI;
         if ((*Meta)->TryGetNumberField(TEXT("carYaw"), Yaw)) CarYaw = FMath::RadiansToDegrees(Yaw - HALF_PI);
@@ -479,9 +439,42 @@ void ANeivaCity::BuildCity()
             return FVector::DistSquared2D(A[0], SpawnPoint) < FVector::DistSquared2D(B[0], SpawnPoint);
         });
     }
+    // Authored NPC circulation inside the mapped paved plaza. This adds no
+    // streets or buildings and makes no claim about real pedestrian patterns.
+    FString PopulationRaw;
+    TSharedPtr<FJsonObject> Population;
+    if (FFileHelper::LoadFileToString(PopulationRaw, *(FPaths::ProjectContentDir() / TEXT("Data/neiva-population.json"))) &&
+        PopulationRaw.Len() <= 100000 && FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(PopulationRaw), Population) && Population.IsValid())
+    {
+        const TArray<TSharedPtr<FJsonValue>>* Routes = nullptr;
+        double Version = 0;
+        FString Units;
+        int32 Added = 0;
+        if (Population->TryGetNumberField(TEXT("schemaVersion"), Version) && Version == 1 &&
+            Population->TryGetStringField(TEXT("units"), Units) && Units == TEXT("metres") &&
+            Population->TryGetArrayField(TEXT("routes"), Routes) && Routes->Num() <= 16)
+            for (const auto& Value : *Routes)
+            {
+                if (Value->Type != EJson::Object) continue;
+                const auto Object = Value->AsObject();
+                FString Kind;
+                bool bClosed = false;
+                if (!Object->TryGetStringField(TEXT("kind"), Kind) || Kind != TEXT("simulated-pedestrian-route") ||
+                    !Object->TryGetBoolField(TEXT("closed"), bClosed) || !bClosed) continue;
+                TArray<FVector> Route = Neiva::Points(Object, 100);
+                if (Route.Num() < 3 || Route.Num() > 64 ||
+                    Route.ContainsByPredicate([this](const FVector& Point) {
+                        return Point.ContainsNaN() || FVector::DistSquared2D(Point, SpawnPoint) > 20000.0 * 20000.0;
+                    })) continue;
+                const FVector ClosingPoint = Route[0];
+                Route.Add(ClosingPoint); // Points removes polygon closure; copy before TArray may reallocate.
+                PedestrianRoutes.Insert(Route, Added++);
+            }
+        UE_LOG(LogTemp, Display, TEXT("Neiva: loaded %d simulated plaza patrols; ground and collision validation follows."), Added);
+    }
     using namespace Neiva;
     const TSet<FString> LandmarkIds = bGenerateMapGeometry ? BuildLandmarks(Data) : TSet<FString>();
-    FMapGeometry Terrain, Streets, Pavement, Water, Green, Studio, StudioFrames, StudioGlass, StudioTrim;
+    FMapGeometry Terrain, Streets, Pavement, Water, Green;
     FParse::Value(FCommandLine::Get(), TEXT("NeivaBuildingRadius="), BuildingRadiusMeters);
     BuildingRadiusMeters = FMath::Max(0.f, BuildingRadiusMeters);
     FParse::Value(FCommandLine::Get(), TEXT("NeivaBuildingTileMeters="), BuildingTileSizeMeters);
@@ -599,7 +592,6 @@ void ANeivaCity::BuildCity()
             }
         }
     }
-    StudioGeometry(StudioPoint, Studio, StudioFrames, StudioGlass, StudioTrim);
     if (bGenerateMapGeometry)
     {
         Terrain.Upload(Mesh, 0, GroundMaterial, true);
@@ -608,58 +600,7 @@ void ANeivaCity::BuildCity()
         Water.Upload(Mesh, 3, WaterMaterial, false);
         Green.Upload(Mesh, 4, GrassMaterial, false);
     }
-    auto* StudioMesh = NewObject<UProceduralMeshComponent>(this, TEXT("EstudioGeometria"));
-    StudioMesh->SetupAttachment(Mesh);
-    StudioMesh->SetMobility(EComponentMobility::Static);
-    StudioMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    AddInstanceComponent(StudioMesh);
-    StudioMesh->RegisterComponent();
-    Studio.Upload(StudioMesh, 0, Neiva::Material(TEXT("M_Studio")), false);
-    auto* FrameMaterial = UMaterialInstanceDynamic::Create(Neiva::Material(TEXT("M_LandmarkSolid")), this);
-    auto* GlassMaterial = UMaterialInstanceDynamic::Create(Neiva::Material(TEXT("M_LandmarkSolid")), this);
-    if (FrameMaterial)
-    {
-        FrameMaterial->SetScalarParameterValue(TEXT("RoughnessScale"), .28f);
-        FrameMaterial->SetScalarParameterValue(TEXT("Metalness"), .75f);
-    }
-    if (GlassMaterial)
-    {
-        // Reuse the existing opaque reflective glazing model, with a dielectric
-        // surface. A transparent material or interior would require authored art.
-        GlassMaterial->SetScalarParameterValue(TEXT("RoughnessScale"), .055f);
-        GlassMaterial->SetScalarParameterValue(TEXT("Metalness"), 0.f);
-    }
-    StudioFrames.Upload(StudioMesh, 1, FrameMaterial, false);
-    StudioGlass.Upload(StudioMesh, 2, GlassMaterial, false);
-    StudioTrim.Upload(StudioMesh, 3, Neiva::Material(TEXT("M_Studio")), false);
-    // Preserve the former closed exterior's blocking volume independently of
-    // visual recesses; the studio contact stays available from the street.
-    auto* StudioCollision = NewObject<UBoxComponent>(this, TEXT("EstudioColision"));
-    StudioCollision->SetupAttachment(Mesh);
-    StudioCollision->SetMobility(EComponentMobility::Static);
-    StudioCollision->SetRelativeLocation(StudioPoint + FVector(0,0,175));
-    StudioCollision->SetBoxExtent(FVector(300,200,175));
-    StudioCollision->SetCollisionProfileName(TEXT("BlockAll"));
-    AddInstanceComponent(StudioCollision);
-    StudioCollision->RegisterComponent();
-    UTextRenderComponent* Sign = NewObject<UTextRenderComponent>(this, TEXT("EstudioFicticio"));
-    Sign->SetupAttachment(Mesh);
-    Sign->SetRelativeLocation(StudioPoint + FVector(0, -200.2, 294));
-    Sign->SetRelativeRotation(FRotator(0, -90, 0));
-    Sign->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
-    Sign->SetWorldSize(34);
-    Sign->SetText(FText::FromString(TEXT("JHON / DESARROLLO")));
-    Sign->SetTextRenderColor(FColor::White);
-    Sign->RegisterComponent();
-    auto* Services = NewObject<UTextRenderComponent>(this, TEXT("EstudioServicios"));
-    Services->SetupAttachment(Mesh);
-    Services->SetRelativeLocation(StudioPoint + FVector(0,-200.2,263));
-    Services->SetRelativeRotation(FRotator(0,-90,0));
-    Services->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
-    Services->SetWorldSize(18);
-    Services->SetText(FText::FromString(TEXT("WEB · SOFTWARE")));
-    Services->SetTextRenderColor(FColor(220,236,232));
-    Services->RegisterComponent();
+    // The invented studio was removed in 0.3. Contact is offered by dialogue.
     if (bGenerateMapGeometry) BuildEnvironment(Data);
     Status = FString::Printf(TEXT("Neiva / %d trazados / %d de %d huellas / alturas estimadas"), RoadCount, BuildingCount, TotalBuildings);
     if (BuildingRadiusMeters > 0) Status += FString::Printf(TEXT(" / radio %.0f m"), BuildingRadiusMeters);
@@ -758,7 +699,16 @@ void ANeivaCharacter::Forward(float V) { if (Controller) AddMovementInput(FRotat
 void ANeivaCharacter::Right(float V) { if (Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::Y), V); }
 void ANeivaCharacter::LookYaw(float V) { AddControllerYawInput(V); }
 void ANeivaCharacter::LookPitch(float V) { AddControllerPitchInput(V); }
-void ANeivaCharacter::SprintOn() { GetCharacterMovement()->MaxWalkSpeed = 540; }
+void ANeivaCharacter::Jump()
+{
+    if (Controller && Controller->IsMoveInputIgnored()) return;
+    Super::Jump();
+}
+void ANeivaCharacter::SprintOn()
+{
+    if (Controller && Controller->IsMoveInputIgnored()) return;
+    GetCharacterMovement()->MaxWalkSpeed = 540;
+}
 void ANeivaCharacter::SprintOff() { GetCharacterMovement()->MaxWalkSpeed = 200; }
 void ANeivaCharacter::ResetControlInput()
 {
@@ -792,6 +742,7 @@ FString ANeivaCharacter::AppearanceLabel() const
 void ANeivaCharacter::ToggleTouchControls() { Neiva::Touch(Cast<APlayerController>(Controller)); }
 void ANeivaCharacter::ResetPosition()
 {
+    if (Controller && Controller->IsMoveInputIgnored()) return;
     if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
     {
         const FVector Requested = City->SpawnPoint;
@@ -830,26 +781,36 @@ void ANeivaCharacter::ResetPosition()
             FVector::Dist2D(Requested, Placed), Radius, HalfHeight);
     }
 }
+namespace Neiva
+{
+void FindNearbyInteraction(const ANeivaCharacter* Character, ANeivaPedestrian*& NearbyPerson, ANeivaCar*& NearbyCar)
+{
+    NearbyPerson = nullptr; NearbyCar = nullptr;
+    const auto* Player = Cast<ANeivaPlayerController>(Character->GetController());
+    double Distance = 450.f * 450.f;
+    for (TActorIterator<ANeivaCar> It(Character->GetWorld()); It; ++It)
+    {
+        const double Candidate = FVector::DistSquared(Character->GetActorLocation(), It->GetActorLocation());
+        if (Candidate < Distance && Player && Player->LineOfSightTo(*It)) { Distance = Candidate; NearbyCar = *It; }
+    }
+    for (TActorIterator<ANeivaPedestrian> It(Character->GetWorld()); It; ++It)
+    {
+        const double Candidate = FVector::DistSquared(Character->GetActorLocation(), It->GetActorLocation());
+        if (Candidate < FMath::Min(Distance, 320.0 * 320.0) && Player && Player->LineOfSightTo(*It))
+        { NearbyPerson = *It; Distance = Candidate; }
+    }
+}
+}
 void ANeivaCharacter::Interact()
 {
-    for (TActorIterator<ANeivaCar> It(GetWorld()); It; ++It)
-    {
-        if (FVector::Dist2D(GetActorLocation(), It->GetActorLocation()) < 450)
-        { It->Enter(this); return; }
-    }
-    if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
-    {
-        if (FVector::Dist2D(GetActorLocation(), City->StudioPoint) < 1000)
-        {
-            FPlatformProcess::LaunchURL(Neiva::ContactURL, nullptr, nullptr);
-            Neiva::Message(TEXT("Jhon: alvarezruizj289@gmail.com / desarrollo web, datos y software."));
-            return;
-        }
-    }
-    for (TActorIterator<ANeivaPedestrian> It(GetWorld()); It; ++It)
-        if (FVector::Dist2D(GetActorLocation(), It->GetActorLocation()) < 240)
-        { Neiva::Message(TEXT("Buen dia. El Parque Santander esta en el centro; E junto al estudio abre el contacto de Jhon.")); return; }
-    Neiva::Message(TEXT("Acercate al carro o al pequeno estudio turquesa de Jhon."));
+    auto* Player = Cast<ANeivaPlayerController>(Controller);
+    if (Player && Player->GetDialogue()->IsActive()) { Player->CloseConversation(); return; }
+    ANeivaPedestrian* NearbyPerson = nullptr;
+    ANeivaCar* NearbyCar = nullptr;
+    Neiva::FindNearbyInteraction(this, NearbyPerson, NearbyCar);
+    if (NearbyPerson && Player && Player->BeginConversation(NearbyPerson)) return;
+    if (NearbyCar) { NearbyCar->Enter(this); return; }
+    Neiva::Message(TEXT("Acércate a una persona para conversar o al coche para conducir."));
 }
 
 ANeivaPedestrian::ANeivaPedestrian()
@@ -867,11 +828,27 @@ void ANeivaPedestrian::SetRoute(const TArray<FVector>& Points, int32 AppearanceS
     TargetPoint = FMath::Clamp(FirstTargetPoint, 1, FMath::Max(1, Route.Num() - 1));
     Direction = 1; WaitSeconds = 0; StuckSeconds = 0;
     PreviousLocation = GetActorLocation();
+    DialogueSeed = AppearanceSeed;
     SetAppearance(AppearanceSeed % 4, (AppearanceSeed / 2) % 4);
+}
+void ANeivaPedestrian::SetConversationPartner(ANeivaCharacter* Partner)
+{
+    ConversationPartner = Partner;
+    GetCharacterMovement()->StopMovementImmediately();
+    ConsumeMovementInputVector();
+    StuckSeconds = 0;
+    PreviousLocation = GetActorLocation();
 }
 void ANeivaPedestrian::Tick(float DT)
 {
     Super::Tick(DT);
+    if (ConversationPartner.IsValid())
+    {
+        GetCharacterMovement()->StopMovementImmediately();
+        FVector Facing = ConversationPartner->GetActorLocation() - GetActorLocation(); Facing.Z = 0;
+        if (!Facing.IsNearlyZero()) SetActorRotation(FMath::RInterpTo(GetActorRotation(), Facing.Rotation(), DT, 5.f));
+        return;
+    }
     if (Route.Num() < 2) return;
     if (WaitSeconds > 0) { WaitSeconds -= DT; return; }
     FVector Offset = Route[TargetPoint] - GetActorLocation(); Offset.Z = 0;
@@ -1169,6 +1146,7 @@ void ANeivaGameMode::StartPlay()
         }
         UE_LOG(LogTemp, Display, TEXT("Neiva: approximate procedural ambient fill %.0f lux per direction; no shadows/specular/GI. NeivaFillLux=0 disables it."), FillLux);
     }
+    if (!Neiva::Find<ANeivaWeather>(GetWorld())) GetWorld()->SpawnActor<ANeivaWeather>();
     Super::StartPlay();
     if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
     {
@@ -1189,11 +1167,16 @@ void ANeivaGameMode::StartPlay()
         for (const auto& Route : City->PedestrianRoutes)
         {
             Candidates.Add(Neiva::SamplePedestrianRoute(Route));
+            // Start with accessible parts of the mapped route near the player;
+            // candidate coordinates and collision checks remain unchanged.
+            Candidates.Last().Sort([City](const Neiva::FPedestrianRouteSample& A, const Neiva::FPedestrianRouteSample& B) {
+                return FVector::DistSquared2D(A.Position, City->SpawnPoint) < FVector::DistSquared2D(B.Position, City->SpawnPoint);
+            });
             MaxSamples = FMath::Max(MaxSamples, Candidates.Last().Num());
         }
         TArray<FVector> SpawnedPositions;
-        // Alternate the original OSM routes instead of filling only the first
-        // path. Every candidate remains on an original polyline segment.
+        // Spread candidates over mapped paths and simulated plaza patrols.
+        // Every position still needs a clear grounded capsule.
         for (int32 SampleIndex = 0; SampleIndex < MaxSamples && City->ActivePedestrians < Requested; ++SampleIndex)
             for (int32 RouteIndex = 0; RouteIndex < Candidates.Num() && City->ActivePedestrians < Requested; ++RouteIndex)
             {
@@ -1217,8 +1200,8 @@ void ANeivaGameMode::StartPlay()
                 }
                 else ++Blocked;
             }
-        City->Status += FString::Printf(TEXT(" / %d peatones en caminos OSM"), City->ActivePedestrians);
-        UE_LOG(LogTemp, Display, TEXT("Neiva: spawned %d/%d pedestrians on %d candidate paths; %d sampled positions, %d blocked, %d within 12 m; original OSM paths retained."),
+        City->Status += FString::Printf(TEXT(" / %d peatones"), City->ActivePedestrians);
+        UE_LOG(LogTemp, Display, TEXT("Neiva: spawned %d/%d pedestrians on %d candidate paths; %d sampled positions, %d blocked, %d within 12 m; mapped paths and simulated plaza patrols."),
             City->ActivePedestrians, Requested, City->PedestrianRoutes.Num(), Attempts, Blocked, TooClose);
     }
 }
@@ -1247,25 +1230,76 @@ void ANeivaHUD::DrawHUD()
         }
         return;
     }
+    auto* PC = Cast<ANeivaPlayerController>(PlayerOwner);
+    if (PC && PC->GetDialogue()->IsActive())
+    {
+        auto* Dialogue = PC->GetDialogue();
+        const float W = FMath::Min(760.f * S, Canvas->ClipX - 32.f);
+        const float X = (Canvas->ClipX - W) * .5f, Padding = 20.f*S;
+        const auto Lines = Neiva::WrapText(this, Dialogue->GetText(), W - 2*Padding, S);
+        const float LineHeight = 23.f*S, RowHeight = 40.f*S;
+        const float H = 112.f*S + Lines.Num()*LineHeight + Dialogue->GetTopics().Num()*RowHeight +
+            (Dialogue->ShowsContact() ? 76.f*S : 0.f);
+        const float Y = FMath::Max(14.f, Canvas->ClipY - H - 28.f);
+        DrawRect(FLinearColor(.015,.027,.034,.96), X, Y, W, H);
+        DrawRect(FLinearColor(.34,.72,.61,1), X, Y, 3*S, H);
+        DrawText(Dialogue->GetSpeakerLabel(), FColor(159,227,204), X+Padding, Y+Padding, nullptr, 1.3f*S);
+        float RowY = Y+56*S;
+        for (const auto& Line : Lines)
+        { DrawText(Line, FColor::White, X+Padding, RowY, nullptr, S); RowY += LineHeight; }
+        RowY += 12*S;
+        for (int32 I = 0; I < Dialogue->GetTopics().Num(); ++I)
+        {
+            DrawRect(FLinearColor(.06,.14,.16,.96), X+Padding, RowY, W-2*Padding, RowHeight-5*S);
+            DrawText(FString::Printf(TEXT("%d  %s"), I+1, *Dialogue->GetTopics()[I]), FColor(226,237,232),
+                X+Padding+10*S, RowY+9*S, nullptr, .9f*S);
+            AddHitBox(FVector2D(X+Padding,RowY), FVector2D(W-2*Padding,RowHeight-5*S),
+                FName(*FString::Printf(TEXT("Talk%d"),I)), true);
+            RowY += RowHeight;
+        }
+        if (Dialogue->ShowsContact())
+        {
+            DrawText(TEXT("alvarezruizj289@gmail.com"), FColor(193,220,210), X+Padding, RowY+5*S, nullptr, .9f*S);
+            DrawRect(FLinearColor(.06,.32,.27,1), X+Padding, RowY+31*S, W-2*Padding, 32*S);
+            DrawText(TEXT("ABRIR CORREO"), FColor::White, X+Padding+10*S, RowY+39*S, nullptr, .85f*S);
+            AddHitBox(FVector2D(X+Padding,RowY+31*S),FVector2D(W-2*Padding,32*S),TEXT("TalkContact"),true);
+            RowY += 76*S;
+        }
+        DrawText(TEXT("E / Esc  ·  Terminar conversación"), FColor(165,200,190), X+Padding, RowY+10*S, nullptr, .85f*S);
+        AddHitBox(FVector2D(X+Padding,RowY),FVector2D(W-2*Padding,32*S),TEXT("TalkClose"),true);
+        return;
+    }
     // Keep the city visible. Geometry counts belong in the opt-in HUD stats,
     // while players need location and nearby interaction information.
     DrawRect(FLinearColor(.018,.028,.035,.68), 18, 18, FMath::Min(Canvas->ClipX - 36, 286.f*S), 78*S);
     DrawRect(FLinearColor(.34,.72,.61,1), 18, 18, 3*S, 78*S);
     DrawText(TEXT("NEIVA ABIERTA"), FColor::White, 34, 29, nullptr, 1.65f*S);
     DrawText(TEXT("HUILA, COLOMBIA  /  ALFA"), FColor(182,207,200), 34, 65*S, nullptr, .8f*S);
+    if (auto* Weather = Neiva::Find<ANeivaWeather>(GetWorld()); Weather && Weather->IsWeatherReady())
+        DrawText(Weather->GetPhaseLabel(), FColor(182,207,200), 24, 105*S, nullptr, .85f*S);
     if (ANeivaCity* City = Neiva::Find<ANeivaCity>(GetWorld()))
     {
         if (FParse::Param(FCommandLine::Get(), TEXT("NeivaHUDStats")))
             DrawText(City->Status, FColor(168,203,195), 24, 108*S, nullptr, .8f*S);
-        if (PlayerOwner && PlayerOwner->GetPawn())
-        {
-            const float Distance = FVector::Dist2D(PlayerOwner->GetPawn()->GetActorLocation(), City->StudioPoint) / 100;
-            if (Distance < 40)
-                DrawText(FString::Printf(TEXT("JHON / DESARROLLO  ·  %.0f m  ·  E contactar"), Distance),
-                    FColor(224,237,231), 24, Canvas->ClipY - 123*S, nullptr, .85f*S);
-        }
     }
     const bool Driving = PlayerOwner && Cast<ANeivaCar>(PlayerOwner->GetPawn());
+    if (const auto* Character = PlayerOwner ? Cast<ANeivaCharacter>(PlayerOwner->GetPawn()) : nullptr)
+    {
+        ANeivaPedestrian* Person = nullptr;
+        ANeivaCar* Car = nullptr;
+        Neiva::FindNearbyInteraction(Character, Person, Car);
+        double Distance = 2000.f;
+        for (TActorIterator<ANeivaPedestrian> It(GetWorld()); It; ++It)
+            Distance = FMath::Min(Distance, FVector::Dist(Character->GetActorLocation(), It->GetActorLocation()));
+        if (Person || Car)
+        {
+            const AActor* Target = Person ? static_cast<AActor*>(Person) : static_cast<AActor*>(Car);
+            Distance = FVector::Dist(Character->GetActorLocation(), Target->GetActorLocation());
+        }
+        if (Distance < 2000 || Car)
+            DrawText(FString::Printf(TEXT("%s  ·  %.0f m"), Person ? TEXT("E  CONVERSAR") : Car ? TEXT("E  SUBIR AL COCHE") : TEXT("PERSONA CERCANA"), Distance/100),
+                FColor(193,234,214), 24, Canvas->ClipY-125*S, nullptr, .9f*S);
+    }
     if (Driving)
     {
         const float Kmh = FMath::Abs(Cast<ANeivaCar>(PlayerOwner->GetPawn())->Speed) * .036f;
@@ -1279,7 +1313,7 @@ void ANeivaHUD::DrawHUD()
         TEXT("WASD caminar | mouse mirar | Shift correr | Espacio saltar | E interactuar | R volver | T tactil"),
         FColor::White, 24, Canvas->ClipY - 65, nullptr, .87f*S);
     DrawText(TEXT("Esc / P  PAUSA"), FColor(198,216,210), Canvas->ClipX - 150*S, 26, nullptr, .85f*S);
-    DrawText(TEXT("Datos: OpenStreetMap y Overture Maps / ODbL. Cobertura parcial; huellas y alturas estimadas."),
+    DrawText(TEXT("OSM/Overture · ODbL | Google Research · CC BY 4.0 | Alturas estimadas, cobertura parcial."),
         FColor(182,191,191), 24, Canvas->ClipY - 35, nullptr, .73f*S);
     const FVector2D Button(Canvas->ClipX - 178*S, Canvas->ClipY - 170*S);
     DrawRect(FLinearColor(.05,.43,.39,.94), Button.X, Button.Y, 152*S, 58*S);
@@ -1298,6 +1332,14 @@ void ANeivaHUD::NotifyHitBoxClick(FName BoxName)
 {
     Super::NotifyHitBoxClick(BoxName);
     if (!PlayerOwner) return;
+    if (auto* PC = Cast<ANeivaPlayerController>(PlayerOwner); PC && PC->GetDialogue()->IsActive())
+    {
+        if (BoxName == TEXT("TalkClose")) PC->CloseConversation();
+        else if (BoxName == TEXT("TalkContact")) PC->OpenDeveloperContact();
+        else for (int32 I = 0; I < 4; ++I)
+            if (BoxName == FName(*FString::Printf(TEXT("Talk%d"),I))) PC->SelectConversationTopic(I);
+        return;
+    }
     if (PlayerOwner->IsPaused())
     {
         if (auto* Controller = Cast<ANeivaPlayerController>(PlayerOwner))

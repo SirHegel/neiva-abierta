@@ -55,6 +55,16 @@ class BootstrapContracts(unittest.TestCase):
         with patch.dict(sys.modules, unreal=self.api):
             spec.loader.exec_module(self.subject)
         self.subject.REIMPORT = False
+        # This suite exercises bootstrap sequencing, while separate import
+        # tests validate weather/audio sources and a real Editor validates APIs.
+        self.weather = Mock()
+        self.dialogue = Mock()
+        additions = patch.dict(sys.modules, {
+            "prepare_weather_editor": SimpleNamespace(prepare=self.weather),
+            "import_dialogue_editor": SimpleNamespace(main=self.dialogue),
+        })
+        additions.start()
+        self.addCleanup(additions.stop)
 
     def rename(self, source, destination):
         obj = self.registry.pop(source.split(".")[0])
@@ -172,6 +182,27 @@ class BootstrapContracts(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "all generated resources"):
                     self.subject.main()
             self.assertFalse((Path(folder) / "NeivaAssets-import.json").exists())
+
+    def test_failed_weather_or_voice_preparation_prevents_final_success_report(self):
+        character = Mock()
+        character.get_editor_property.side_effect = lambda key: [] if key == "materials" else object()
+        plan = {"materials": [], "models": [{"kind": "character"}, {"kind": "car"}],
+                "environment": "/art/sky.hdr", "characterTextures": {}}
+        with tempfile.TemporaryDirectory() as folder:
+            self.api.Paths = SimpleNamespace(project_saved_dir=lambda: folder)
+            for failed in (self.weather, self.dialogue):
+                with self.subTest(stage="weather" if failed is self.weather else "dialogue"):
+                    self.weather.reset_mock(side_effect=True)
+                    self.dialogue.reset_mock(side_effect=True)
+                    failed.side_effect = RuntimeError("addition could not be saved")
+                    with patch.multiple(self.subject, build_plan=lambda: plan, landmark_solid_material=lambda: None,
+                                        water_material=lambda: None, import_texture=lambda *args: None,
+                                        import_fbx=lambda *args: character, import_car=lambda *args: None):
+                        with self.assertRaisesRegex(RuntimeError, "addition could not be saved"):
+                            self.subject.main()
+                    if failed is self.weather:
+                        self.dialogue.assert_not_called()
+                    self.assertFalse((Path(folder) / "NeivaAssets-import.json").exists())
 
 
 if __name__ == "__main__":

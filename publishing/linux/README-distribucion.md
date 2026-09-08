@@ -6,13 +6,15 @@ Este archivo de instrucciones no acredita una ejecución del paquete. -->
 # Neiva Abierta · Unreal Engine · Linux x86_64
 
 Explora una interpretación de Neiva, Huila, a pie o en coche. El personaje no
-tiene nombre y el pequeño estudio de Jhon es ficticio. El juego usa Unreal
+tiene nombre y puede conversar con peatones sobre Jhon. El juego usa Unreal
 Engine 5.5.4. El código original del proyecto está disponible bajo MIT;
 el motor y los recursos de terceros conservan sus propias licencias.
 
-La alfa 0.2 incorpora materiales corregidos del personaje, árboles y bancos
-de Poly Haven, geometría Nanite en los hitos y sectores urbanos agrupados
-según su distancia al punto inicial. El límite inicial de la aplicación es
+La alfa 0.3 añade lluvia periódica, humedad y secado gradual de materiales,
+conversaciones con voz sintética y recorridos de peatones dentro del parque.
+Aplica 17.696 alturas estimadas de Google Research Open Buildings Temporal
+2023. Conserva los materiales del personaje, árboles y bancos CC0, geometría
+Nanite en los hitos y sectores urbanos agrupados. El límite inicial es
 60 FPS; no garantiza esa tasa en cada vista o equipo. La ciudad sigue siendo
 una interpretación parcial y su calidad visual no equivale a Cyberpunk 2077.
 
@@ -31,7 +33,8 @@ empaquetado incluye el runtime; no requiere instalar el editor para jugar.
 Necesitas Linux x86_64, una sesión gráfica y una GPU/controlador compatibles
 con Vulkan. No se han establecido requisitos mínimos ni un objetivo de FPS
 para todas las máquinas. Esta distribución no incluye ejecutables para
-Windows, Android o iOS.
+Windows, macOS, Android o iOS. Windows y macOS requieren sus propias
+compilaciones y pruebas nativas; renombrar este archivo no los convierte.
 
 El lanzador solicita Vulkan y, cuando `nvidia-smi` confirma una GPU NVIDIA
 disponible, solicita [PRIME para ese proceso](https://download.nvidia.com/XFree86/Linux-x86_64/570.124.04/README/primerenderoffload.html).
@@ -69,9 +72,13 @@ todos los archivos de `Linux/`: un binario aislado no basta para abrir el juego.
 
 El menú de pausa permite continuar o salir. C y V cambian los colores de la
 tela de las prendas existentes; no sustituyen la ropa por otras prendas.
-Cerca del estudio ficticio, E ofrece el contacto público
-`alvarezruizj289@gmail.com` y solicita abrir el programa de correo del sistema.
-Si hay un coche al alcance, la interacción con el coche tiene prioridad.
+Cerca de un peatón visible, **E** abre una conversación. **1–4** o los botones
+eligen el tema; **E/Esc** cierran el diálogo y devuelven el control del personaje.
+Los diálogos están escritos para el juego y las voces son sintéticas; no son
+testimonios de habitantes reales. El tema Contacto muestra el correo público
+`alvarezruizj289@gmail.com`; el botón correspondiente abre el programa de correo.
+La interacción elige la persona o el coche accesible más cercano. El antiguo
+edificio ficticio se retiró del juego nativo.
 
 ## Alcance de la ciudad
 
@@ -80,11 +87,13 @@ versión, pero ese conjunto **no equivale a una reproducción exacta y completa
 de toda Neiva**. La cobertura es parcial; muchas huellas y alturas son
 estimadas, el relieve no es un levantamiento topográfico y las fachadas son
 interpretadas. Los cuatro hitos modelados del centro tampoco son escaneos 3D.
-El estudio de Jhon no representa una dirección comercial real.
+Los recorridos de los peatones son simulados; no reproducen habitantes reales.
 
 La cartografía procede de OpenStreetMap y Overture Maps, con fuentes Microsoft
 ML Buildings y Google Open Buildings. La fecha de descarga o de edición de un
 mapa no certifica la fecha de una fotografía ni el estado actual de cada casa.
+Las nuevas alturas proceden de inferencia ML de 2023, con resolución efectiva
+de 4 m; no son mediciones de campo ni determinan la apariencia de las fachadas.
 Consulta la procedencia y límites del mapa en `Datos/LEEME.txt` y sus
 metadatos originales en `Datos/neiva.metadata.json`, incluidos en la descarga.
 

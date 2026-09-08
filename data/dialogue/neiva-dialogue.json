@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "language": "es",
+  "description": "Diálogos originales de personajes ficticios del juego; no son testimonios de habitantes reales.",
+  "roles": {
+    "vecino": {
+      "label": "Vecino",
+      "greeting": "saludo_vecino"
+    },
+    "comerciante": {
+      "label": "Comerciante",
+      "greeting": "saludo_comerciante"
+    },
+    "estudiante": {
+      "label": "Estudiante",
+      "greeting": "saludo_estudiante"
+    }
+  },
+  "topics": [
+    {
+      "key": "jhon",
+      "label": "¿Quién es Jhon?",
+      "clip": "jhon"
+    },
+    {
+      "key": "servicios",
+      "label": "¿Qué desarrolla?",
+      "clip": "servicios"
+    },
+    {
+      "key": "contacto",
+      "label": "Quiero contactarlo",
+      "clip": "contacto"
+    },
+    {
+      "key": "ciudad",
+      "label": "Seguir explorando Neiva",
+      "clip": "ciudad"
+    }
+  ],
+  "clips": [
+    {
+      "id": "saludo_vecino",
+      "file": "/audio/dialogue/saludo_vecino.wav",
+      "text": "¡Hola! Qué bueno verte por aquí. ¿Conoces a Jhon? Es un gran desarrollador de Neiva. Si tienes una idea para una aplicación, puedes hablar con él.",
+      "durationSeconds": 10.727619047619047,
+      "sha256": "8fc05ef5dc9471c702610f3e2e6857549f8e61c07188598c5107f7fe3af201ef",
+      "bytes": 473132
+    },
+    {
+      "id": "saludo_comerciante",
+      "file": "/audio/dialogue/saludo_comerciante.wav",
+      "text": "¡Buenas! Tómate un momento para recorrer el centro. Si buscas a alguien que desarrolle una página o un sistema para tu negocio, pregunta por Jhon. Es un gran desarrollador de nuestra ciudad.",
+      "durationSeconds": 13.246984126984128,
+      "sha256": "2833ad9b89413527aff258410dd61a1f5784305f5320d4cce4e20b3a1b586836",
+      "bytes": 584236
+    },
+    {
+      "id": "saludo_estudiante",
+      "file": "/audio/dialogue/saludo_estudiante.wav",
+      "text": "¡Hola! Me interesa lo que se puede crear con tecnología. Jhon es un gran desarrollador de Neiva, y este juego es uno de sus proyectos. ¿Quieres saber cómo contactarlo?",
+      "durationSeconds": 11.993106575963719,
+      "sha256": "c162a701a940e1b7d8407264f1e637e4e7950e1e5773c15ce84f81fab45a150f",
+      "bytes": 528940
+    },
+    {
+      "id": "jhon",
+      "file": "/audio/dialogue/jhon.wav",
+      "text": "Se llama Jhon Steven Álvarez Ruiz. Se dedica al desarrollo de software. Aquí puedes conocer su trabajo y encontrar el contacto para contarle tu proyecto.",
+      "durationSeconds": 11.853786848072563,
+      "sha256": "c9acfc470ea007c2ebe9728df57a6e0820dfe8d79c62be6572429906d89bd82e",
+      "bytes": 522796
+    },
+    {
+      "id": "servicios",
+      "file": "/audio/dialogue/servicios.wav",
+      "text": "Puedes hablar con Jhon sobre desarrollo web, aplicaciones, datos y herramientas de software. Cuéntale qué necesitas y revisen juntos cómo convertir tu idea en un proyecto.",
+      "durationSeconds": 12.144036281179138,
+      "sha256": "090cadfd74f9a6d301cd9761a66a15a0031ad86edcd2811c6d86466f4620e939",
+      "bytes": 535596
+    },
+    {
+      "id": "contacto",
+      "file": "/audio/dialogue/contacto.wav",
+      "text": "Te dejo el correo de Jhon en pantalla. Si quieres, abre tu aplicación de correo desde el botón de contacto. Tú decides qué mensaje enviarle.",
+      "durationSeconds": 10.286439909297052,
+      "sha256": "7d702e56ef2bafec36a746437d133bec498362b70cc9a4345526713890354969",
+      "bytes": 453676
+    },
+    {
+      "id": "ciudad",
+      "file": "/audio/dialogue/ciudad.wav",
+      "text": "Estamos en los alrededores del Parque Santander. Puedes seguir a pie, correr o acercarte al coche para conducir. Si quieres conversar otra vez, aquí nos vemos. ¡Disfruta el recorrido!",
+      "durationSeconds": 12.759365079365079,
+      "sha256": "400691dd92192e8af9a0ef9923eee45941881efd0c5caa3c8595a5386a36f747",
+      "bytes": 562732
+    }
+  ],
+  "voice": {
+    "synthetic": true,
+    "engine": "Piper",
+    "engineVersion": "1.8.0",
+    "model": "es_MX-ald-medium",
+    "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/resolve/1162a9173d0ce503555aed757976b7a9912eae4c/es/es_MX/ald/medium/es_MX-ald-medium.onnx",
+    "modelSha256": "019b3803293c93e34a206dd2e53a3889209a514e786fd7144f7b70196c579b63",
+    "modelCardSha256": "1f0694ceb3f1e78c1e2ee0e2d5da40f19f965bc638e1b4fb4fca9bdca420d713",
+    "datasetLicense": "Unlicense (model card); see README and MODEL_CARD",
+    "runtimeIncluded": false,
+    "modelIncluded": false,
+    "note": "Spanish synthetic voice, not a recording of a real Neiva resident. No lip-sync claim."
+  }
+}

@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import plistlib
 from pathlib import Path
 import subprocess
 import tempfile
@@ -56,10 +57,13 @@ class UnrealLauncherTests(unittest.TestCase):
     def package_fixture(self, target='Linux'):
         package = self.root / f'packaged build {target}'
         filename = 'NeivaAbierta-Win64-Shipping.exe' if target == 'Win64' else 'NeivaAbierta-Linux-Shipping'
-        binary = package / 'NeivaAbierta/Binaries' / target / filename
+        binary = (package / 'NeivaAbierta.app/Contents/MacOS/NeivaAbierta' if target == 'Mac' else
+                  package / 'NeivaAbierta/Binaries' / target / filename)
         binary.parent.mkdir(parents=True, exist_ok=True)
-        binary.write_bytes((b'MZ' if target == 'Win64' else b'\x7fELF') + b'\0' * 60)
+        binary.write_bytes((b'MZ' if target == 'Win64' else b'\xcf\xfa\xed\xfe' if target == 'Mac' else b'\x7fELF') + b'\0' * 60)
         binary.chmod(0o755)
+        if target == 'Mac':
+            (binary.parent.parent / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleExecutable': binary.name}))
         data = package / 'NeivaAbierta/Content/Paks'
         data.mkdir(parents=True)
         files = {}
@@ -71,7 +75,8 @@ class UnrealLauncherTests(unittest.TestCase):
     def test_platforms_are_explicit_and_mobile_is_not_silently_packaged(self):
         self.assertEqual(launcher.native_platform('Linux'), 'Linux')
         self.assertEqual(launcher.native_platform('Windows'), 'Win64')
-        for system in ['Darwin', 'Android', 'iOS']:
+        self.assertEqual(launcher.native_platform('Darwin'), 'Mac')
+        for system in ['Android', 'iOS', 'Unknown']:
             with self.subTest(system=system), self.assertRaises(ValueError):
                 launcher.native_platform(system)
 
@@ -84,6 +89,17 @@ class UnrealLauncherTests(unittest.TestCase):
         self.assertEqual(linux['editor'].name, 'UnrealEditor')
         self.assertEqual(linux['build'].parts[-2:], ('Linux', 'Build.sh'))
         self.assertIn('Epic Engine 5.5', str(windows['editor']))
+
+    def test_mac_engine_bundle_paths_and_path_discovery_are_native(self):
+        files = self.engine_fixture('Mac')
+        self.assertEqual(files['editor'], self.engine / 'Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor')
+        self.assertEqual(files['build'], self.engine / 'Engine/Build/BatchFiles/Mac/Build.sh')
+        self.assertEqual(files['uat'], self.engine / 'Engine/Build/BatchFiles/RunUAT.sh')
+        self.assertEqual(launcher.inspect_engine(self.engine, 'Mac'), ([], [5, 5, 4]))
+        with patch.dict(os.environ, {}, clear=True), patch.object(launcher.shutil, 'which', return_value=str(files['editor'])):
+            self.assertEqual(launcher.find_engine(), self.engine.resolve())
+        files['editor'].unlink()
+        self.assertTrue(any('editor' in error for error in launcher.inspect_engine(self.engine, 'Mac')[0]))
 
     def test_engine_discovery_respects_explicit_then_environment_then_path(self):
         other = self.root / 'other engine'
@@ -112,7 +128,7 @@ class UnrealLauncherTests(unittest.TestCase):
         self.assertIn('Build.version inválido', errors)
 
     def test_import_uses_full_editor_and_single_argument_script_paths(self):
-        for target in ['Linux', 'Win64']:
+        for target in ['Linux', 'Win64', 'Mac']:
             with self.subTest(target=target):
                 plan = launcher.command_plan('import', self.engine, target, self.root / 'out', project=self.project)
                 self.assertEqual(len(plan), 4)
@@ -138,7 +154,7 @@ class UnrealLauncherTests(unittest.TestCase):
 
     def test_import_source_control_override_is_child_only_on_both_platforms(self):
         environment = dict(os.environ)
-        for target in ['Linux', 'Win64']:
+        for target in ['Linux', 'Win64', 'Mac']:
             with self.subTest(target=target):
                 plan = launcher.command_plan('package', self.engine, target, self.root / 'out', project=self.project)
                 occurrences = [(index, arg) for index, command in enumerate(plan) for arg in command if arg.startswith('-SCCProvider=')]
@@ -155,7 +171,7 @@ class UnrealLauncherTests(unittest.TestCase):
         self.assertEqual(plan[0][1:], [str(self.project), '/Game/Maps/Neiva', '-game', '-log'])
 
     def test_explicit_build_limit_reaches_editor_ubt_and_uat_game_build_without_xml_dependency(self):
-        for target in ['Linux', 'Win64']:
+        for target in ['Linux', 'Win64', 'Mac']:
             with self.subTest(target=target):
                 plan = launcher.command_plan('package', self.engine, target, self.root / 'out', project=self.project,
                                              max_build_actions=2)
@@ -519,7 +535,7 @@ class UnrealLauncherTests(unittest.TestCase):
                     launcher.require_import(self.project, started)
 
     def test_native_linux_and_windows_mimetic_packages_are_accepted(self):
-        for target in ['Linux', 'Win64']:
+        for target in ['Linux', 'Win64', 'Mac']:
             with self.subTest(target=target):
                 package, binary, data = self.package_fixture(target)
                 files = launcher.package_files(package, target)
@@ -527,6 +543,88 @@ class UnrealLauncherTests(unittest.TestCase):
                 self.assertIn(data['pak'], files)
                 self.assertIn(data['utoc'], files)
                 self.assertIn(data['ucas'], files)
+
+    def test_mac_plan_uses_host_platform_without_linux_display_or_shader_options(self):
+        plan = launcher.command_plan('package', self.engine, 'Mac', self.root / 'Mac output',
+                                     project=self.project, max_build_actions=2, cook_processes=1)
+        self.assertEqual(plan[2][:4], [str(self.engine / 'Engine/Build/BatchFiles/Mac/Build.sh'),
+                                      'NeivaAbiertaEditor', 'Mac', 'Development'])
+        self.assertIn('-platform=Mac', plan[-1])
+        self.assertIn('-AdditionalCookerOptions=-cookprocesscount=1', plan[-1])
+        self.assertIn('-UbtArgs=-MaxParallelActions=2', plan[-1])
+        self.assertFalse(any('vulkan' in arg.lower() or 'xvfb' in arg.lower() or 'Win64' in arg
+                             for command in plan for arg in command))
+        for options in [{'virtual_display': '/fixture/xvfb-run'}, {'shader_workers': 2}]:
+            with self.subTest(options=options), self.assertRaisesRegex(ValueError, 'Linux'):
+                launcher.command_plan('package', self.engine, 'Mac', self.root / 'out', **options)
+        with patch.object(launcher.platform, 'system', return_value='Darwin'):
+            self.assertEqual(launcher.gpu_environment('nvidia'), dict(os.environ))
+
+    def test_mac_dry_run_cannot_claim_compilation_or_modify_outputs(self):
+        self.engine_fixture('Mac')
+        output = self.root / 'mac package plan'
+        argv = ['unreal.py', 'package', '--engine', str(self.engine), '--output', str(output), '--dry-run']
+        stream = io.StringIO()
+        with patch.object(launcher.sys, 'argv', argv), patch.object(launcher, 'PROJECT', self.project), patch.object(
+                launcher.platform, 'system', return_value='Darwin'), patch.object(
+                launcher, 'gpu_report', return_value={'nvidia': [], 'runtimeValidated': False}), patch.object(
+                launcher.subprocess, 'run') as run, contextlib.redirect_stdout(stream):
+            self.assertEqual(launcher.main(), 0)
+            run.assert_not_called()
+        report = json.loads(stream.getvalue())
+        self.assertEqual(report['target'], 'Mac')
+        self.assertFalse(any(report[key] for key in ['compiled', 'imported', 'packaged', 'runtimeValidated']))
+        self.assertFalse(output.exists())
+        self.assertFalse((self.project.parent / 'Saved').exists())
+
+    def test_mac_bundle_metadata_and_native_header_are_required(self):
+        package, binary, data = self.package_fixture('Mac')
+        info = binary.parent.parent / 'Info.plist'
+        for name in ['', '../escape', '/outside', 'folder\\outside', ':bad', None]:
+            with self.subTest(name=name):
+                info.write_bytes(plistlib.dumps({} if name is None else {'CFBundleExecutable': name}))
+                with self.assertRaisesRegex(RuntimeError, 'CFBundleExecutable'):
+                    launcher.package_files(package, 'Mac')
+        for body in [b'not a plist', b'<?xml version="1.0"?><plist><dict>']:
+            info.write_bytes(body)
+            with self.assertRaisesRegex(RuntimeError, 'Info.plist'):
+                launcher.package_files(package, 'Mac')
+        info.unlink()
+        with self.assertRaisesRegex(RuntimeError, 'Info.plist'):
+            launcher.package_files(package, 'Mac')
+        info.write_bytes(plistlib.dumps({'CFBundleExecutable': binary.name}))
+        for magic in [b'\x7fELF', b'MZxx', b'#!/b', b'']:
+            with self.subTest(magic=magic):
+                binary.write_bytes(magic)
+                with self.assertRaisesRegex(RuntimeError, 'cabecera'):
+                    launcher.package_files(package, 'Mac')
+        binary.write_bytes(b'\xca\xfe\xba\xbe' + b'\0' * 60)
+        self.assertIn(binary, launcher.package_files(package, 'Mac'))  # Header only, not universal-slice validation.
+        binary.chmod(0o644)
+        with self.assertRaisesRegex(RuntimeError, 'Falta ejecutable'):
+            launcher.package_files(package, 'Mac')
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX symlink fixture')
+    def test_mac_bundle_cannot_reference_an_executable_outside_its_app(self):
+        package, binary, data = self.package_fixture('Mac')
+        outside = self.root / 'outside-macho'
+        binary.rename(outside)
+        binary.symlink_to(outside)
+        with self.assertRaisesRegex(RuntimeError, 'sale de su paquete'):
+            launcher.package_files(package, 'Mac')
+
+    def test_mac_package_inventory_requires_all_iostore_data(self):
+        package, binary, data = self.package_fixture('Mac')
+        report = {'target': 'Mac', 'compiled': True, 'imported': True, 'packaged': True,
+                  'files': [p.relative_to(package).as_posix() for p in launcher.package_files(package, 'Mac')]}
+        (package / 'neiva-build-report.json').write_text(json.dumps(report))
+        self.assertEqual(launcher.verify_package(package, 'Mac'), report)
+        for file in data.values():
+            original = file.read_bytes()
+            file.write_bytes(b'')
+            with self.assertRaises(RuntimeError):
+                launcher.verify_package(package, 'Mac')
+            file.write_bytes(original)
 
     def test_empty_or_non_native_binaries_are_not_downloadable_builds(self):
         package, binary, data = self.package_fixture()
