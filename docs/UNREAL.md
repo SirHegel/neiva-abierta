@@ -2,80 +2,181 @@
 
 El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, compilado con **Unreal Engine 5.5.4**. Incluye código C++ original, personaje anónimo en tercera persona, coche arcade conducible, peatones que recorren caminos OSM, colores de ropa persistentes, colisiones, calles y edificios procedurales a partir del mismo JSON que usa la web. Un estudio ficticio de **6 × 4 m, altura 3,5 m** permite abrir un correo a `alvarezruizj289@gmail.com` al acercarse y pulsar **E**. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
 
-**Estado comprobado el 7 de septiembre de 2026:** Unreal Engine 5.5.4 oficial
-está instalado en Linux. La compilación C++ y la importación de activos pasaron
-sus comprobaciones en el motor real. El informe local
-`artifacts/unreal-native/first-native-20260907T162729Z/import-03-report.json`
-registra `compiled: true`, `imported: true` y cero errores. La partida de
-desarrollo con `UnrealEditor -game` cargó **35.873/35.873 edificios** bajo Xvfb,
-con Vulkan SM6 y NVIDIA RTX 4050 Laptop. La prueba `editor-game-05.log` confirmó
-suelo transitable, entrada al coche, avance y salida después de frenar.
-Pixel Streaming recibió vídeo VP8 a 1280 × 720: 557 cuadros decodificados en
-18,5574 s, unos 30,015 FPS recibidos. Son estadísticas de recepción de una
-sesión local breve, no FPS de render ni rendimiento máximo del motor.
-El paquete Linux está en construcción; su ejecución independiente y la
-verificación completa de interacciones siguen pendientes. La
-[evidencia de transmisión y conducción](DISTRIBUCION.md#estado-comprobado)
-identifica informes, log y grabación local.
+**Alfa Linux 0.1.0 disponible:**
+[descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha).
+El 7 de septiembre de 2026 pasaron la compilación C++, la importación y el
+empaquetado UAT real con UE 5.5.4. El ejecutable independiente abrió con Vulkan
+SM6 en una NVIDIA RTX 4050 Laptop y cargó **35.873/35.873 edificios**.
+Se comprobaron suelo estable, cámara, pausa/reanudación, entrada al coche,
+avance de unos 4,8 m, freno y salida.
+
+Pixel Streaming recibió 558 cuadros VP8 a 1280 × 720 durante 18,6192 s,
+**29,969 FPS recibidos**, en una partida del paquete. Es vídeo decodificado de
+una sesión breve, no un benchmark del render ni rendimiento garantizado.
+La [evidencia del paquete](DISTRIBUCION.md#estado-comprobado) distingue estas
+pruebas de las anteriores del editor y de la comprobación de la copia descargada
+públicamente. Los avisos VSM pueden reaparecer al conducir: el perfil de sombras
+del lanzador reduce resolución, pero no se considera una solución completa.
 
 Los recursos importados incluyen el humano con esqueleto y animaciones,
 el coche, materiales PBR, fachadas generadas y las mallas de Catedral,
 Palacio de Justicia, Hotel Neiva Plaza y Colonial. Las fachadas genéricas siguen
 siendo interpretaciones, sin inventario fotográfico completo de la ciudad.
 El [flujo de construcción y distribución](DISTRIBUCION.md) distingue las
-comprobaciones del editor de la entrega empaquetada y su transmisión.
+comprobaciones del editor, el paquete independiente y la descarga pública.
 
 ## Abrir y jugar
 
-El flujo automatizado comprueba la instalación, prepara datos, compila el
-editor, importa y empaqueta:
+Descarga la [alfa Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha),
+extrae el archivo completo y ejecuta desde su carpeta:
+
+```sh
+./Jugar-Neiva.sh
+```
+
+Conserva `Linux/` junto al lanzador. El paquete incluye el runtime y no requiere
+instalar el editor. Necesita GPU/controlador Vulkan; no hay requisitos mínimos
+establecidos ni binarios Windows o móviles en esta descarga. Las licencias y
+los metadatos cartográficos están legibles en `Licenses/` y `Datos/`.
+
+| Acción | Control |
+| --- | --- |
+| Caminar / conducir | WASD o flechas |
+| Mirar a pie o en el coche | Ratón |
+| Correr | Shift izquierdo |
+| Saltar / frenar el coche | Espacio |
+| Entrar o salir del coche / contactar desde el estudio | E |
+| Volver al punto de inicio / recuperar coche | R |
+| Pausar, continuar y acceder a Salir | Esc / P |
+| Cambiar color del polo / de la bermuda | C / V y botones del HUD |
+| Activar joysticks virtuales | T |
+| Mando | Palanca izquierda mover, derecha mirar, botón inferior saltar, izquierdo interactuar |
+
+Los controles de teclado y ratón anteriores corresponden al juego nativo. Los
+controles de mando y táctiles están configurados en el código, pero no se han
+validado en un dispositivo final. El HUD incluye botones táctiles para interactuar y cambiar los dos colores de ropa. El mapeo de joysticks virtuales del motor se activa automáticamente en plataformas móviles y con T en escritorio. **Un paquete móvil nativo de Unreal no está compilado ni validado**; la vía prevista para teléfonos es recibir vídeo de Unreal mediante Pixel Streaming. Lumen está configurado para escritorio y no debe asumirse compatible con un móvil nativo.
+
+## Compilar el proyecto
+
+Para desarrollar o crear un paquete nuevo se necesita el editor oficial
+**UE 5.5.4**, su compilador C++ compatible y Python 3. El motor se obtiene de
+Epic y no está incluido en la licencia MIT del repositorio. El comando
+`scripts/unreal.py package` prepara los datos, compila el editor, ejecuta
+**sólo `bootstrap_editor.py`** y después UAT. **No descarga ni importa el árbol
+y banco CC0 ni ejecuta el horneado de hitos.** Desde un clon limpio, completar
+primero el orden siguiente para incluir la mejora visual 0.2 en desarrollo.
+Estos pasos no cambian el contenido de la alfa 0.1.0 ya publicada.
+
+### Orden completo desde un clon limpio
+
+Ejecutar los comandos de terminal desde la raíz del repositorio. Los `.uasset`,
+mapas binarios, informes y datos preparados están excluidos de Git: hay que
+generarlos en el equipo de construcción y conservarlos hasta terminar el cook.
+
+1. Comprobar el motor y recuperar los originales CC0 fijados por URL, tamaño y
+   SHA-256 en `SourceArt/visual/manifest.json`. La descarga son unos 257 MB;
+   `--prepare-only` prepara geometría e información de importación sin arrancar
+   Unreal y no acredita que existan recursos importados.
+
+   ```sh
+   python3 scripts/unreal.py doctor --engine /ruta/UE_5.5
+   python3 unreal/NeivaAbierta/Scripts/download_visual_assets.py
+   python3 unreal/NeivaAbierta/Scripts/download_visual_assets.py --verify-only
+   python3 unreal/NeivaAbierta/Scripts/import_visual_assets.py --prepare-only
+   ```
+
+   El directorio predeterminado es `artifacts/visual-upgrade/assets`. Si se usa
+   `--destination` en la descarga, indicar ese mismo directorio mediante
+   `NEIVA_VISUAL_ASSET_DIR` sólo a los procesos de preparación/importación.
+   Los modelos y texturas base están en `public/` dentro del repositorio.
+   El JSON de hitos ya está versionado; para regenerarlo después de modificar
+   sus generadores, usar Node 24, `npm ci` y
+   `node scripts/export-unreal-landmarks.mjs` **antes del paso siguiente**.
+
+2. Preparar datos y licencias, compilar el target Editor e importar el arte base:
+
+   ```sh
+   python3 scripts/unreal.py import --engine /ruta/UE_5.5 --gpu nvidia \
+     --virtual-display --max-build-actions 2 --shader-workers 2
+   ```
+
+   El launcher ejecuta `prepare_project.py`, `asset_plan.py --check`, Build.sh
+   y `bootstrap_editor.py` en el editor completo. El bootstrap importa el
+   personaje, coche y materiales, asigna los materiales de piel/ropa y crea
+   `/Game/Maps/Neiva` si falta. Debe terminar correctamente con un informe nuevo
+   en `unreal/NeivaAbierta/Saved/NeivaAssets-import.json`. No hace falta ejecutar
+   los scripts históricos `repair_*` para una importación nueva.
+
+3. Abrir `unreal/NeivaAbierta/NeivaAbierta.uproject` en **una sola sesión del
+   editor completo**, sin partida ni cook concurrentes. Con los plugins del
+   proyecto habilitados, incluidos Interchange, Python, Editor Scripting
+   Utilities y GeometryScripting, ejecutar mediante **Tools → Execute Python
+   Script**, en este orden y esperando que termine cada uno:
+
+   - `unreal/NeivaAbierta/Scripts/import_visual_assets.py`: comprobar un informe
+     nuevo `Saved/NeivaVisual-import.json` con `status: "PASS"` y
+     `engineImportPassed: true`. Importa y guarda árbol, banco y materiales
+     bajo `/Game/NeivaAssets/Visual`.
+   - `unreal/NeivaAbierta/Scripts/bake_landmarks_editor.py`: no establecer
+     `NEIVA_BAKE_MESHES`, para hornear **todas** las secciones. Comprobar el
+     informe nuevo de `Saved/NeivaBake/` y
+     `Content/Data/neiva-landmarks-baked.json`: ambos deben indicar
+     `complete: true`, `assetCompilationBarrierCompleted: true` y el hash del
+     `Content/Data/neiva-landmarks.json` actual. Un plan offline o una prueba
+     parcial no activa el conjunto completo.
+
+   Los dos scripts también admiten `-ExecutePythonScript=<ruta absoluta>` en
+   procesos separados del editor completo; el launcher actual no expone una
+   opción para ejecutarlos. En Linux, las sesiones automatizadas deben usar
+   Xvfb privado y los límites de concurrencia locales indicados abajo. No usar
+   `-NullRHI` ni el commandlet Python para sustituir estas importaciones.
+   Véanse [importación CC0](../unreal/NeivaAbierta/Scripts/import_visual_assets.md)
+   y [horneado](../unreal/NeivaAbierta/Scripts/BAKE-LANDMARKS.md).
+
+4. Reabrir los recursos guardados y comprobar `/Game/Maps/Neiva` en una partida:
+   personaje vestido, árboles y bancos, hotel/catedral, materiales, colisiones
+   y controles. El log debe confirmar la carga de hitos con hash válido y las
+   instancias de vegetación. Con la fuente revisada actualmente son 150 partes,
+   149 Nanite, 71.311 triángulos, 15 árboles y seis bancos; contrastar siempre
+   con los informes de la fuente que se está construyendo. Cerrar esa sesión
+   antes de empaquetar.
+
+5. Conservar `Content/NeivaAssets`, `Content/Maps` y el manifiesto de horneado
+   generados, y crear el paquete:
 
 ```sh
 python3 scripts/unreal.py package --engine /ruta/UE_5.5 --gpu nvidia \
   --virtual-display --max-build-actions 2 --shader-workers 2 --cook-processes 1
 ```
 
-`doctor` informa de prerrequisitos; `import` permite comprobar la importación
-sin empaquetar; `play --virtual-display` inicia la partida de desarrollo bajo
-Xvfb privado en Linux. Los límites anteriores permiten dos acciones UBT,
-hasta dos workers locales de shaders y un proceso de cook. No limitan la RAM;
-el número efectivo de workers se comprueba en el log. Los pasos manuales son:
+El comando repite preparación, compilación e importación base antes de UAT;
+conserva los recursos adicionales ya generados. No sustituye los pasos 1–4.
+Si cambia el JSON de hitos después del horneado, hay que repetirlo: el runtime
+rechaza un manifiesto de otra fuente y vuelve a la geometría procedural.
+Abrir después el **ejecutable empaquetado**, comprobar su log y conservar
+capturas; el éxito del editor o de UAT por sí solo no valida esa partida.
 
-1. En otro equipo, instala Unreal Engine 5.5.4 y su compilador C++ compatible. El motor se obtiene de Epic y no está incluido en la licencia MIT del repositorio.
-2. Desde la raíz del repositorio, copia y valida el mapa:
-
-   ```bash
-   python3 unreal/NeivaAbierta/Scripts/prepare_project.py
-   python3 unreal/NeivaAbierta/Scripts/asset_plan.py --check
-   ```
-
-3. Genera los archivos del proyecto con la integración de Unreal de tu sistema y compila el target **NeivaAbiertaEditor / Development Editor**. En Linux con una instalación del motor, el comando equivalente es:
-
-   ```bash
-   "$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" NeivaAbiertaEditor Linux Development \
-     "$PWD/unreal/NeivaAbierta/NeivaAbierta.uproject" -WaitMutex -MaxParallelActions=2
-   ```
-
-4. Abre el `.uproject`, con los plugins Interchange, Interchange Editor, Python y Editor Scripting Utilities disponibles para UE 5.5. En la primera apertura todavía no existe el mapa binario `/Game/Maps/Neiva`. Desde **Tools → Execute Python Script**, ejecuta `Scripts/bootstrap_editor.py`: valida los archivos antes de modificar assets, importa materiales/modelos y crea el mapa únicamente si falta. Guarda tu nivel actual antes de ejecutar el script.
-5. Abre `/Game/Maps/Neiva` y pulsa **Play**. El GameMode genera la ciudad y los actores cargan el arte en `BeginPlay`. Comprueba escala, orientación, suelo, materiales y reproducción del esqueleto. Si falta un recurso, el log da su ruta; no lo sustituye por un avatar/coche de bloques.
-
-| Acción | Control |
-| --- | --- |
-| Caminar / conducir | WASD o flechas |
-| Mirar a pie o en el coche | Ratón |
-| Correr | Shift |
-| Saltar / frenar el coche | Espacio |
-| Entrar o salir del coche / contactar desde el estudio | E |
-| Volver al punto de inicio / recuperar coche | R |
-| Cambiar color del polo / de la bermuda | C / V y botones del HUD |
-| Activar joysticks virtuales | T |
-| Mando | Palanca izquierda mover, derecha mirar, botón inferior saltar, izquierdo interactuar |
-
-El HUD incluye botones táctiles para interactuar y cambiar los dos colores de ropa. El mapeo de joysticks virtuales del motor se activa automáticamente en plataformas móviles y con T en escritorio. **Un paquete móvil nativo de Unreal no está compilado ni validado**; la vía prevista para teléfonos es recibir vídeo de Unreal mediante Pixel Streaming. Lumen está configurado para escritorio y no debe asumirse compatible con un móvil nativo.
+Los ejemplos usan Linux con NVIDIA y `xvfb-run` disponible. `--virtual-display`
+crea un Xvfb privado; los límites permiten dos acciones UBT, hasta dos workers
+locales de shaders y un proceso de cook. No limitan la RAM; el número efectivo
+de workers se comprueba en el log. `play --virtual-display` inicia una partida
+de desarrollo. El motor, compilador y opciones de plataforma deben adaptarse
+en Windows; los controles táctiles no equivalen a un paquete móvil validado.
 
 ## Datos y límites del modelo
 
 `Scripts/prepare_project.py` valida el mapa, aplica primero `neiva-corrections.json` y después `neiva-survey.json`, y escribe el resultado en `Content/Data/neiva.json`. Conserva los metadatos de procedencia de cada corrección. También valida y copia `SourceArt/landmarks/neiva-landmarks.json` a `Content/Data/`. La configuración de empaquetado incluye ese directorio como UFS y los materiales generados. `Content/Data/Licenses` recibe las atribuciones, licencias y manifiestos de recursos, con las modificaciones específicas del importador nativo. No se distribuyen copias innecesarias del mapa en Git. Para actualizar la cartografía, ejecuta primero el proceso de actualización descrito en la documentación de datos del repositorio y repite la copia.
+
+La preparación genera también `Content/Data/neiva-environment.json` con las
+posiciones estimadas de árboles y bancos, y copia `SourceArt/visual/manifest.json`
+y `README.md` a `Content/Data/Licenses/visual/`. Estos archivos identifican los
+originales CC0, autores, URLs, tamaños y SHA-256. `DefaultGame.ini` incluye
+`/Game/NeivaAssets` en `DirectoriesToAlwaysCook` y `Data` en
+`DirectoriesToAlwaysStageAsUFS`: cubren tanto los recursos visuales como sus
+licencias y el manifiesto de horneado. La distribución externa debe conservar
+también el subdirectorio `visual/` al copiar `Content/Data/Licenses` a
+`Licenses/`; no copiar sólo los archivos de primer nivel. Esta revisión del
+flujo no acredita un nuevo paquete 0.2 publicado.
 
 El JSON expresa metros: X hacia el este, Z hacia el sur. El código convierte a centímetros de Unreal con **X = x × 100, Y = −z × 100, Z = altura × 100**. Lee `meta.spawn`, `meta.car`, `meta.carYaw` y `meta.studio` para mantener las mismas posiciones de juego que la web.
 
@@ -85,7 +186,9 @@ Las huellas se extruyen y sus contornos cóncavos se triangulan por recorte de o
 
 Las **22 cubiertas OSM abiertas** se construyen como losa con grosor y columnas, sin muros que cierren el paso. Los soportes y sus alturas son estimados y se identifican así en los datos. Los tramos de vía confirmados como adoquinados usan el material de pavimento.
 
-La exportación detallada del centro contiene **45 mallas, 177.774 vértices y 110.618 triángulos**, más tres rótulos convertidos a `TextRenderComponent`. Las posiciones y normales originales se conservan al convertir los ejes; las UV pasan a U=u/tileU y V=1−v/tileV para adaptar el origen vertical de las imágenes de Three a Unreal; los cuatro IDs sólo sustituyen sus extrusiones después de validar todo el conjunto y localizar los materiales. El archivo y sus fuentes están en [SourceArt/landmarks](../unreal/NeivaAbierta/SourceArt/landmarks/README.md). El Palacio conserva el modelo bajo revisado, sin torre inventada. La geometría de plaza está incluida; los árboles y chorros animados del cliente anterior no se exportan.
+La exportación detallada revisada del centro contiene **47 secciones, 119.886 vértices y 71.311 triángulos**, más tres rótulos convertidos a `TextRenderComponent`. Las posiciones y normales originales se conservan al convertir los ejes; las UV pasan a U=u/tileU y V=1−v/tileV para adaptar el origen vertical de las imágenes de Three a Unreal; los cuatro IDs sólo sustituyen sus extrusiones después de validar todo el conjunto y localizar los materiales. El archivo y sus fuentes están en [SourceArt/landmarks](../unreal/NeivaAbierta/SourceArt/landmarks/README.md). El Palacio conserva el modelo bajo revisado, sin torre inventada. La geometría de plaza está incluida; los árboles y chorros animados del cliente anterior no se exportan.
+
+El nuevo [flujo de horneado](../unreal/NeivaAbierta/Scripts/BAKE-LANDMARKS.md) **pasó en Unreal 5.5.4**: genera 150 recursos `StaticMesh`, de los cuales 149 usan Nanite y uno representa agua, conservando todos los triángulos. Una partida posterior del editor confirmó su carga desde disco, los tres rótulos y el hash de la fuente. Las normales, UV, colores y parámetros PBR se conservan; la compilación offline genera campos de distancia y tarjetas Lumen. El manifiesto sólo se publica después de completar las colas de compilación y guardar todos los recursos. El estudio no se duplica; si falta algún recurso o cambia la fuente, se conserva la ruta procedural. **Este cambio está en validación local y aún no forma parte del alfa público anterior.**
 
 ### Importación de toda la ciudad y rendimiento
 
@@ -96,15 +199,25 @@ La división en sectores y las cuentas del archivo exportado son datos estructur
 Las caras procedurales usan el orden horario que requiere Unreal; las normales
 de iluminación conservan su orientación exterior. Esto corrige las superficies
 de colisión invertidas de la ciudad y de los hitos importados. La corrección
-pasó la compilación C++, las pruebas geométricas y la caminata/conducción de la
-partida `game05`. Las tangentes se calculan por índice en tiempo lineal, sin
-fusionar bordes ni recalcular las normales originales. En esa partida apareció
-una advertencia de cola de sombras Virtual Shadow Maps para mallas sin Nanite;
-su coste y la calidad visual requieren todavía revisión.
+pasó la compilación C++, las pruebas geométricas y las partidas del editor y del
+paquete independiente. Las tangentes se calculan por índice en tiempo lineal,
+sin fusionar bordes ni recalcular las normales originales.
+
+El wrapper `Jugar-Neiva.sh` pasa los dos bias direccionales de Virtual Shadow Maps
+a **0.5** mediante argumentos INI del proceso. Reduce la resolución de sombras
+para disminuir su trabajo sobre la geometría procedural. Los avisos de cola VSM
+siguen visibles en capturas durante la conducción de la prueba B; no se dan por
+resueltos porque sólo aparezca una entrada de arranque en el log. El nuevo
+horneado divide los conjuntos densos de los hitos y permite que sus recursos
+usen Nanite; las losas y cornisas largas conservan sus límites reales. Los
+sectores procedurales del resto de la ciudad siguen produciendo avisos VSM en
+la nueva partida de revisión: no se da el problema por resuelto. La comparación
+visual actual evalúa también iluminación sin el relleno directo aproximado;
+hornear los cuatro hitos no sustituye la validación de toda la iluminación.
 
 Para una vista previa más ligera, el actor `NeivaCity` expone `BuildingRadiusMeters`: **0 carga todo**. También se puede iniciar el juego/editor con `-NeivaBuildingRadius=1500` para seleccionar edificios cuyo centro está a 1.500 m del punto inicial. El HUD muestra el número cargado frente al total y el radio activo. Ese límite permanece fijo durante la sesión: **no carga sectores nuevos al caminar**. Los cuatro hitos detallados y el resto de superficies geográficas permanecen cargados. `BuildingTileSizeMeters` permite variar el tamaño de sector entre 100 y 2.000 m. Estos ajustes requieren verificación de rendimiento en el equipo final.
 
-El coche usa un integrador arcade de paso fijo de 1/60 s, 20 m/s máximos hacia delante y 4,5 m/s marcha atrás; el reloj conserva el tiempo pendiente ante un frame largo. La colisión usa barrido de traslación de una caja invisible. Antes de girar se consulta el solapamiento de la rotación candidata; no se afirma que Unreal haga un barrido de rotación. Al salir se prueban ambos lados, suelo transitable y espacio para la cápsula; una salida bloqueada conserva al jugador dentro. El control cambia mediante `Possess` y el personaje queda detenido, oculto y sin colisión durante la conducción. El render usa el coche importado completo; sus ruedas quedan unidas a la malla y no giran independientemente en esta preparación Unreal. El humano usa el rig y las animaciones originales de Rocketbox, con bloqueo de raíz para que el movimiento proceda de CharacterMovement. Los cambios entre idle, walk y run son directos: quedan pendientes BlendSpace, IK y validación de pisada. La arquitectura fuera de los cuatro hitos continúa basada en huellas extruidas y necesita revisión artística y medición para una ciudad fotorealista. Activar Lumen por sí solo no produce fotorealismo: los componentes procedurales tampoco equivalen a mallas estáticas horneadas con Nanite y campos de distancia. Para producción, convierte sectores validados a Static Mesh, añade LOD/HLOD y mide iluminación y rendimiento sobre hardware real.
+El coche usa un integrador arcade de paso fijo de 1/60 s, 20 m/s máximos hacia delante y 4,5 m/s marcha atrás; el reloj conserva el tiempo pendiente ante un frame largo. La colisión usa barrido de traslación de una caja invisible. Antes de girar se consulta el solapamiento de la rotación candidata; no se afirma que Unreal haga un barrido de rotación. Al salir se prueban ambos lados, suelo transitable y espacio para la cápsula; una salida bloqueada conserva al jugador dentro. El control cambia mediante `Possess` y el personaje queda detenido, oculto y sin colisión durante la conducción. El render usa el coche importado completo; sus ruedas quedan unidas a la malla y no giran independientemente en esta alfa Unreal. El humano usa el rig y las animaciones originales de Rocketbox, con bloqueo de raíz para que el movimiento proceda de CharacterMovement. Los cambios entre idle, walk y run son directos: quedan pendientes BlendSpace, IK y validación de pisada. La arquitectura fuera de los cuatro hitos continúa basada en huellas extruidas y necesita revisión artística y medición para una ciudad fotorealista. Activar Lumen por sí solo no produce fotorealismo: los componentes procedurales tampoco equivalen a mallas estáticas horneadas con Nanite y campos de distancia. Para producción, convierte sectores validados a Static Mesh, añade LOD/HLOD y mide iluminación y rendimiento sobre hardware real.
 
 ## Peatones y personalización
 
@@ -128,7 +241,7 @@ originales para Unreal; las variantes WebP se reservan al cliente web.
 | `textures/*_{color,normal,arm}_1k.jpg` | `/Game/NeivaAssets/Materials/M_*` | Asfalto, yeso, ladrillo, pavimento, cubierta y terreno |
 | `facades/neiva-residential.png` | Material `M_Facade`, atlas de 16 × 6,4 m | Fachadas generadas para volúmenes de hasta 6,4 m |
 | `facades/neiva-upper.png` | Material `M_UpperFacade`, atlas de 9,6 × 6,4 m | Fachadas generadas de volúmenes más altos |
-| `textures/sunny_sky_2k.hdr` | `/Game/NeivaAssets/Environment/T_sunny_sky_2k` | Cubemap del SkyLight |
+| `textures/sunny_sky_2k.hdr` | `/Game/NeivaAssets/Environment/T_sunny_sky_2k` | HDR importado; la partida actual captura SkyAtmosphere para el SkyLight |
 
 Los nombres y dimensiones del atlas son convenciones artísticas del juego.
 La procedencia está en [FACHADAS-GENERADAS.md](FACHADAS-GENERADAS.md),
@@ -150,7 +263,7 @@ según la normal dominante; las tangentes se calculan antes de cargar la malla.
 Muros y cubiertas tienen secciones/materiales separados. Los normales y ARM
 de yeso acompañan al color del atlas generado como acabado representativo.
 El agua sigue siendo una superficie opaca simple, sin simulación volumétrica.
-Los hitos usan materiales dedicados `M_Landmark_*`: color fotográfico multiplicado por el color lineal exportado, normales y ARM, UV escalada una sola vez por `uvTileMeters`. Los materiales de la ciudad genérica conservan sus atlas. Los materiales sólidos del centro conservan color, rugosidad y metalicidad. Esta primera preparación usa superficies opacas de doble cara; el vidrio y el agua no reproducen transmisión óptica ni refracción, y requieren revisión artística en el editor.
+Los hitos usan materiales dedicados `M_Landmark_*`: color fotográfico multiplicado por el color lineal exportado, normales y ARM, UV escalada una sola vez por `uvTileMeters`. Los materiales de la ciudad genérica conservan sus atlas. Los materiales sólidos del centro conservan color, rugosidad y metalicidad. Esta alfa usa superficies opacas de doble cara; el vidrio y el agua no reproducen transmisión óptica ni refracción, y requieren revisión artística en el editor.
 
 `[/Script/NeivaAbierta.NeivaVisualSettings]` en `Config/DefaultGame.ini` permite
 cambiar las referencias del personaje, coche, cubemap y animaciones. Los campos
@@ -195,12 +308,12 @@ El script es una vista previa geográfica separada. Cesium usa por defecto ejes 
 
 ## Publicación Unreal y Pixel Streaming
 
-Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable Unreal no se ejecuta dentro del hosting de Vercel**. Para jugar a la versión Unreal en navegador, incluido móvil, se necesita un host con GPU que ejecute el juego y la infraestructura de Pixel Streaming. La recepción local de vídeo VP8 de la partida de desarrollo está comprobada; no hay un servicio público de streaming desplegado ni una prueba en teléfonos que acredite esta versión nativa.
+Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable Unreal no se ejecuta dentro del hosting de Vercel**. Para jugar a la versión Unreal en navegador, incluido móvil, se necesita un host con GPU que ejecute el juego y la infraestructura de Pixel Streaming. La recepción local de vídeo VP8 del paquete independiente está comprobada; no hay un servicio público de streaming desplegado ni una prueba en teléfonos que acredite esta versión nativa.
 
-1. Verifica el proyecto en Unreal y empaqueta una build Windows o Linux desde el editor.
+1. Para una sesión local Linux, usa la carpeta completa de la alfa publicada. Para otras plataformas o cambios del proyecto, compila y valida un paquete nuevo.
 2. El plugin estándar **Pixel Streaming de UE 5.5** ya está habilitado en el `.uproject`; no inicia ni contrata un servidor por sí solo. Compila y empaqueta con la instalación compatible.
 3. Despliega la infraestructura oficial de señalización y su frontend de la **misma rama de versión del motor**. Configura HTTPS, conectividad WebRTC y TURN cuando la red lo necesite.
-4. Para una sesión local Linux, prepara la infraestructura oficial y comprueba el plan. Una vez verificado el paquete, sustituye la ruta del ejemplo por su carpeta real:
+4. Prepara la infraestructura oficial y comprueba el plan. Sustituye la ruta del ejemplo por la raíz de la carpeta que contiene `Jugar-Neiva.sh`, `Linux/` y `neiva-build-report.json`:
 
    ```bash
    node scripts/pixel-streaming-local.mjs prepare
@@ -209,6 +322,11 @@ Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable U
    node scripts/pixel-streaming-local.mjs start --package /ruta/al/paquete-validado \
      --codec VP8 --virtual-display --capture-fence --decouple-framerate
    ```
+
+   El CLI valida el informe, los binarios y los datos antes de iniciar. Prefiere
+   `Jugar-Neiva.sh` en Linux cuando existe, conservando su perfil de sombras;
+   para una salida UAT sin wrapper usa `Linux/NeivaAbierta.sh`. La elección se
+   comprobó en la partida real `distribution-launch-01`.
 
    Esta configuración usa VP8 por software, ventana y pantalla Xvfb privadas de
    1280 × 720, con objetivo de 30 FPS. `--width` y `--height` ajustan ambas
@@ -220,9 +338,15 @@ Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable U
 
 5. Comprueba primero la sesión en el frontend oficial y después enlázala desde el sitio web. La resolución del stream, el bitrate y la interfaz táctil se deben probar en los dispositivos finales. `LaunchURL` se ejecuta en el servidor durante Pixel Streaming: para abrir el correo en el teléfono/navegador, el frontend necesita mostrar su propio enlace de contacto público o implementar un mensaje de interacción al cliente. El correo permanece visible en pantalla como alternativa.
 
-El flujo local, la revisión fijada de infraestructura oficial y las mediciones VP8 están en [DISTRIBUCION.md](DISTRIBUCION.md). La señalización aislada no acredita vídeo, y la prueba del editor no valida un paquete descargado: la transmisión y los controles deben repetirse con el ejecutable final. No se ha contratado alojamiento GPU ni activado servicios de Google. [Documentación oficial de Pixel Streaming](https://dev.epicgames.com/documentation/en-us/unreal-engine/pixel-streaming-in-unreal-engine), [infraestructura oficial](https://github.com/EpicGamesExt/PixelStreamingInfrastructure).
+El flujo local, la revisión fijada de infraestructura oficial y las mediciones VP8 están en [DISTRIBUCION.md](DISTRIBUCION.md). La señalización aislada no acredita vídeo; las pruebas del paquete citadas arriba incluyen proceso nativo, transmisión y controles. El estado de la copia descargada públicamente se registra por separado en esa página. No se ha contratado alojamiento GPU ni activado servicios de Google. [Documentación oficial de Pixel Streaming](https://dev.epicgames.com/documentation/en-us/unreal-engine/pixel-streaming-in-unreal-engine), [infraestructura oficial](https://github.com/EpicGamesExt/PixelStreamingInfrastructure).
 
 ## Validación disponible
+
+La revisión de código de esta entrega pasó **178 pruebas: 99 Node, 57 Python
+de raíz y 22 Python de scripts Unreal**. Por separado, se completaron UHT,
+compilación C++, importación y UAT, y se probaron partidas del ejecutable Linux.
+El [registro del paquete](../data/verification/unreal-package-log.txt) conserva
+evidencia de esas ejecuciones; las pruebas portables no las sustituyen.
 
 ```bash
 python3 unreal/NeivaAbierta/Scripts/prepare_project.py --check

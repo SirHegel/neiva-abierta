@@ -23,20 +23,44 @@ const {values} = parseArgs({options: {
   controls: {type: 'boolean', default: false},
   fixture: {type: 'boolean', default: false},
   record: {type: 'boolean', default: false},
+  'record-bitrate': {type: 'string', default: '2000000'},
   browser: {type: 'string', default: 'firefox'},
   'native-state': {type: 'boolean', default: false},
+  'look-yaw': {type: 'string'},
+  'look-pitch': {type: 'string', default: '-12'},
+  profile: {type: 'boolean', default: false},
+  'frame-limit': {type: 'string'},
+  'profile-after-disconnect': {type: 'boolean', default: false},
+  'quit-game': {type: 'boolean', default: false},
 }});
 if (!['firefox', 'chrome'].includes(values.browser)) throw Error('browser must be firefox or chrome.');
 if (values['native-state'] && values.fixture) throw Error('--native-state requires the native game, not a fixture.');
+if (values['quit-game'] && (values.fixture || values.controls || values['profile-after-disconnect']))
+  throw Error('--quit-game requires a native game with no pause or disconnected profiling audit.');
+if (values.profile && (values.fixture || values.controls)) throw Error('--profile requires native gameplay without the pause audit.');
+const frameLimit = values['frame-limit'] === undefined ? null : Number(values['frame-limit']);
+if (frameLimit !== null && (!values.profile || !Number.isInteger(frameLimit) || frameLimit < 15 || frameLimit > 120))
+  throw Error('--frame-limit requires --profile and a limit from 15 to 120 FPS.');
+if (values['profile-after-disconnect'] && (values.fixture || values.profile || values.controls || values.record))
+  throw Error('--profile-after-disconnect requires native gameplay without another profile or recording.');
 const address = new URL(values.url);
 if (address.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(address.hostname)
     || address.username || address.password)
   throw Error('Use the local HTTP player without credentials.');
 const seconds = Number(values.seconds), timeout = Number(values.timeout);
+const recordBitrate = Number(values['record-bitrate']);
+if (!Number.isInteger(recordBitrate) || recordBitrate < 1000000 || recordBitrate > 8000000)
+  throw Error('--record-bitrate must be 1000000–8000000 bits per second.');
 if (!Number.isInteger(seconds) || seconds < 3 || seconds > 60 ||
     !Number.isInteger(timeout) || timeout < 5 || timeout > 300)
   throw Error('seconds must be 3–60; timeout must be 5–300.');
 validateInteractionModes({...values, seconds});
+const lookYaw = values['look-yaw'] === undefined ? null : Number(values['look-yaw']);
+const lookPitch = Number(values['look-pitch']);
+if (lookYaw !== null && (!Number.isFinite(lookYaw) || Math.abs(lookYaw) > 180 ||
+    !Number.isFinite(lookPitch) || lookPitch < -70 || lookPitch > 60 ||
+    values.controls || values.drive || values.exercise || values.fixture))
+  throw Error('--look-yaw requires a native audit game, yaw -180..180, pitch -70..60 and no other input mode.');
 for (const flag of ['AutoConnect', 'AutoPlayVideo', 'StartVideoMuted']) address.searchParams.set(flag, 'true');
 // Epic's locked mouse mode needs a click to acquire pointer lock. This explicit
 // route audits free mouse movement with no button held using its hovering mode.
@@ -67,6 +91,26 @@ const report = {schema: 1, observedAtUtc: new Date().toISOString(), videoVerifie
     controlsMouseModeRequested: 'HoveringMouse'} : {}),
   ...(values.drive ? {driveAssumption: 'Operator-selected fresh game at mapped spawn and control yaw 20 degrees; not verified by this observer.'} : {})};
 
+// Preserve the decoded native video at its intrinsic resolution. A page capture
+// can shrink a 1080p stream into a 720p viewport and includes the browser player
+// controls. This PNG copies the actual video frame without resizing or retouching.
+async function captureNativeFrame(name) {
+  const frame = await page.evaluate(() => {
+    const video = document.querySelector('video');
+    if (!video || !video.videoWidth || !video.videoHeight) throw Error('No decoded video frame to capture.');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    return {width: canvas.width, height: canvas.height, data: canvas.toDataURL('image/png').split(',')[1]};
+  });
+  const bytes = Buffer.from(frame.data, 'base64');
+  if (bytes.length > 32 * 1024 * 1024) throw Error('Native frame exceeds the 32 MiB bound.');
+  await writeFile(join(output, `${name}-native.png`), bytes);
+  (report.nativeFrames ||= []).push({name, width: frame.width, height: frame.height,
+    bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex'),
+    source: 'Decoded WebRTC video, original resolution, no rescaling or visual edits'});
+}
+
 async function keyDown(key) {
   abort.signal.throwIfAborted();
   heldKeys.add(key); // retain it for cleanup even if the transport rejects after delivery
@@ -95,16 +139,16 @@ async function holdKeys(keys, milliseconds, label) {
   report.inputSent.push(label);
 }
 
-async function queryNativeState(name) {
+async function queryNativeState(name, command = 'NeivaState') {
   // The operator must start with the UE console closed. Its single-line mode
   // closes after this one command; never type a second command into gameplay.
-  const query = {name, requestedAtUtc: new Date().toISOString(), commandSent: false,
+  const query = {name, command, requestedAtUtc: new Date().toISOString(), commandSent: false,
     nativeStateVerified: false, screenshot: `${name}.png`};
   (report.nativeStateQueries ||= []).push(query);
   await holdKeys(['Backquote'], 60, 'Console:open');
   await delay(250, undefined, {signal: abort.signal});
-  for (const key of 'NeivaState') await holdKeys([key], 45, `Console:key:${key}`);
-  await holdKeys(['Enter'], 60, 'Console:execute-NeivaState');
+  for (const key of command) await holdKeys([key], 45, `Console:key:${key}`);
+  await holdKeys(['Enter'], 60, 'Console:execute-' + command);
   query.commandSent = true;
   query.executedAtUtc = new Date().toISOString();
   await delay(300, undefined, {signal: abort.signal});
@@ -285,7 +329,7 @@ try {
       droppedFrames: quality.droppedVideoFrames, connection: peer.connectionState, incoming};
   });
   report.samples.push(await sample());
-  if (values.drive || values.exercise || values.controls) {
+  if (values.drive || values.exercise || values.controls || values.profile || values['profile-after-disconnect'] || values['quit-game'] || lookYaw !== null) {
     const baseline = report.samples[0], started = performance.now();
     const maxWaitMs = 8000;
     report.warmup = {passed: false, maxWaitMs, requiredNewFrames: 3,
@@ -318,7 +362,7 @@ try {
       throw Error('Native controls require Epic HoveringMouse mode. No input sent.');
   }
   if (values.record) {
-    await page.evaluate((maxBytes) => {
+    await page.evaluate(({maxBytes, videoBitrate}) => {
       const stream = document.querySelector('video')?.srcObject;
       if (!(stream instanceof MediaStream) || !stream.getVideoTracks().some(track => track.readyState === 'live'))
         throw Error('The player has no live MediaStream video to record.');
@@ -326,7 +370,7 @@ try {
       const codecs = stream.getAudioTracks().length ? 'vp8,opus' : 'vp8';
       const mimeType = `video/webm;codecs=${codecs}`;
       if (!MediaRecorder.isTypeSupported(mimeType)) throw Error('WebM recording unsupported.');
-      const recorder = new MediaRecorder(stream, {mimeType, videoBitsPerSecond: 2000000, audioBitsPerSecond: 96000});
+      const recorder = new MediaRecorder(stream, {mimeType, videoBitsPerSecond: videoBitrate, audioBitsPerSecond: 96000});
       const state = {recorder, chunks: [], bytes: 0, startedAt: performance.now(), stopped: false};
       window.__neivaStreamObserverRecording = state;
       state.done = new Promise(resolve => {
@@ -352,11 +396,30 @@ try {
       recorder.start(500);
       // Reserve one second for the final encoder flush within the 60 s budget.
       state.timer = setTimeout(() => stop('duration-limit'), 59000);
-    }, recordingLimitBytes);
+    }, {maxBytes: recordingLimitBytes, videoBitrate: recordBitrate});
     recordingStarted = true;
     report.recordingRequested = true;
+    report.recordingVideoBitrateRequested = recordBitrate;
+  }
+  if (lookYaw !== null) {
+    await page.evaluate(() => document.querySelector('video')?.closest('[tabindex]')?.focus({preventScroll: true}));
+    await queryNativeState('review-camera', `NeivaLook ${lookYaw} ${lookPitch}`);
+    await delay(1500, undefined, {signal: abort.signal});
+    report.reviewCameraRequested = {yaw: lookYaw, pitch: lookPitch, requiresNativeAudit: true,
+      positionUnchangedByCommand: true, verified: false};
   }
   await page.screenshot({path: join(output, 'before.png')});
+  await captureNativeFrame('before');
+  if (values.profile) {
+    await page.evaluate(() => document.querySelector('video')?.closest('[tabindex]')?.focus({preventScroll: true}));
+    if (frameLimit !== null) {
+      await queryNativeState('performance-frame-limit', `t.MaxFPS ${frameLimit}`);
+      await delay(1500, undefined, {signal: abort.signal});
+      report.nativeFrameLimitRequested = frameLimit;
+    }
+    await queryNativeState('performance-start', 'CsvProfile START');
+    report.nativePerformanceRequested = true;
+  }
   if (values.exercise) {
     await page.mouse.click(640, 360);
     for (const sprint of [false, true]) {
@@ -409,6 +472,17 @@ try {
     report.samples.push(await sample());
   }
   await page.screenshot({path: join(output, 'after.png')});
+  await captureNativeFrame('after');
+  if (values.profile) {
+    await queryNativeState('performance-stop', 'CsvProfile STOP');
+    report.nativePerformanceVerified = false; // read native CSV, never infer GPU time from WebRTC FPS
+  }
+  if (values['profile-after-disconnect']) {
+    await page.evaluate(() => document.querySelector('video')?.closest('[tabindex]')?.focus({preventScroll: true}));
+    await queryNativeState('performance-without-player', 'CsvProfile FRAMES=360');
+    report.nativePerformanceAfterDisconnect = {framesRequested: 360, verified: false,
+      note: 'Native CSV continues after this owned browser closes; exclude initial connected frames when reviewing.'};
+  }
   const first = report.samples[0], last = report.samples.at(-1);
   const duration = (last.timeMs - first.timeMs) / 1000;
   // Firefox can report zero VideoPlaybackQuality frames for a live MediaStream
@@ -446,6 +520,19 @@ try {
     try { await finishRecording(); }
     catch (error) {
       report.recordingError = String(error.message).replace(/https?:\/\/[^\s"']+/g, '[player URL]').slice(0, 500);
+      process.exitCode = 1;
+    }
+  }
+  // Finish captures first, then ask the native application to release its GPU
+  // resources normally. The launcher exit code must still be checked separately.
+  if (values['quit-game'] && report.videoVerified && !report.error && !report.recordingError && !abort.signal.aborted) {
+    try {
+      await page.evaluate(() => document.querySelector('video')?.closest('[tabindex]')?.focus({preventScroll: true}));
+      await queryNativeState('native-quit', 'Quit');
+      report.nativeQuitRequested = true;
+      report.nativeExitVerified = false;
+    } catch {
+      report.nativeQuitError = 'Could not confirm delivery of the native Quit command.';
       process.exitCode = 1;
     }
   }

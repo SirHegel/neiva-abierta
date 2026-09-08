@@ -9,8 +9,10 @@ const bytes = await readFile(new URL(OUTPUT, root));
 const asset = JSON.parse(bytes);
 
 test('native landmark asset uses finite indexed geometry in world metres with normalized normals', () => {
-  assert.equal(validateExport(asset).meshes, 45);
-  assert.equal(asset.counts.triangles, 110618);
+  assert.equal(validateExport(asset).meshes, asset.meshes.length);
+  assert.ok(asset.counts.meshes <= 50, 'Landmarks stay merged by material');
+  assert.equal(asset.counts.triangles, asset.meshes.reduce((count, mesh) => count + mesh.indices.length / 3, 0));
+  assert.ok(asset.counts.triangles <= 110618, 'Refinements preserve the original triangle budget');
   assert.deepEqual(asset.origin, [-75.2809, 2.9252]);
   for (const mesh of asset.meshes) {
     assert.ok(mesh.bounds.max[0] < -800 && mesh.bounds.min[0] > -1020, 'Positions must remain in the actual central district, not at local zero');

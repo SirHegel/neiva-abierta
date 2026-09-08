@@ -1,0 +1,1131 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-09-08T05:24:21.813742+00:00",
+  "releaseCandidate": "0.2",
+  "status": "in-development-not-packaged-or-published",
+  "scope": "New visual-upgrade evidence from UnrealEditor game mode; separate from the released and downloaded alpha0.1.0 record.",
+  "previousReleaseEvidence": {
+    "path": "data/verification/unreal-native.json",
+    "sha256WhenThisManifestWasCreated": "f25d85136b957011fae8a7f3da12cf660b75d2493e8c1723e01ec62e1596c706",
+    "modifiedByThisTask": false
+  },
+  "phases": {
+    "editorCompiled": true,
+    "characterRepairPersistedAndReopened": true,
+    "visualAssetsImported": true,
+    "landmarksFullBakeCompleted": true,
+    "nativeEditorGameObserved1080p": true,
+    "nativeCsvPerformanceACollected": true,
+    "tile100RuntimeVerified": true,
+    "extraNpcRuntimeVerified": true,
+    "renderOffscreenRuntimeVerified": true,
+    "version02Packaged": false,
+    "version02PublicDownloadVerified": false,
+    "version02SiteDeployed": false,
+    "wholeCityPhysicalDimensionsVerified": false,
+    "requestedHyperrealisticQualityAchieved": false,
+    "nativeCsvPerformanceB2Collected": true,
+    "nativeCsvPerformanceB4Collected": true,
+    "nativeCsvPerformanceB4At60CapCollected": true,
+    "cleanEditorGameExitVerified": true,
+    "tile100AllCityRuntimeVerified": false,
+    "additionalNpcIndividualRoutesVerified": false
+  },
+  "engine": {
+    "version": "5.5.4-40574608+++UE5+Release-5.5",
+    "platform": "Linux x64",
+    "configuration": "Development",
+    "renderingBackend": "Vulkan SM6",
+    "nativeCaptureResolution": [
+      1920,
+      1080
+    ],
+    "streamingCodec": "VP8 software encoder",
+    "screenPercentage": 100,
+    "runtimeExecutable": "UnrealEditor",
+    "runtimeMode": "editor-game",
+    "latestVerifiedSession": "B4",
+    "displayModeObserved": "A private virtual window; B2 and B4 RenderOffScreen on an isolated virtual display.",
+    "initialSessionFrameLimit": 30,
+    "latestTestedFrameLimit": 60,
+    "streamingFrameLimit": 30,
+    "cleanExitVerified": true,
+    "nativeGamePackage": false,
+    "note": "Full session-specific settings, logs and termination evidence are preserved in runtimeSessions. A is historical; B4 is the latest completed session. The configured frame limit is not guaranteed FPS."
+  },
+  "character": {
+    "savedBindingsVerified": true,
+    "separateEditorReopenVerified": true,
+    "nativeSkinAndClothingAppearanceObserved": true,
+    "allAppearanceVariantsVerified": false,
+    "bindingAudit": {
+      "path": "artifacts/visual-upgrade/character-bindings-verified.json",
+      "bytes": 1334,
+      "sha256": "7a27c44298f52c68ad6c5d0ad7b682c4362cdde518ad6ac50528a738203498bb"
+    },
+    "auditedAtUtc": "2026-09-07T19:11:27.792863+00:00",
+    "materialSlots": [
+      {
+        "slot": "m002_body",
+        "material": "/Game/NeivaAssets/Materials/M_CharacterBody.M_CharacterBody",
+        "textureParameters": {
+          "ClothingMask": "/Game/NeivaAssets/Textures/T_rocketbox_clothing_mask.T_rocketbox_clothing_mask",
+          "Color": "/Game/NeivaAssets/Textures/T_m002_body_color.T_m002_body_color",
+          "Normal": "/Game/NeivaAssets/Textures/T_m002_body_normal.T_m002_body_normal"
+        },
+        "skeletalUsage": true
+      },
+      {
+        "slot": "m002_head",
+        "material": "/Game/NeivaAssets/Materials/M_CharacterHead.M_CharacterHead",
+        "textureParameters": {
+          "Normal": "/Game/NeivaAssets/Textures/T_m002_head_normal.T_m002_head_normal",
+          "Color": "/Game/NeivaAssets/Textures/T_m002_head_color.T_m002_head_color"
+        },
+        "skeletalUsage": true
+      },
+      {
+        "slot": "m002_opacity",
+        "material": "/Game/NeivaAssets/Materials/M_CharacterOpacity.M_CharacterOpacity",
+        "textureParameters": {
+          "Color": "/Game/NeivaAssets/Textures/T_m002_opacity_color.T_m002_opacity_color"
+        },
+        "skeletalUsage": true
+      }
+    ],
+    "scope": "Body/head/opacity use their corresponding textures and clothing mask; screenshots show clothed native character. This is not a claim of scanned likeness or complete outfit coverage."
+  },
+  "environment": {
+    "importPassed": true,
+    "importReport": {
+      "path": "artifacts/visual-upgrade/visual-import-verified.json",
+      "bytes": 1949,
+      "sha256": "8f81a715eb5bd0a132b7bbb2ba90ca4963408d8027372e964539ca66ab1c080d"
+    },
+    "importCompletedAtUtc": "2026-09-07T19:20:10.926123+00:00",
+    "treeInstancesLoaded": 15,
+    "benchInstancesLoaded": 6,
+    "importedModels": [
+      {
+        "assetId": "jacaranda_tree",
+        "nanite": true,
+        "sourceTriangles": 3863832,
+        "collisionShapeCount": 3,
+        "preparedSha256": "32d68d9342799a230bf1fa60941294be4170083e9eaf000672eb0f3fe13e482e"
+      },
+      {
+        "assetId": "modular_street_seating",
+        "nanite": true,
+        "sourceTriangles": 12500,
+        "collisionShapeCount": 1,
+        "preparedSha256": "40b2a24939000b23c6bc6fa5d33d9f2a6cacebca29941d1826235276f1dcf2d9"
+      }
+    ],
+    "placementEstimated": true,
+    "speciesVerifiedInNeiva": false,
+    "individuallySurveyed": false,
+    "photoReferenceCanopyDensityMatched": false,
+    "scope": "Photographic tree/bench source assets are instanced at interpreted locations; this is not a field inventory.",
+    "sourceAssets": [
+      {
+        "assetId": "jacaranda_tree",
+        "sourcePage": "https://polyhaven.com/a/jacaranda_tree",
+        "license": "CC0-1.0"
+      },
+      {
+        "assetId": "modular_street_seating",
+        "sourcePage": "https://polyhaven.com/a/modular_street_seating",
+        "license": "CC0-1.0"
+      }
+    ],
+    "licenseManifest": {
+      "path": "artifacts/visual-upgrade/assets/manifest.json",
+      "bytes": 1075,
+      "sha256": "86a573dc1cbebeb15ff96484ba278a3389b30273f905db18426672e1014c654f"
+    }
+  },
+  "landmarks": {
+    "sourceMeshSections": 47,
+    "sourceVertices": 119886,
+    "sourceTriangles": 71311,
+    "staticMeshParts": 150,
+    "naniteParts": 149,
+    "nonNaniteParts": 1,
+    "nativeTextLabels": 3,
+    "bakeId": "3e64021866e45f86",
+    "bakePassed": true,
+    "compilationBarrierPassed": true,
+    "runtimeSourceHashVerified": true,
+    "bakeReport": {
+      "path": "unreal/NeivaAbierta/Saved/NeivaBake/landmarks-1788809187744528403.json",
+      "bytes": 166425,
+      "sha256": "9fc7975db709e601b2d05c470f9866091bb6f032de7d60759be19f5bcc4a9222"
+    },
+    "sourceMeshExport": {
+      "path": "unreal/NeivaAbierta/SourceArt/landmarks/neiva-landmarks.json",
+      "bytes": 8951357,
+      "sha256": "93306e220a0863a274eb1992f7e4bfd8024ed493180c38015bc9cd046e4912fd"
+    },
+    "interpretedGeometry": true,
+    "newPhysicalMeasurements": 0,
+    "refinements": [
+      {
+        "id": "way/313286678",
+        "name": "Hotel Neiva Plaza",
+        "triangles": 26932,
+        "heightM": 19.8,
+        "heightEstimated": true,
+        "changes": [
+          "Two differentiated referenced fronts",
+          "Three room rows and an open upper gallery",
+          "Recessed shops/windows and a solid ochre corner",
+          "Duplicate internal cap faces removed before native bake"
+        ]
+      },
+      {
+        "id": "way/313286677",
+        "name": "Catedral Inmaculada Concepción",
+        "triangles": 15250,
+        "heightM": 33,
+        "sourceHeightTagNotPhysicalSurvey": true,
+        "worldTopM": 33.035,
+        "changes": [
+          "Lower wooden door leaves separated from upper glazing/tracery",
+          "Central decorative gable no longer seals the pointed opening",
+          "Existing long-spire silhouette and map footprint retained"
+        ]
+      }
+    ],
+    "closeFrontalNativeComparisonOfBothLandmarksComplete": false,
+    "scope": "Geometry/ray/topology tests and a native loaded-hash check passed; the two supplied views do not constitute a complete frontal visual review of both landmarks."
+  },
+  "observations": [
+    {
+      "id": "on4WtW",
+      "observedAtUtc": "2026-09-07T19:29:02.952Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-on4WtW/report.json",
+        "bytes": 22349,
+        "sha256": "4f2ed6c92246ef8144656602d319b93a1104ac78ab6c00e54eb77dfb1938fef5"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-on4WtW/before-native.png",
+          "bytes": 2910741,
+          "sha256": "eda5031c46f5140db16b5b27cf586c8c31505ae54a3a56df3d945b53f2cab59a",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded native WebRTC video, original pixels; no resizing or visual edits."
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-on4WtW/after-native.png",
+          "bytes": 2866902,
+          "sha256": "63f03b9404afba17c475380f1010a19fe3c994e435db260ac82aaffe63206910",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded native WebRTC video, original pixels; no resizing or visual edits."
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 20.225101490142695,
+      "receivedDecodedFrames": 416,
+      "observationSeconds": 20.5685,
+      "fpsBasis": "inbound-rtp framesDecoded / elapsed observation time, not the native renderer benchmark",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Paired with UnrealEditor -game launch record, engine log and NeivaState timestamps; observer alone cannot identify the engine.",
+      "recording": {
+        "path": "artifacts/unreal-native/stream-observations/observation-on4WtW/stream.webm",
+        "bytes": 3549226,
+        "sha256": "e8884509b7722377941a89c2d284d51235b50f11d185531e510fef9a75872770",
+        "mime": "video/webm;codecs=vp8",
+        "recordedIntervalMs": 24174,
+        "completedStop": true,
+        "desktopCapture": false
+      }
+    },
+    {
+      "id": "mjWR8q",
+      "observedAtUtc": "2026-09-07T19:31:14.036Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-mjWR8q/report.json",
+        "bytes": 8727,
+        "sha256": "743ffd81986d09a266be6f87471f298639d53e2fcd1b09fb632ac91eb7ec298e"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-mjWR8q/before-native.png",
+          "bytes": 3721190,
+          "sha256": "8ae53663ef3a621e8e205a8387bee8e0bd5a61573984164f27dc5dbb097071b1",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded native WebRTC video, original pixels; no resizing or visual edits."
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-mjWR8q/after-native.png",
+          "bytes": 3772251,
+          "sha256": "f897d5937da4721ec9b73932a4328ec57f9dc2dfb18213358602c11d5cb3b02a",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded native WebRTC video, original pixels; no resizing or visual edits."
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 18.78225889942232,
+      "receivedDecodedFrames": 127,
+      "observationSeconds": 6.761699999988079,
+      "fpsBasis": "inbound-rtp framesDecoded / elapsed observation time, not the native renderer benchmark",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Paired with UnrealEditor -game launch record, engine log and NeivaState timestamps; observer alone cannot identify the engine."
+    },
+    {
+      "id": "bV5OxL",
+      "session": "B2",
+      "observedAtUtc": "2026-09-08T05:10:36.281Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/report.json",
+        "bytes": 21756,
+        "sha256": "5348cefda946cc9b2ac9e5a326e0cc70f7d8d4cab363c4c8ac1276d5fa5af2e4"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/before-native.png",
+          "bytes": 2770360,
+          "sha256": "47b3d78950d1ef9bc096d44c99f2404f5d9e3e9c40807a951483fa171e541207",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/after-native.png",
+          "bytes": 2812478,
+          "sha256": "ae95447dc8150c91d855da25f61794c26b7ab356c8e7b10c676b9338afbe0385",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 29.635757561011218,
+      "receivedDecodedFrames": 609,
+      "observationSeconds": 20.5495,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Matched to session launch record, native log, NeivaState/CSV commands; observer alone does not identify Unreal or prove gameplay.",
+      "recording": null,
+      "nativeGameplayLogCrossCheckPassed": true,
+      "driveScreenshots": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/car-enter.png",
+          "bytes": 1017082,
+          "sha256": "9bda96cc16ae83217321c379f7c1b685c3dd5e45060cdd2ed52e5d040d7671f4"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/car-drive.png",
+          "bytes": 1125602,
+          "sha256": "2961cdd2a6fb0e624277d2a9b078a36ee74ba4c7d1a5415ed921c3a3d7867091"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-bV5OxL/car-exit.png",
+          "bytes": 768803,
+          "sha256": "08b209250f80d76ea564872f0ba0bba0648b9543c72b894462405fa147a12681"
+        }
+      ]
+    },
+    {
+      "id": "yxNIeO",
+      "session": "B4",
+      "observedAtUtc": "2026-09-08T05:17:16.590Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-yxNIeO/report.json",
+        "bytes": 21181,
+        "sha256": "02f5ec92b2b74ce9122a40fb92980ed44458e068b08ffed709ce0a63e065fb24"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-yxNIeO/before-native.png",
+          "bytes": 3467050,
+          "sha256": "a253aa2ffd8f5aaac80a3e3df751bc8460b0f5cd25d01acd4b8ef1baeef98f66",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-yxNIeO/after-native.png",
+          "bytes": 3534494,
+          "sha256": "89fa0919d6e67410546b22e13a46c99bf345a80db5cbd7e11eb5e1a09336d1c8",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 26.636249927152292,
+      "receivedDecodedFrames": 411,
+      "observationSeconds": 15.430099999964238,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Matched to session launch record, native log, NeivaState/CSV commands; observer alone does not identify Unreal or prove gameplay.",
+      "recording": null,
+      "nativeGameplayLogCrossCheckPassed": false,
+      "visualReview": "Clothed character, tree trunks/foliage and benches visible; no VSM banner in this frame. Repeated generic facades and sparse interpreted canopy remain."
+    },
+    {
+      "id": "kK4sYS",
+      "session": "B4-60",
+      "observedAtUtc": "2026-09-08T05:19:37.710Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-kK4sYS/report.json",
+        "bytes": 21704,
+        "sha256": "23c28771d1da446d506e7764447a41ae83799c13d761645df2cf4fc477883f42"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-kK4sYS/before-native.png",
+          "bytes": 2668487,
+          "sha256": "c108e047c8d96df4fb351be25ee48f404045837a5f85414aa830ed44c79ab1e5",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-kK4sYS/after-native.png",
+          "bytes": 3397650,
+          "sha256": "7a3d8f26bdb3f018d3e2f76c6ae17e6094ee7ab49420eebadb4082d517146235",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 29.894571810130454,
+      "receivedDecodedFrames": 450,
+      "observationSeconds": 15.052899999976159,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Matched to session launch record, native log, NeivaState/CSV commands; observer alone does not identify Unreal or prove gameplay.",
+      "recording": null,
+      "nativeGameplayLogCrossCheckPassed": false,
+      "nativeQuitVerifiedSeparately": true
+    }
+  ],
+  "nativePerformance": {
+    "measurements": [
+      {
+        "scenario": "A with VP8 streaming client",
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-A.json",
+          "bytes": 7240,
+          "sha256": "5ae91caace28f1395956302f99b2ba0d84e112ca983cc78a1c2d5ab7ffeafeca"
+        },
+        "csv": {
+          "path": "unreal/NeivaAbierta/Saved/Profiling/CSV/Profile(20260907_142907).csv",
+          "bytes": 775363,
+          "sha256": "8029b101ad2eee7749814f229bf172f010f5b5dc4af78dbf32e6ef0cd530b7eb"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 0,
+        "frameTime": {
+          "count": 396,
+          "meanMs": 52.14180681818182,
+          "medianMs": 46.5142,
+          "p95Ms": 85.2377
+        },
+        "renderThreadTime": {
+          "count": 396,
+          "meanMs": 51.06418686868687,
+          "medianMs": 45.9775,
+          "p95Ms": 82.306
+        },
+        "gameThreadTime": {
+          "count": 396,
+          "meanMs": 4.836002525252526,
+          "medianMs": 3.213,
+          "p95Ms": 12.246
+        },
+        "gpuTime": {
+          "count": 396,
+          "meanMs": 19.442790404040405,
+          "medianMs": 19.502,
+          "p95Ms": 21.508
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 19.178468507756055,
+        "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise."
+      },
+      {
+        "scenario": "A after streaming client disconnected",
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-A-disconnected.json",
+          "bytes": 836,
+          "sha256": "89a4713ee1f26969aa92d93fc724e5d4d3221fea87abf7b97b1f45de4d00c722"
+        },
+        "csv": {
+          "path": "unreal/NeivaAbierta/Saved/Profiling/CSV/Profile(20260907_143529).csv",
+          "bytes": 704476,
+          "sha256": "ef4db8be3db99dde8dbe2374cd960f8d97f7f526a2e399f9192773898c47a01e"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 60,
+        "frameTime": {
+          "count": 300,
+          "meanMs": 49.17097666666667,
+          "medianMs": 47.682950000000005
+        },
+        "renderThreadTime": {
+          "count": 300,
+          "meanMs": 48.721916666666665,
+          "medianMs": 47.143
+        },
+        "gameThreadTime": {
+          "count": 300,
+          "meanMs": 2.57103,
+          "medianMs": 2.5425
+        },
+        "gpuTime": {
+          "count": 300,
+          "meanMs": 20.05209333333333,
+          "medianMs": 21.0255
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 20.337200271189786,
+        "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise."
+      },
+      {
+        "scenario": "B2 offscreen1080p with VP8 client",
+        "session": "B2",
+        "frameLimit": 30,
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-B2.json",
+          "bytes": 1358,
+          "sha256": "586f2e7b42012f8bf8bacbead8c92729daec24027f871763b54bba98b5ff113d"
+        },
+        "csv": {
+          "path": "unreal/NeivaAbierta/Saved/Profiling/CSV/Profile(20260908_001103).csv",
+          "bytes": 1174561,
+          "sha256": "fb0ace175df105c53c0f2a7fc44666d2e45ec05e052b5ddd38e95480f689dbc9"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 0,
+        "frameTime": {
+          "count": 613,
+          "meanMs": 33.344766394779775,
+          "medianMs": 33.3326,
+          "p95Ms": 34.2638
+        },
+        "renderThreadTime": {
+          "meanMs": 9.888595432300162,
+          "medianMs": 9.545,
+          "p95Ms": 12.89
+        },
+        "gameThreadTime": {
+          "meanMs": 2.5598923327895595,
+          "medianMs": 2.374,
+          "p95Ms": 3.277
+        },
+        "gpuTime": {
+          "reportedMeanMs": 0,
+          "validPerformanceMeasurement": false,
+          "reason": "GPUTime is zero in the offscreen samples; zero is not evidence of zero GPU cost."
+        },
+        "gpuTotal": {
+          "sourceColumn": "GPU/Total",
+          "meanMs": 17.73889233278956,
+          "medianMs": 17.404,
+          "p95Ms": 19.44,
+          "acceptedReportedTiming": true
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 29.989713772790235,
+        "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise.",
+        "scope": "Short walk/enter/drive/brake/exit route on one local machine."
+      },
+      {
+        "scenario": "B4 offscreen1080p with VP8 client",
+        "session": "B4",
+        "frameLimit": 30,
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-B4.json",
+          "bytes": 1366,
+          "sha256": "8bbc382b78afda17838d36830dba04bbc2366f6316ea6a0b7f1152abeef70fa7"
+        },
+        "csv": {
+          "path": "unreal/NeivaAbierta/Saved/Profiling/CSV/Profile(20260908_001723).csv",
+          "bytes": 706131,
+          "sha256": "9d875c56d236b6f3934a7e04d7b3636695cd09c2bf9423c98d5afd81b18cbb1c"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 0,
+        "frameTime": {
+          "count": 362,
+          "meanMs": 34.03190027624309,
+          "medianMs": 33.33075,
+          "p95Ms": 41.426
+        },
+        "renderThreadTime": {
+          "meanMs": 15.046693370165746,
+          "medianMs": 11.3335,
+          "p95Ms": 36.511
+        },
+        "gameThreadTime": {
+          "meanMs": 3.8585911602209944,
+          "medianMs": 2.6285,
+          "p95Ms": 9.9
+        },
+        "gpuTime": {
+          "reportedMeanMs": 0,
+          "validPerformanceMeasurement": false,
+          "reason": "GPUTime is zero in the offscreen samples; zero is not evidence of zero GPU cost."
+        },
+        "gpuTotal": {
+          "sourceColumn": "GPU/Total",
+          "meanMs": 17.122312154696132,
+          "medianMs": 16.458,
+          "p95Ms": 21.042,
+          "acceptedReportedTiming": true
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 29.384195178136366,
+        "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise.",
+        "scope": "Short fixed park view, not an across-device or sustained-driving60FPS benchmark."
+      },
+      {
+        "scenario": "B4-60 offscreen1080p with VP8 client",
+        "session": "B4",
+        "frameLimit": 60,
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-B4-60.json",
+          "bytes": 1365,
+          "sha256": "93c9f2148c831a576f587d0ffd9ee3da365ad382cd1386f04e092c18cc121705"
+        },
+        "csv": {
+          "path": "unreal/NeivaAbierta/Saved/Profiling/CSV/Profile(20260908_001944).csv",
+          "bytes": 1341655,
+          "sha256": "6c15cac45558ce01638d83eedee326ab31d281bb881b0377fd9075ef149e5f3d"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 0,
+        "frameTime": {
+          "count": 694,
+          "meanMs": 17.771070028818443,
+          "medianMs": 17.56185,
+          "p95Ms": 22.9893
+        },
+        "renderThreadTime": {
+          "meanMs": 10.271256484149855,
+          "medianMs": 9.1175,
+          "p95Ms": 18.124
+        },
+        "gameThreadTime": {
+          "meanMs": 2.9005389048991352,
+          "medianMs": 2.518,
+          "p95Ms": 5.527
+        },
+        "gpuTime": {
+          "reportedMeanMs": 0,
+          "validPerformanceMeasurement": false,
+          "reason": "GPUTime is zero in the offscreen samples; zero is not evidence of zero GPU cost."
+        },
+        "gpuTotal": {
+          "sourceColumn": "GPU/Total",
+          "meanMs": 1.6972118155619598,
+          "medianMs": 0.061,
+          "p95Ms": 16.425,
+          "reason": "Inconsistent GPU/Total samples include repeated0.061ms; exclude GPU counters from performance conclusions for this60cap capture.",
+          "acceptedReportedTiming": false
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 56.27123174791111,
+        "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise.",
+        "scope": "Short fixed park view, not an across-device or sustained-driving60FPS benchmark."
+      }
+    ],
+    "rawNativeCsvAvailable": true,
+    "sustained60FpsVerified": false,
+    "vramConsumptionInferred": false,
+    "acrossDevicesBenchmarkCompleted": false,
+    "causalABComparison": false,
+    "scope": "Historical A and subsequent B2/B4 native CSVs on one machine. B2/B4 verify offscreen rendering. FrameTime remains separate from WebRTC receipt. GPUTime=0 is invalid in offscreen; GPU/Total is usable in the30cap samples but inconsistent in B4-60 and excluded there. Different cameras, frame limits and settings prevent causal one-variable comparisons.",
+    "measuredGpuBoardMemory": {
+      "source": {
+        "path": "artifacts/visual-upgrade/vram-B4.csv",
+        "bytes": 5937,
+        "sha256": "da80cf26b2a2005fed2509b03e378838cb86df65f6670070a0ca1d00da0b1ea1"
+      },
+      "samples": 120,
+      "sourceClock": "Local America/Bogota timestamps,UTC-05:00",
+      "firstAtLocal": "2026/09/08 00:16:31.373",
+      "lastAtLocal": "2026/09/08 00:17:30.922",
+      "baselineMiB": 133,
+      "lastMiB": 4156,
+      "peakMiB": 4491,
+      "boardCapacityMiB": 6141,
+      "scope": "nvidia-smi total-board memory.used during B4 startup/runtime, not a process-exclusive memory measurement. Values are measured, not inferred from frame time."
+    }
+  },
+  "checks": {
+    "nodeTestsPassed": 103,
+    "nativePythonTestsPassed": 41,
+    "nodeLog": {
+      "path": "artifacts/visual-upgrade/node-tests-final-20260908.log",
+      "bytes": 10052,
+      "sha256": "344acf9d083b8b4b8c7a4840473e0f44124b2033cd916cbee6a4ad43c8471be3"
+    },
+    "nativePythonLog": {
+      "path": "artifacts/visual-upgrade/native-python-final-20260908.log",
+      "bytes": 140,
+      "sha256": "544edcb593563a293127e4c66fba570ccb259491b56eecbd016d59ca41072095"
+    },
+    "landmarkByteForByteReproductionPassed": true,
+    "allTriangleWindingAndTopologyChecksRetained": true,
+    "scope": "Current pre-package test logs:103Node+41NativePython+57RootPython=201. The web build is the previous static prototype and does not verify Unreal packaging. Historical alpha0.1 tests are not added again.",
+    "rootPythonTestsPassed": 57,
+    "totalTestsInTheseSuites": 201,
+    "rootPythonLog": {
+      "path": "artifacts/visual-upgrade/root-python-20260908-final.log",
+      "bytes": 156,
+      "sha256": "144c8164e6ce0f7b8866f159a992cbfeca72473f34f602e56ae81f245299582e"
+    },
+    "webBuildStatus": "PASS",
+    "webBuildLog": {
+      "path": "artifacts/visual-upgrade/web-build-final-20260908.log",
+      "bytes": 88,
+      "sha256": "1491eaa8abd12c12deb72e719d80d6bd8763d36ce430bd70ed75fdee318f04f4"
+    }
+  },
+  "cartographicLimitations": {
+    "audit": {
+      "path": "artifacts/visual-upgrade/north-santander-visual-audit.json",
+      "bytes": 14957,
+      "sha256": "7995d13f96d69790810b485a5c990c8b3d7cdc4511b12a1c4ac86534fe6a190b"
+    },
+    "currentOsmTags": {
+      "path": "artifacts/visual-upgrade/osm-north-santander-source-tags.json",
+      "bytes": 2508,
+      "sha256": "9d9c7262d7b0eeeb77e70ccae95e7fae0c23b79f0d7f1e258a43f729ef1bfda4"
+    },
+    "sameGeneratedUpperFacadeStillRepeated": true,
+    "sourceHeightIsNotCertifiedMeasurement": true,
+    "wholeCityIdentical": false,
+    "keyConflicts": [
+      {
+        "id": "way/1221117102",
+        "name": "4",
+        "osmHeightM": 30,
+        "osmLevels": 2,
+        "correctedHeightM": null
+      },
+      {
+        "id": "way/1080757643",
+        "name": "edif3",
+        "osmHeightM": 17,
+        "osmLevels": 2,
+        "correctedHeightM": null
+      }
+    ],
+    "note": "Names1..5 and heights20/30/20/30/25m are current OSM tags, not random seeds. No replacement height or facade is invented here."
+  },
+  "limitations": [
+    "Visual quality remains substantially below the requested AAA/hyperrealistic target.",
+    "Large generated buildings still repeat an invented window atlas; hotel/cathedral refinements do not solve the entire city.",
+    "VSM page-overlap warnings are visible in A and B2. None appear in the completed B4 log or reviewed park frame with directional shadow bias0.5; all-route resolution remains unverified.",
+    "Tree canopy density/species and placement do not match a surveyed real park.",
+    "B4-60 averages56.27 derived FPS in a short static view; sustained60FPS and performance across devices are not established. Its GPU counters are inconsistent and excluded.",
+    "B2/B4 verify near100m/far500m sectors and3/8NPCs spawned in a playable offscreen session; individual NPC route coverage remains unverified.",
+    "The initial B descriptor-limit failure and B3 Vulkan OOM failure are preserved. Later successful sessions do not erase them or prove a single cause.",
+    "The0.2 package, public download and website deployment are still unverified; no new distribution URL is claimed."
+  ],
+  "distribution": {
+    "version02PackageUrl": null,
+    "version02PackageSha256": null,
+    "version02PackageBytes": null,
+    "version02GithubReleaseUrl": null,
+    "version02WebsiteDeploymentUrl": null
+  },
+  "documentation": "docs/MEJORA-VISUAL-0.2.md",
+  "failedAttempts": [
+    {
+      "id": "B-offscreen-tile100",
+      "startedAtUtc": "2026-09-07T19:45:54.138478+00:00",
+      "failureAtUtc": "2026-09-07T19:46:09.680Z",
+      "status": "failed-before-a-verified-game-frame",
+      "runtimeExecutable": "UnrealEditor",
+      "runtimeMode": "editor-game",
+      "renderOffscreen": true,
+      "configuredCityTileMetres": 100,
+      "exitCode": 139,
+      "verifiedNativeFrames": 0,
+      "performanceVerified": false,
+      "additionalNpcGameplayVerified": false,
+      "partialStartupCounts": {
+        "mappedBuildings": 35873,
+        "genericBuildingMeshChunks": 5513,
+        "pedestriansSpawnedInLog": 3,
+        "pedestriansRequestedInLog": 8
+      },
+      "log": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B/game.log",
+        "bytes": 180438,
+        "sha256": "472417b1777104baa44fbf3638798b9a2a82e97f790ad1ab7fd3bec28bc64c86"
+      },
+      "exitRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B/exit.json",
+        "bytes": 18,
+        "sha256": "894fe490099b56f5902cad9bf323ba0814280541b77b53a29fc9e241094d4a66"
+      },
+      "safeFailureSnippets": [
+        {
+          "line": 1556,
+          "text": "[2026.09.07-19.46.06:565][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 5513 mesh chunks; tile 100 m; preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1561,
+          "text": "[2026.09.07-19.46.07:384][  0]LogTemp: Display: Neiva: spawned 3/8 pedestrians on 3 candidate paths; 12 sampled positions, 9 blocked, 0 within 12 m; original OSM paths retained."
+        },
+        {
+          "line": 1592,
+          "text": "Assertion failed: ResourceIndex < State.MaxDescriptorCount [File:./Runtime/VulkanRHI/Private/VulkanDescriptorSets.cpp] [Line: 890] "
+        },
+        {
+          "line": 1593,
+          "text": "You need to grow the resource array size for [VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER]!"
+        },
+        {
+          "line": 1595,
+          "text": "You need to grow the resource array size for [VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER]!"
+        },
+        {
+          "line": 1604,
+          "text": "You need to grow the resource array size for [VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER]!"
+        }
+      ],
+      "failure": "Vulkan ResourceIndex < State.MaxDescriptorCount assertion for VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER.",
+      "engineDefaultDescriptorCapacity": 65536,
+      "engineCapacitySource": "Engine/Source/Runtime/VulkanRHI/Private/VulkanDescriptorSets.cpp:36",
+      "vramExhaustionProven": false,
+      "offscreenAloneEstablishedAsCause": false,
+      "sectorCorrectionRuntimeVerified": false,
+      "note": "Startup logs are not a playable-runtime pass. This failed attempt contributes no FPS benchmark.",
+      "laterSectorCorrectionVerifiedBySessions": [
+        "B2",
+        "B4"
+      ]
+    },
+    {
+      "id": "B3-offscreen-shadow-bias05",
+      "startedAtUtc": "2026-09-08T05:13:42.837126+00:00",
+      "status": "failed-before-a-verified-game-frame",
+      "runtimeExecutable": "UnrealEditor",
+      "runtimeMode": "editor-game",
+      "renderOffscreen": true,
+      "exitCode": 139,
+      "verifiedNativeFrames": 0,
+      "performanceVerified": false,
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B3/command.json",
+        "bytes": 1991,
+        "sha256": "6856c55961329facab4c5f89df67ebc761ee5b6ebaf003e8da681508f4391512"
+      },
+      "log": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B3/game.log",
+        "bytes": 190546,
+        "sha256": "cb9a62de3b569f58f1b17318b689bfa2c6222a954d55e38563bbeb6a0e403dca"
+      },
+      "exitRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B3/exit.json",
+        "bytes": 18,
+        "sha256": "894fe490099b56f5902cad9bf323ba0814280541b77b53a29fc9e241094d4a66"
+      },
+      "safeFailureSnippets": [
+        {
+          "line": 1275,
+          "text": "[2026.09.08-05.13.50:232][  0]LogVulkanRHI: Display: \t HEAP 00 |   0.27% /         16.31 MB |       1506.88 MB |       6141.00 MB |"
+        },
+        {
+          "line": 1632,
+          "text": "Out of memory on Vulkan; MemoryTypeIndex=1, AllocSize=128.000MB"
+        },
+        {
+          "line": 1634,
+          "text": "Out of memory on Vulkan; MemoryTypeIndex=1, AllocSize=128.000MB"
+        },
+        {
+          "line": 1661,
+          "text": "Out of memory on Vulkan; MemoryTypeIndex=1, AllocSize=128.000MB"
+        }
+      ],
+      "failure": "Vulkan out-of-memory allocation failure, MemoryTypeIndex1, AllocSize128MB.",
+      "reportedGpuHeapBudgetMB": 1506.88,
+      "comparisonB2ReportedGpuHeapBudgetMB": 5527.81,
+      "configuredShadowLodBias": 0.5,
+      "sameLaunchSettingsLaterSucceededIn": "B4",
+      "causalityEstablished": false,
+      "note": "B3 started with a much lower reported GPU memory budget. Operator observed that terminating the B2 wrapper had not guaranteed native process exit. The record does not establish that as the sole cause or blame the shadow profile."
+    }
+  ],
+  "phaseScope": "B2/B4 verify near 100m and far 500m sectors, 3/8 NPCs spawned during real gameplay, offscreen video and B2 driving. Individual routes for all NPCs, an all-city100m configuration, packaged0.2 and distribution remain unverified.",
+  "runtimeSessions": [
+    {
+      "id": "A",
+      "historical": true,
+      "version": "5.5.4-40574608+++UE5+Release-5.5",
+      "platform": "Linux x64",
+      "configuration": "Development",
+      "runtimeExecutable": "UnrealEditor",
+      "runtimeMode": "editor-game",
+      "renderingBackend": "Vulkan SM6",
+      "nativeCaptureResolution": [
+        1920,
+        1080
+      ],
+      "streamingCodec": "VP8 software encoder",
+      "displayModeObserved": "Private virtual display, windowed; not RenderOffScreen",
+      "tMaxFps": 30,
+      "screenPercentage": 100,
+      "gameStartupUtc": "2026-09-07T19:27:51.804317+00:00",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-01/command.json",
+        "bytes": 1870,
+        "sha256": "e06f1870cb99398bc59f530532dcf7dc1a72547359c985123cea4ac5b97ca079"
+      },
+      "gameLog": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-01/game.log",
+        "bytes": 240076,
+        "sha256": "f5bb5414a5e7e14c665e66503c0a335ca218292be1c5717984458e7d8fb5ecd7"
+      },
+      "safeRuntimeSnippets": [
+        {
+          "line": 1570,
+          "text": "[2026.09.07-19.28.04:745][  0]LogTemp: Display: Neiva baked landmarks: 150 static parts, 149 Nanite, 71311 source triangles, 3 labels; source hash verified."
+        },
+        {
+          "line": 1571,
+          "text": "[2026.09.07-19.28.06:199][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 604 mesh chunks; preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1572,
+          "text": "[2026.09.07-19.28.06:914][  0]LogTemp: Display: Neiva: environment 15 trees, 6 benches; placements/heights/species are interpreted, not individually surveyed."
+        },
+        {
+          "line": 1575,
+          "text": "[2026.09.07-19.28.07:067][  0]LogTemp: Display: Neiva: spawned 1/8 pedestrians on 3 candidate paths; blocked spawn points skipped."
+        },
+        {
+          "line": 1726,
+          "text": "[2026.09.07-19.29.29:071][707]LogTemp: Display: NeivaState: world_seconds=80.210 pawn=NeivaCharacter_0 location_cm=X=-86693.158 Y=8418.630 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=0.000000 Y=21.678587 R=-0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1789,
+          "text": "[2026.09.07-19.31.17:199][  3]LogTemp: Display: NeivaState: world_seconds=188.382 pawn=NeivaCharacter_0 location_cm=X=-86693.158 Y=8418.630 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-5.000000 Y=145.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        }
+      ],
+      "operatorTerminationExitCode": -15,
+      "cleanExitVerified": false,
+      "note": "The observed Editor process was terminated by the operator. This record makes no clean-exit or packaged-runtime claim."
+    },
+    {
+      "id": "B2",
+      "runtimeExecutable": "UnrealEditor",
+      "runtimeMode": "editor-game",
+      "startedAtUtc": "2026-09-08T05:10:28.470873+00:00",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B2/command.json",
+        "bytes": 1885,
+        "sha256": "e870bfb92641a6367bfd02559eaac17a7e54ffca189a91119b281e61d959974b"
+      },
+      "gameLog": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B2/game.log",
+        "bytes": 196942,
+        "sha256": "c222b2a136623b206f92cc2e635ecebf35290b0829b8b49c568aff4834e45bf7"
+      },
+      "renderOffscreen": true,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "screenPercentage": 100,
+      "initialFrameLimit": 30,
+      "streamCodec": "VP8 software encoder",
+      "streamFrameLimit": 30,
+      "nativeGamePackage": false,
+      "physicalDesktopInput": false,
+      "mappedBuildings": 35873,
+      "genericBuildingMeshChunks": 682,
+      "nearTileMetres": 100,
+      "farTileMetres": 500,
+      "fineRadiusMetresFromInitialSpawn": 500,
+      "nearProceduralBuildings": 567,
+      "farProceduralBuildings": 35302,
+      "spawnedNpcs": 3,
+      "requestedNpcs": 8,
+      "individualNpcRoutesVerified": false,
+      "safeRuntimeSnippets": [
+        {
+          "line": 1555,
+          "text": "[2026.09.08-05.10.56:629][  0]LogTemp: Display: Neiva baked landmarks: 150 static parts, 149 Nanite, 71311 source triangles, 3 labels; source hash verified."
+        },
+        {
+          "line": 1556,
+          "text": "[2026.09.08-05.10.58:245][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 682 mesh chunks (682 cells); tiles near 100 m / far 500 m, fine radius 500 m around initial spawn (567 near / 35302 far procedural buildings); preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1557,
+          "text": "[2026.09.08-05.10.59:260][  0]LogTemp: Display: Neiva: environment 15 trees, 6 benches; placements/heights/species are interpreted, not individually surveyed."
+        },
+        {
+          "line": 1561,
+          "text": "[2026.09.08-05.10.59:478][  0]LogTemp: Display: Neiva: spawned 3/8 pedestrians on 3 candidate paths; 12 sampled positions, 9 blocked, 0 within 12 m; original OSM paths retained."
+        },
+        {
+          "line": 1640,
+          "text": "[2026.09.08-05.11.07:243][185]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm."
+        },
+        {
+          "line": 1647,
+          "text": "[2026.09.08-05.11.10:777][291]LogTemp: Display: Neiva: exited vehicle at V(X=-87208.99, Y=8213.58, Z=96.00) cm; car at V(X=-87293.95, Y=8427.31, Z=70.00) cm."
+        },
+        {
+          "line": 1889,
+          "text": "[2026.09.08-05.13.33:631][  0]LogExit: Exiting."
+        }
+      ],
+      "drivingVerifiedByNativeLog": true,
+      "carStartCm": [
+        -87740,
+        8250,
+        70
+      ],
+      "carStoppedCm": [
+        -87293.95,
+        8427.312,
+        70
+      ],
+      "carAdvanceMetres": 4.8000015400414195,
+      "brakeSpeedProperty": 0,
+      "exitReturnedToWalking": true,
+      "wrapperExitCode": -15,
+      "cleanNativeExitVerified": false,
+      "terminationNote": "Wrapper termination alone did not verify native process termination. Operator reported the prior engine remained running; this is a shutdown hazard, not proof of B3 crash causation.",
+      "safeDrivingSnippets": [
+        {
+          "line": 1645,
+          "text": "[2026.09.08-05.11.10:208][274]LogTemp: Display: NeivaState: world_seconds=10.014 pawn=NeivaCar_0 location_cm=X=-87293.950 Y=8427.312 Z=70.000 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-15.000000 Y=21.678587 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1646,
+          "text": "[2026.09.08-05.11.10:208][274]LogTemp: Display: NeivaState: car=NeivaCar_0 location_cm=X=-87293.950 Y=8427.312 Z=70.000 yaw=21.679 speed_property=0.000 passenger=NeivaCharacter_0"
+        },
+        {
+          "line": 1649,
+          "text": "[2026.09.08-05.11.11:210][304]LogTemp: Display: NeivaState: world_seconds=11.015 pawn=NeivaCharacter_0 location_cm=X=-87208.988 Y=8213.579 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=0.000000 Y=21.678587 R=-0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1650,
+          "text": "[2026.09.08-05.11.11:210][304]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1"
+        }
+      ]
+    },
+    {
+      "id": "B4",
+      "runtimeExecutable": "UnrealEditor",
+      "runtimeMode": "editor-game",
+      "startedAtUtc": "2026-09-08T05:16:30.214983+00:00",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B4/command.json",
+        "bytes": 1991,
+        "sha256": "f2c3d0fd08c5bc56228052daf93dccb0e367523ee968f65581b1149b5b70d41e"
+      },
+      "gameLog": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B4/game.log",
+        "bytes": 184980,
+        "sha256": "7d645db3d89daf0078a77b1512ca4c92ec317fe7332e0ff9352ed0ec9f1a2177"
+      },
+      "renderOffscreen": true,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "screenPercentage": 100,
+      "initialFrameLimit": 30,
+      "streamCodec": "VP8 software encoder",
+      "streamFrameLimit": 30,
+      "nativeGamePackage": false,
+      "physicalDesktopInput": false,
+      "mappedBuildings": 35873,
+      "genericBuildingMeshChunks": 682,
+      "nearTileMetres": 100,
+      "farTileMetres": 500,
+      "fineRadiusMetresFromInitialSpawn": 500,
+      "nearProceduralBuildings": 567,
+      "farProceduralBuildings": 35302,
+      "spawnedNpcs": 3,
+      "requestedNpcs": 8,
+      "individualNpcRoutesVerified": false,
+      "safeRuntimeSnippets": [
+        {
+          "line": 1555,
+          "text": "[2026.09.08-05.16.43:651][  0]LogTemp: Display: Neiva baked landmarks: 150 static parts, 149 Nanite, 71311 source triangles, 3 labels; source hash verified."
+        },
+        {
+          "line": 1556,
+          "text": "[2026.09.08-05.16.45:059][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 682 mesh chunks (682 cells); tiles near 100 m / far 500 m, fine radius 500 m around initial spawn (567 near / 35302 far procedural buildings); preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1557,
+          "text": "[2026.09.08-05.16.45:793][  0]LogTemp: Display: Neiva: environment 15 trees, 6 benches; placements/heights/species are interpreted, not individually surveyed."
+        },
+        {
+          "line": 1561,
+          "text": "[2026.09.08-05.16.45:915][  0]LogTemp: Display: Neiva: spawned 3/8 pedestrians on 3 candidate paths; 12 sampled positions, 9 blocked, 0 within 12 m; original OSM paths retained."
+        },
+        {
+          "line": 1658,
+          "text": "[2026.09.08-05.17.19:886][970]LogTemp: Display: NeivaState: world_seconds=33.256 pawn=NeivaCharacter_0 location_cm=X=-88670.000 Y=7880.000 Z=99.700 actor_rotation=P=0.000000 Y=0.000000 R=0.000000 control_rotation=P=-5.000000 Y=145.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1694,
+          "text": "[2026.09.08-05.19.40:853][190]t.MaxFPS = \"60\""
+        },
+        {
+          "line": 1712,
+          "text": "[2026.09.08-05.19.57:479][131]LogCore: FUnixPlatformMisc::RequestExit(0, UGameEngine::HandleExitCommand)"
+        },
+        {
+          "line": 1713,
+          "text": "[2026.09.08-05.19.57:479][131]LogGenericPlatformMisc: FPlatformMisc::RequestExit(0, UGameEngine::HandleExitCommand)"
+        },
+        {
+          "line": 1798,
+          "text": "[2026.09.08-05.19.59:810][132]LogExit: Exiting."
+        }
+      ],
+      "directionalShadowLodBias": 0.5,
+      "directionalMovingShadowLodBias": 0.5,
+      "finalFrameLimit": 60,
+      "parkViewYaw": 145,
+      "parkViewPitch": -5,
+      "vsmWarningCount": 0,
+      "vsmWarningScope": "No matching warning in the completed B4 log and none visible in the reviewed park screenshot; not proof of all-route resolution.",
+      "terminationReport": {
+        "path": "artifacts/visual-upgrade/editor-game-visual-B4/termination-verified.json",
+        "bytes": 245,
+        "sha256": "1befc7ddb1009bf9b4d0d165530fb439dd6948962acafcd876950697376c6d91"
+      },
+      "cleanNativeExitVerified": true,
+      "wrapperExitCode": 0,
+      "nativeLogExitObserved": true,
+      "nativeLogCrashObserved": false,
+      "ownedProcessGroupMembersRemaining": 0,
+      "gpuBoardMemoryAfterExitMiB": 133
+    }
+  ]
+}

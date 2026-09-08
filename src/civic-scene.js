@@ -141,41 +141,117 @@ function buildCourthouse(building, mats, features = {}) {
 function buildHotel(building, mats) {
   const mesh = new DetailMesh('Hotel Neiva Plaza · fachada revisada'), ring = building.points, edges = facadeEdges(ring);
   const h = building.height || 19.8;
-  mesh.volume(inset(ring, .009), 0, h - 2.5, mats.cream);
+  // The official hotel photograph shows three room rows below an open gallery,
+  // continuous balconies and a broad opaque ochre corner. Only fronts 0 and 1
+  // are supported by that view. Recess depths, bays and elevations are interpreted,
+  // not measured; the mapped perimeter and the existing estimated height remain.
+  const mainFronts = new Set([0, 1]), recessDepth = 1.25;
+  const retailTop = h * (5.1 / 19.8), galleryFloor = h - 3.6;
+  const roomPitch = (galleryFloor - retailTop) / 3;
+  // Offset the two observed facades by actual metres. A solid perimeter volume
+  // would otherwise fill the balcony/shop openings behind the applied frames.
+  const cross = (a, b) => a[0] * b[1] - a[1] * b[0];
+  const core = edges.map((edge, index) => {
+    const previousIndex = (index + edges.length - 1) % edges.length, previous = edges[previousIndex];
+    const a = previous.a.map((v, axis) => v - previous.n[axis] * (mainFronts.has(previousIndex) ? recessDepth : 0));
+    const b = edge.a.map((v, axis) => v - edge.n[axis] * (mainFronts.has(index) ? recessDepth : 0));
+    const determinant = cross(previous.t, edge.t);
+    if (Math.abs(determinant) < 1e-8) return b;
+    const distance = cross([b[0] - a[0], b[1] - a[1]], edge.t) / determinant;
+    return [a[0] + previous.t[0] * distance, a[1] + previous.t[1] * distance];
+  });
+  const glass = mats.glass.clone(); glass.name = 'Hotel recessed room and shop glazing';
+  glass.metalness = .12; glass.roughness = .24; glass.envMapIntensity = .65;
+  // Plinth and gallery slab close this core. A second extruded cap at the same
+  // elevation duplicated triangles and made the native DynamicMesh non-manifold.
+  for (const edge of facadeEdges(core)) {
+    const wall = new T.PlaneGeometry(edge.length, galleryFloor - .58);
+    wall.rotateY(Math.atan2(edge.n[0], edge.n[1]));
+    wall.translate((edge.a[0] + edge.b[0]) / 2, (galleryFloor + .58) / 2, (edge.a[1] + edge.b[1]) / 2);
+    mesh.add(wall, mats.cream);
+  }
   mesh.volume(ring, 0, .58, mats.stone);
+  mesh.volume(ring, galleryFloor - .22, galleryFloor, mats.cream);
+  mesh.volume(ring, h - .22, h, mats.white);
   for (const [edgeIndex, edge] of edges.entries()) {
-    if (edge.length < 2) continue;
-    const bays = Math.max(1, Math.round(edge.length / 3.8)), bay = edge.length / bays;
-    for (let i = 0; i < bays; i++) {
-      const u = (i + .5) * bay, w = Math.min(2.15, bay - .48);
-      const cornerPanel = (edgeIndex === 0 && i === bays - 1) || (edgeIndex === 1 && i === 0);
-      along(mesh, edge, u, 2.18, .01, Math.max(.6, bay - .3), 2.85, .045, mats.glass);
-      if (cornerPanel) along(mesh, edge, u, 10.55, .16, bay + .02, 13.4, .34, mats.ochre);
-      for (let floor = 0; floor < (cornerPanel ? 0 : 4); floor++) {
-        const y = 5.6 + floor * 2.85;
-        along(mesh, edge, u, y, .035, w, 1.85, .06, mats.glass);
-        for (const side of [-1, 1]) along(mesh, edge, u + side * (w / 2 + .055), y, .13, .11, 2.05, .23, mats.white);
-        along(mesh, edge, u, y + .97, .13, w + .2, .13, .25, mats.white);
-        along(mesh, edge, u, y - 1.02, .36, w + .45, .12, .75, mats.white);
-        along(mesh, edge, u, y - .28, .72, w + .27, .055, .055, mats.metal);
-        for (let k = 0; k < 7; k++) along(mesh, edge, u - w / 2 + k * w / 6, y - .63, .72, .027, .69, .035, mats.metal);
-      }
-      along(mesh, edge, i * bay, 10.1, .14, .2, 13.3, .28, mats.ochre);
-      along(mesh, edge, i * bay, h - 1.12, .12, .16, 2.25, .2, mats.white);
-      if (edgeIndex < 2 || edgeIndex === edges.length - 1) {
-        const radius = Math.max(.2, bay / 2 - .08);
-        const arch = new T.TorusGeometry(radius,.095,8,24,Math.PI);
-        arch.rotateY(edge.yaw); arch.translate(edge.a[0]+edge.t[0]*u+edge.n[0]*.15,
-          h-radius,edge.a[1]+edge.t[1]*u+edge.n[1]*.15); mesh.add(arch,mats.white);
+    if (!mainFronts.has(edgeIndex)) {
+      // Unseen rear elevations: plain masonry, not invented copies of the front.
+      along(mesh, edge, edge.length / 2, (h + galleryFloor) / 2, -.15,
+        edge.length, h - galleryFloor, .3, mats.cream);
+      continue;
+    }
+    const cornerWidth = Math.min(edge.length * .18, edgeIndex === 0 ? 5.3 : 5.1);
+    const start = edgeIndex === 1 ? cornerWidth : 0, end = edgeIndex === 0 ? edge.length - cornerWidth : edge.length;
+    const frontage = end - start, bays = Math.max(1, Math.round(frontage / (edgeIndex === 0 ? 4.2 : 4.8)));
+    const bay = frontage / bays, cornerU = edgeIndex === 0 ? edge.length - cornerWidth / 2 : cornerWidth / 2;
+    along(mesh, edge, cornerU, (retailTop + galleryFloor) / 2, -.22,
+      cornerWidth, galleryFloor - retailTop, .44, mats.ochre);
+    // Shops have visible recessed glazing and structural piers, not a reflective strip.
+    const shopBays = Math.max(1, Math.round(edge.length / (edgeIndex === 0 ? 5.5 : 4.7))), shopBay = edge.length / shopBays;
+    for (let i = 0; i < shopBays; i++) {
+      const u = (i + .5) * shopBay;
+      along(mesh, edge, u, (retailTop + .58) / 2, -1.17, shopBay - .42, retailTop - .72, .045, glass);
+      along(mesh, edge, u, (retailTop + .58) / 2, -1.12, .06, retailTop - .72, .08, mats.metal);
+    }
+    for (let i = 0; i <= shopBays; i++) {
+      const u = Math.max(.21, Math.min(edge.length - .21, i * shopBay));
+      along(mesh, edge, u, retailTop / 2, -.53, .42, retailTop, 1.06, mats.cream);
+      along(mesh, edge, u, .9, -.03, .44, 1.8, .08, mats.stone);
+    }
+    along(mesh, edge, edge.length / 2, retailTop - .14, -.6, edge.length, .28, 1.2, mats.ochre);
+    for (let row = 0; row < 3; row++) {
+      const floor = retailTop + row * roomPitch, windowY = floor + 1.67;
+      along(mesh, edge, (start + end) / 2, floor + .04, -.62, frontage, .22, 1.24, mats.cream);
+      along(mesh, edge, (start + end) / 2, floor + .2, -.09, frontage, .38, .18, mats.ochre);
+      for (const railY of [floor + .39, floor + 1.13])
+        along(mesh, edge, (start + end) / 2, railY, -.12, frontage, .05, .05, mats.metal);
+      const railPosts = Math.ceil(frontage / .3);
+      for (let post = 0; post <= railPosts; post++)
+        along(mesh, edge, start + post * frontage / railPosts, floor + .76, -.12, .025, .74, .035, mats.metal);
+      for (let i = 0; i < bays; i++) {
+        const u = start + (i + .5) * bay, w = edgeIndex === 0 ? 2.45 : 2.08;
+        along(mesh, edge, u, windowY, -1.18, w, 2.18, .05, glass);
+        for (const side of [-1, 1])
+          along(mesh, edge, u + side * (w / 2 + .065), windowY, -.98, .13, 2.4, .49, mats.white);
+        for (const dy of [-1.15, 1.15])
+          along(mesh, edge, u, windowY + dy, -.98, w + .26, .12, .49, mats.white);
+        along(mesh, edge, u + (edgeIndex === 0 ? .22 : -.24), windowY, -1.13, .045, 2.18, .08, mats.white);
+        // Longer side has broad piers; the Calle 7 front has slimmer open bays.
+        const pierWidth = edgeIndex === 0 ? .2 : .36;
+        along(mesh, edge, start + i * bay + pierWidth / 2, floor + roomPitch / 2,
+          -.33, pierWidth, roomPitch, .66, mats.ochre);
       }
     }
-    for (const y of [3.85, 7.08, 9.93, 12.78, 15.63, 17.35]) along(mesh, edge, edge.length / 2, y, .15, edge.length + .1, .16, .38, mats.ochre);
-    along(mesh, edge, edge.length / 2, h, .1, edge.length + .12, .14, .26, mats.white);
-    along(mesh, edge, edge.length / 2, h - 1.55, .22, edge.length, .05, .05, mats.metal);
+    // Open upper gallery. Low-rise arches, not deep semicircular roof hoops.
+    const galleryBays = Math.max(1, Math.round(edge.length / (edgeIndex === 0 ? 4.2 : 4.8))), galleryBay = edge.length / galleryBays;
+    const spring = h - 1.0, rise = .6;
+    for (let i = 0; i <= galleryBays; i++) {
+      const u = Math.max(.15, Math.min(edge.length - .15, i * galleryBay));
+      along(mesh, edge, u, (galleryFloor + spring) / 2, -.16, .3, spring - galleryFloor, .32, mats.white);
+    }
+    for (let i = 0; i < galleryBays; i++) {
+      const u = (i + .5) * galleryBay, half = (galleryBay - .28) / 2;
+      const arch = new T.Shape();
+      arch.moveTo(-half, 0); arch.quadraticCurveTo(0, rise * 2, half, 0);
+      arch.lineTo(half, .18); arch.quadraticCurveTo(0, rise * 2 + .18, -half, .18); arch.closePath();
+      const geometry = new T.ExtrudeGeometry(arch, { depth: .24, bevelEnabled: false, curveSegments: 10, steps: 1 });
+      geometry.rotateY(edge.yaw); geometry.translate(edge.a[0] + edge.t[0] * u - edge.n[0] * .28,
+        spring, edge.a[1] + edge.t[1] * u - edge.n[1] * .28); mesh.add(geometry, mats.white);
+    }
+    for (const y of [galleryFloor + .2, galleryFloor + 1.03])
+      along(mesh, edge, edge.length / 2, y, -.13, edge.length, .05, .06, mats.metal);
+    const galleryPosts = Math.ceil(edge.length / .32);
+    for (let post = 0; post <= galleryPosts; post++) {
+      along(mesh, edge, post * edge.length / galleryPosts, galleryFloor + .62, -.13, .025, .83, .035, mats.metal);
+    }
   }
-  mesh.add(surface(ring, h - 2.35, building.holes), mats.pavement);
-  const group = mesh.finish(); group.userData = { landmark: true, osmId: building.id, model: 'hotel', reviewed: true };
-  signOn(group, edges[0], 'HOTEL NEIVA PLAZA', 3.63, Math.min(19, edges[0].length - 1), '#e5dfc5');
+  mesh.add(surface(ring, galleryFloor + .012, building.holes), mats.pavement);
+  const group = mesh.finish(); group.userData = { landmark: true, osmId: building.id, model: 'hotel', reviewed: true,
+    source: 'https://www.hotelneivaplaza.com/en/', footprint: ring.map(point => [...point]),
+    dimensionsEstimated: true, observedFrontEdges: [0, 1], interpretedRoomRows: 3,
+    galleryFloorEstimatedM: galleryFloor, balconyDepthEstimatedM: recessDepth,
+    interpretation: 'Original model from the official photograph; bay counts, recesses and vertical dimensions are interpreted, not surveyed. Rear elevations are unverified.' };
+  signOn(group, edges[0], 'HOTEL NEIVA PLAZA', retailTop - .48, Math.min(19, edges[0].length - 1), '#e5dfc5');
   return group;
 }
 

@@ -8,6 +8,8 @@
 **/*.code-workspace
 **/__pycache__/
 **/Content/Data/neiva.json
+**/Content/Data/neiva-environment.json
+**/Content/Data/neiva-landmarks-baked.json
 **/Content/Data/neiva-landmarks.json
 **/Content/Data/Licenses/
 **/Content/NeivaAssets/

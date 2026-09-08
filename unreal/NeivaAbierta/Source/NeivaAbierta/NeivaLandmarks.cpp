@@ -1,4 +1,5 @@
 #include "NeivaWorld.h"
+#include "NeivaBakedLandmarks.h"
 
 #include "Components/TextRenderComponent.h"
 #include "Dom/JsonObject.h"
@@ -31,6 +32,7 @@ namespace
 TSet<FString> ANeivaCity::BuildLandmarks(const TSharedPtr<FJsonObject>& MapData)
 {
     TSet<FString> Replaced;
+    if (Neiva::TryBuildBakedLandmarks(this, Mesh, MapData, Replaced)) return Replaced;
     FString Raw;
     TSharedPtr<FJsonObject> Data;
     const FString File = FPaths::ProjectContentDir() / TEXT("Data/neiva-landmarks.json");

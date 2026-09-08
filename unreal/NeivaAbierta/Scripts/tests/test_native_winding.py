@@ -170,8 +170,8 @@ int main() {
                 native_normal = (normal[0], -normal[2], normal[1])
                 self.assertLess(sum(x*y for x, y in zip(native_cross, native_normal)), 0)
                 triangles += 1
-        self.assertEqual(len(data["meshes"]), 45)
-        self.assertEqual(triangles, 110618)
+        self.assertEqual(len(data["meshes"]), data["counts"]["meshes"])
+        self.assertEqual(triangles, data["counts"]["triangles"])
 
 
 if __name__ == "__main__":

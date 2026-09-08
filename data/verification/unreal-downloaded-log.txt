@@ -1,0 +1,19 @@
+# Neiva Abierta — runtime of the publicly downloaded Linux release
+# Download: https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.1.0-linux-alpha/Neiva-Abierta-Unreal-0.1.0-Linux-x64.tar.gz
+# Archive SHA-256: 1fc112c9037765f384bba7f441e7c96efee89b0ba39520d5cd65b8606f22c5ce
+# Native binary SHA-256: 0ca1fcecc18198c8f609106f290908965757458ac27e5b955bb331d3541d720b
+# Source: artifacts/unreal-native/github-downloaded-game-01.log
+# Source log prefix bytes at review: 213003
+# Source log prefix SHA-256: bf5f91afaad38e317d77cc2665cc3765f11a7efb5955395df0b23de8a495d6e5
+# Native timestamps are UTC. L prefixes preserve original source line numbers.
+# The runtime continues; later log content is not covered by the prefix hash.
+# VSM marking-queue warnings remain visible in the drive/exit screenshots; this test does not claim a warning-free build.
+L513: [2026.09.07-18.39.43:200][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 604 mesh chunks; preview radius 0 m (0=all); 3 exterior-only courtyard footprints.
+L516: [2026.09.07-18.39.43:888][  0]LogTemp: Display: NeivaSpawn: requested_cm=X=-88670.000 Y=7880.000 Z=150.000 placed_cm=X=-88670.000 Y=7880.000 Z=100.500 actual_cm=X=-88670.000 Y=7880.000 Z=100.500 moved=1 offset_xy_cm=0.000 radius_cm=36.000 half_height_cm=92.000
+L517: [2026.09.07-18.39.43:888][  0]LogTemp: Display: NeivaStart: pawn=NeivaCharacter_2147482463 location_cm=X=-88670.000 Y=7880.000 Z=100.500 actor_yaw=0.000 control_rotation=P=-12.000000 Y=20.000000 R=0.000000 requested_spawn_cm=X=-88670.000 Y=7880.000 Z=150.000 car_cm=X=-87740.000 Y=8250.000 Z=70.000 car_yaw=21.679
+L1932: [2026.09.07-18.41.43:101][558]LogRenderer: Warning: [VSM] Non-Nanite Marking Job Queue overflow. Performance may be affected. This occurs when many non-nanite meshes cover a large area of the shadow map.
+L1933: [2026.09.07-18.41.44:031][586]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm.
+L1968: [2026.09.07-18.41.47:637][694]LogTemp: Display: Neiva: exited vehicle at V(X=-87208.99, Y=8213.58, Z=96.00) cm; car at V(X=-87293.95, Y=8427.31, Z=70.00) cm.
+L1969: [2026.09.07-18.42.00:535][ 74]LogTemp: Display: NeivaState: world_seconds=136.243 pawn=NeivaCharacter_2147482463 location_cm=X=-86748.006 Y=8396.827 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=0.000000 Y=21.678587 R=-0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000
+L1970: [2026.09.07-18.42.00:535][ 74]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1
+L1971: [2026.09.07-18.42.00:535][ 74]LogTemp: Display: NeivaState: car=NeivaCar_2147481761 location_cm=X=-87293.950 Y=8427.312 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None

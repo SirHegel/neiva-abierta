@@ -153,7 +153,10 @@ process.stdout.write(JSON.stringify(applyUrbanSurvey(applyCartographicCorrection
         result = stage.stage_map(source, REPO)
         landmarks = json.loads((REPO / 'unreal/NeivaAbierta/SourceArt/landmarks/neiva-landmarks.json').read_text())
         self.assertIs(stage.validate_landmarks(landmarks, result), landmarks)
-        self.assertEqual(landmarks['counts']['vertices'], 177774)
+        # Reviewed hotel galleries and cathedral portals, including removal of
+        # duplicate cap triangles. Retain an explicit production-data snapshot.
+        self.assertEqual(landmarks['counts']['vertices'], 119886)
+        self.assertEqual(landmarks['counts']['triangles'], 71311)
 
     def test_landmark_validation_preserves_input_and_accepts_plain_materials(self):
         source, corrections, survey = fixtures()

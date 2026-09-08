@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import shutil
 from stage_map import stage_map, validate_landmarks
+from prepare_environment import prepare as prepare_environment
 
 PROJECT = Path(__file__).resolve().parents[1]
 REPO = PROJECT.parents[1]
@@ -59,6 +60,7 @@ def main():
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
         shutil.copyfile(args.landmarks, destination.with_name("neiva-landmarks.json"))
+        prepare_environment()
         licenses = destination.parent / "Licenses"
         for relative in ("LICENSE", "public/models/ATTRIBUTION.txt", "public/models/sources.json",
                          "public/models/character/LICENSE-ROCKETBOX.txt", "public/models/car/LICENSE-CAR.txt",
@@ -67,6 +69,10 @@ def main():
             target = licenses / relative.removeprefix("public/")
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+        for filename in ("manifest.json", "README.md"):
+            target = licenses / "visual" / filename
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(PROJECT / "SourceArt/visual" / filename, target)
         (licenses / "NATIVE-NOTES.txt").write_text(
             "Neiva Abierta / native Unreal source preparation. Original game code MIT; Unreal Engine licensed separately.\n"
             "OpenStreetMap/Overture: ODbL. See neiva.json meta.sources, survey and corrections for sources and estimates.\n"

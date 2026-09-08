@@ -58,7 +58,8 @@ export function buildCathedral(scene, footprint, materials) {
     interpretation: 'Original architectural model; proportions and details interpreted from a reference photograph, not a measured survey.',
     footprint: points.map((p) => [...p]), heightFromOsm: footprint.height || 33,
     spireProportionsEstimated: true, spireHeightBeforeNormalization: spireHeight,
-    verticalNormalization: group.scale.y };
+    verticalNormalization: group.scale.y, portalProportionsEstimated: true,
+    portalReferenceTreatment: 'Rectangular lower door leaves; separate pointed glazed transoms with interpreted masonry tracery.' };
 
   const cornice = materials.brick.clone(); cornice.name = 'Cathedral darker fired-brick cornices'; cornice.color.set(0x704239);
   const baseBrick = materials.brick.clone(); baseBrick.name = 'Cathedral brick plinth'; baseBrick.color.set(0xba7966);
@@ -68,6 +69,8 @@ export function buildCathedral(scene, footprint, materials) {
   const glazing = new THREE.MeshStandardMaterial({ name: 'Cathedral muted green glazing', color: 0x14251f, roughness: 0.2, metalness: 0.12,
     envMapIntensity: 0.65, side: THREE.DoubleSide });
   const wood = new THREE.MeshStandardMaterial({ name: 'Cathedral carved red painted doors', color: 0x762c1d, roughness: 0.73, side: THREE.DoubleSide });
+  const leftWood = wood.clone(); leftWood.name = 'Cathedral left dark door leaves'; leftWood.color.set(0x35382d);
+  const rightWood = wood.clone(); rightWood.name = 'Cathedral right ochre door leaves'; rightWood.color.set(0x8a762d);
   const clockFace = new THREE.MeshStandardMaterial({ name: 'Cathedral pale clock dial', color: 0xb3c8af, roughness: 0.69, side: THREE.DoubleSide });
   const metal = new THREE.MeshStandardMaterial({ name: 'Cathedral clock hands and cross', color: 0xb6b8a6, roughness: 0.4, metalness: 0.6 });
   const buckets = new Map();
@@ -91,19 +94,37 @@ export function buildCathedral(scene, footprint, materials) {
     add(extrude(shape, 0.16), material, [0, 0, z]);
   };
   const frontWindow = (x, y, w, h, { door = false, shutters = false } = {}) => {
-    add(new THREE.ShapeGeometry(pointedArch(x, y, w, h), 10), door ? wood : recess, [0, 0, 0.22]);
-    if (!door) add(new THREE.ShapeGeometry(pointedArch(x, y + 0.12, w - 0.18, h - 0.22), 9), glazing, [0, 0, 0.19]);
+    add(new THREE.ShapeGeometry(pointedArch(x, y, w, h), 10), recess, [0, 0, 0.22]);
+    add(new THREE.ShapeGeometry(pointedArch(x, y + 0.12, w - 0.18, h - 0.22), 9), glazing, [0, 0, 0.19]);
     archRing(x, y, w, h, -0.13);
     archRing(x, y - 0.03, w + 0.46, h + 0.3, -0.035, materials.brick, 0.1);
-    box(x, y + h * 0.44, -0.04, 0.11, h * 0.82, 0.16, door ? cornice : baseBrick);
+    if (!door) box(x, y + h * 0.44, -0.04, 0.11, h * 0.82, 0.16, baseBrick);
     if (shutters) for (let sy = y + 0.2; sy < y + h * 0.61; sy += 0.27)
       box(x, sy, -0.035, w - 0.2, 0.085, 0.14, glazing);
     if (door) {
-      for (const side of [-1, 1]) for (const dy of [1.0, 2.4]) {
-        box(x + side * w * 0.235, y + dy, 0.105, w * 0.34, 1.05, 0.12, wood);
-        box(x + side * w * 0.235, y + dy + 0.49, 0.02, w * 0.36, 0.09, 0.14, cornice);
+      // The photograph separates the lower rectangular timber leaves from the
+      // pointed glazed transom. Proportions and side-door colours are interpreted.
+      const central = Math.abs(x) < .01, leafHeight = h * (central ? .5 : .62);
+      const doorMaterial = central ? wood : x < 0 ? leftWood : rightWood;
+      for (const side of [-1, 1]) {
+        box(x + side * w * .24, y + leafHeight / 2, .14, w * .475, leafHeight, .075, doorMaterial);
+        for (const fraction of [.25, .73]) {
+          const panelY = y + leafHeight * fraction, panelHeight = leafHeight * .34;
+          box(x + side * w * .24, panelY, .07, w * .35, panelHeight, .055, doorMaterial);
+          for (const dy of [-1, 1])
+            box(x + side * w * .24, panelY + dy * panelHeight / 2, .035, w * .36, .055, .06, cornice);
+        }
       }
-      for (const side of [-1, 1]) box(x + side * 0.18, y + 1.55, -0.035, 0.06, 0.32, 0.08, metal);
+      box(x, y + leafHeight + .08, -.015, w + .06, .19, .2, cornice);
+      box(x, y + leafHeight / 2, .05, .055, leafHeight, .065, cornice);
+      for (const side of [-1, 1]) box(x + side * .13, y + leafHeight * .52, -.005, .055, .29, .08, metal);
+      const transomBottom = y + leafHeight + .27, transomHeight = h - leafHeight - .55;
+      const lancets = central ? [-1, 0, 1] : [-.5, .5];
+      for (const lancet of lancets) {
+        const offset = lancet * w * (central ? .265 : .44);
+        const lancetHeight = transomHeight * (central && lancet !== 0 ? .71 : 1);
+        archRing(x + offset, transomBottom, w * (central ? .24 : .31), lancetHeight, .015, cornice, .055);
+      }
     }
   };
 
@@ -180,7 +201,15 @@ export function buildCathedral(scene, footprint, materials) {
     archRing(x, 15.5, 0.7, 2.4, -0.04, baseBrick, 0.09);
   }
   for (const [x, w, y, h] of [[0, 4.2, 5.5, 2.1], [-5.55, 2.15, 7.4, 2.2], [5.55, 2.15, 7.4, 2.2]]) {
-    gable(x, y, w, h, -0.15, materials.brick);
+    if (x === 0) {
+      // A filled triangle used to seal the upper part of the portal's opening.
+      // Keep the gabled surround open; the pierced facade supplies its masonry.
+      const surround = new THREE.Shape([
+        new THREE.Vector2(-w / 2, y), new THREE.Vector2(0, y + h), new THREE.Vector2(w / 2, y),
+        new THREE.Vector2(w / 2 - .28, y), new THREE.Vector2(0, y + h - .32), new THREE.Vector2(-w / 2 + .28, y),
+      ]);
+      add(extrude(surround, .2), materials.brick, [0, 0, -.15]);
+    } else gable(x, y, w, h, -0.15, materials.brick);
     diagonal([x - w / 2, y, -0.4], [x, y + h, -0.4], 0.16, cornice);
     diagonal([x, y + h, -0.4], [x + w / 2, y, -0.4], 0.16, cornice);
   }

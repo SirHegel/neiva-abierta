@@ -76,7 +76,7 @@ def property_link(node, output, prop):
         raise RuntimeError(f"Invalid material property connection: {prop}")
 
 
-def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False, clothing_mask=None, landmark=False, skeletal=False):
+def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, masked=False, clothing_mask=None, landmark=False, skeletal=False, vertex_color=False):
     path = f"{ROOT}/Materials/{name}"
     material = unreal.load_asset(path) if editor.does_asset_exist(path) else assets.create_asset(
         name, ROOT + "/Materials", unreal.Material, unreal.MaterialFactoryNew())
@@ -134,7 +134,7 @@ def pbr_material(name, maps, tile=(1, 1), normal_opengl=True, roughness=.68, mas
             connect(multiply, "", mix, "B")
             connect(mask, channel, mix, "Alpha")
             color_node, color_output = mix, ""
-    if landmark:
+    if landmark or vertex_color:
         vertex = expression(material, unreal.MaterialExpressionVertexColor, -150, -240)
         multiply = expression(material, unreal.MaterialExpressionMultiply, 250, -120)
         connect(color_node, color_output, multiply, "A")
@@ -284,10 +284,37 @@ def import_car(record):
     return canonical_asset(imported, unreal.StaticMesh, destination)
 
 
+def bind_character_materials(character, character_materials):
+    # Iterating a reflected TArray<FSkeletalMaterial> returns struct copies.
+    # Write each modified value back by index before assigning the whole array;
+    # otherwise SaveAsset silently retains the black, textureless FBX materials.
+    character.modify(True)
+    slots = character.get_editor_property("materials")
+    expected = []
+    for index in range(len(slots)):
+        slot = slots[index]
+        label = str(slot.get_editor_property("material_slot_name")).lower()
+        part = next((name for name in character_materials if name in label), None)
+        if part is None:
+            raise RuntimeError(f"Unrecognized character material slot: {label}")
+        material = character_materials[part]
+        slot.set_editor_property("material_interface", material)
+        slots[index] = slot
+        expected.append(material.get_path_name())
+    character.set_editor_property("materials", slots)
+    actual = [slot.get_editor_property("material_interface").get_path_name()
+              for slot in character.get_editor_property("materials")]
+    if actual != expected:
+        raise RuntimeError(f"Character material binding failed: {actual} != {expected}")
+    if not editor.save_loaded_asset(character, only_if_is_dirty=False):
+        raise RuntimeError("Cannot persist the character material bindings")
+
+
 def main():
     plan = build_plan()  # Validate all local sources before asset mutations.
     for spec in plan["materials"]:
-        pbr_material(spec["name"], spec["maps"], spec["tileMeters"], spec["normalOpenGL"])
+        pbr_material(spec["name"], spec["maps"], spec["tileMeters"], spec["normalOpenGL"],
+                     vertex_color=spec["name"] in ("M_Facade", "M_UpperFacade"))
         if spec["name"] in ("M_Brick", "M_Plaster", "M_Roof", "M_Pavement"):
             # Landmark UVs arrive already divided by the exported physical tile.
             pbr_material("M_Landmark_" + spec["key"], spec["maps"], landmark=True)
@@ -308,16 +335,7 @@ def main():
         roughness={"body": .88, "head": .72, "opacity": .94}[part], masked=part == "opacity",
         clothing_mask=plan["clothingMask"] if part == "body" else None, skeletal=True)
         for part, maps in plan["characterTextures"].items()}
-    slots = character.get_editor_property("materials")
-    for slot in slots:
-        label = str(slot.get_editor_property("material_slot_name")).lower()
-        part = next((name for name in character_materials if name in label), None)
-        if part:
-            slot.set_editor_property("material_interface", character_materials[part])
-        else:
-            unreal.log_warning(f"Character material slot '{label}' kept as imported; inspect it visually.")
-    character.set_editor_property("materials", slots)
-    save_asset(character)
+    bind_character_materials(character, character_materials)
     import_car(plan["models"][1])
     levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     if not editor.does_asset_exist("/Game/Maps/Neiva"):

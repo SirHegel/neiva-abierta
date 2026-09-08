@@ -23,6 +23,7 @@ test('default remains H264 offscreen with the UE 5.5 WebRTCFps option',()=>{
   assert.ok(plan.gameArgs.includes('-PixelStreamingWebRTCFps=30'));
   assert.ok(!plan.gameArgs.some(arg=>/WebRTCMaxFps|CaptureUseFence|DecoupleFramerate/.test(arg)));
   assert.equal(plan.command,null);
+  assert.equal(plan.renderOffscreen,true);
   assert.equal(plan.environment.DISPLAY,':personal');
 });
 
@@ -41,11 +42,35 @@ test('VP8 virtual plan matches display dimensions and cannot inherit desktop rou
     assert.ok(plan.gameArgs.includes(arg),arg);
   }
   assert.ok(!plan.gameArgs.includes('-RenderOffScreen'));
+  assert.equal(plan.renderOffscreen,false);
   for(const name of ['DISPLAY','WAYLAND_DISPLAY','WAYLAND_SOCKET','XAUTHORITY','DBUS_SESSION_BUS_ADDRESS','SESSION_MANAGER']){
     assert.equal(plan.environment[name],undefined,name);
   }
   assert.equal(plan.environment.SDL_VIDEODRIVER,'x11');
   assert.equal(plan.environment.UNCHANGED,'keep');
+  assert.deepEqual(environment,original);
+});
+
+test('explicit offscreen virtual capture keeps private routing and resolution without a windowed flag',()=>{
+  const environment={PATH:'/tools',DISPLAY:':personal',WAYLAND_DISPLAY:'wayland-personal',
+    WAYLAND_SOCKET:'8',XAUTHORITY:'/private/auth',DBUS_SESSION_BUS_ADDRESS:'private-session',
+    SESSION_MANAGER:'private-manager',SDL_VIDEODRIVER:'wayland'};
+  const original={...environment};
+  const base=['--codec','VP8','--virtual-display','--width','1920','--height','1080',
+    '--capture-fence','--decouple-framerate'];
+  const windowed=gameLaunchPlan(parse(base),{...fixtures,environment});
+  const offscreen=gameLaunchPlan(parse([...base,'--render-offscreen']),{...fixtures,environment});
+  assert.equal(offscreen.renderOffscreen,true);
+  assert.equal(offscreen.command,windowed.command);
+  assert.deepEqual(offscreen.wrapperArgs,['-a','-s','-screen 0 1920x1080x24 -nolisten tcp']);
+  assert.deepEqual(offscreen.gameArgs,windowed.gameArgs.map(arg=>arg==='-windowed'?'-RenderOffScreen':arg));
+  assert.equal(offscreen.gameArgs.filter(arg=>arg==='-RenderOffScreen').length,1);
+  assert.ok(!offscreen.gameArgs.includes('-windowed'));
+  assert.deepEqual(offscreen.environment,windowed.environment);
+  for(const name of ['DISPLAY','WAYLAND_DISPLAY','WAYLAND_SOCKET','XAUTHORITY','DBUS_SESSION_BUS_ADDRESS','SESSION_MANAGER']){
+    assert.equal(offscreen.environment[name],undefined,name);
+  }
+  assert.equal(offscreen.environment.SDL_VIDEODRIVER,'x11');
   assert.deepEqual(environment,original);
 });
 
@@ -55,6 +80,7 @@ test('malformed codec, ports, dimensions and incompatible capture flags fail bef
     ['--port','8080junk'],['--port','1e4'],['--port','1023'],['--port','65536'],
     ['--port','8888'],['--width','0'],['--height','2161'],['--width','1280.5'],
     ['--decouple-framerate'],['--gpu','intel'],['--host','example.com'],['--package','   '],
+    ['--render-offscreen=false'],
   ])assert.throws(()=>parse(args),undefined,args.join(' '));
   assert.equal(parse(['--capture-fence'])['capture-fence'],true);
   assert.equal(parse(['--width','3840','--height','2160']).width,3840);
@@ -63,6 +89,7 @@ test('malformed codec, ports, dimensions and incompatible capture flags fail bef
 test('virtual display is Linux-only and unintended positional actions are rejected',()=>{
   assert.throws(()=>parse(['--virtual-display'],'win32'),/Linux/);
   assert.throws(()=>parseStreamingArgs(['prepare','--virtual-display'],{platform:'linux'}),/doctor o start/);
+  assert.throws(()=>parseStreamingArgs(['prepare','--render-offscreen'],{platform:'linux'}),/doctor o start/);
   assert.throws(()=>parseStreamingArgs(['start','unexpected'],{platform:'linux'}),/una sola acción/);
   assert.throws(()=>parseStreamingArgs(['unknown'],{platform:'linux'}),/Acción/);
   assert.throws(()=>parse([],'darwin'),/Linux o Windows/);
@@ -94,6 +121,7 @@ test('help is available without starting infrastructure',()=>{
   assert.match(result.stdout,/doctor.*package/);
   assert.match(result.stdout,/H264\|VP8/);
   assert.match(result.stdout,/no inicia servidor ni juego/);
+  assert.match(result.stdout,/--render-offscreen/);
 });
 
 test('doctor reports the VP8 virtual plan without creating a server or game',context=>{
@@ -102,11 +130,14 @@ test('doctor reports the VP8 virtual plan without creating a server or game',con
   }
   try{virtualDisplay();}catch{context.skip('Xvfb toolchain is not installed');return;}
   const result=spawnSync(process.execPath,[script,'doctor','--codec','VP8','--virtual-display',
-    '--capture-fence','--decouple-framerate'],{cwd:repo,encoding:'utf8',timeout:15000});
+    '--render-offscreen','--capture-fence','--decouple-framerate'],{cwd:repo,encoding:'utf8',timeout:15000});
   assert.equal(result.status,0,result.stderr);
   const plan=JSON.parse(result.stdout);
   assert.equal(plan.codec,'VP8');
   assert.equal(plan.virtualDisplay,true);
+  assert.equal(plan.renderOffscreen,true);
+  assert.ok(plan.gameArgs.includes('-RenderOffScreen'));
+  assert.ok(!plan.gameArgs.includes('-windowed'));
   assert.equal(plan.serverRunning,false);
   assert.equal(plan.gameRunning,false);
   assert.equal(plan.runtimeValidated,false);

@@ -17,6 +17,7 @@ public:
     void ResumeGame();
     void QuitToDesktop();
     UFUNCTION(exec) void NeivaState();
+    UFUNCTION(exec) void NeivaLook(float Yaw, float Pitch);
 private:
     void ApplyGameInput();
     void ResetPawnInput();

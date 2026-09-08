@@ -33,6 +33,7 @@ export function parseStreamingArgs(args,{platform=process.platform}={}){
     width:{type:'string',default:'1280'},height:{type:'string',default:'720'},
     gpu:{type:'string',default:'auto'},codec:{type:'string',default:'H264'},
     'virtual-display':{type:'boolean',default:false},
+    'render-offscreen':{type:'boolean',default:false},
     'capture-fence':{type:'boolean',default:false},
     'decouple-framerate':{type:'boolean',default:false},
     'dry-run':{type:'boolean',default:false},help:{type:'boolean',short:'h',default:false}
@@ -53,6 +54,7 @@ export function parseStreamingArgs(args,{platform=process.platform}={}){
   if(values['decouple-framerate']&&!values['capture-fence'])throw Error('--decouple-framerate requiere --capture-fence en UE 5.5.');
   if(values['virtual-display']&&platform!=='linux')throw Error('--virtual-display sólo está disponible en Linux.');
   if(values['virtual-display']&&action==='prepare')throw Error('--virtual-display requiere doctor o start.');
+  if(values['render-offscreen']&&action==='prepare')throw Error('--render-offscreen requiere doctor o start.');
   if(action!=='prepare'&&!['linux','win32'].includes(platform))throw Error('La partida admite Linux o Windows.');
   return {action,values};
 }
@@ -80,13 +82,14 @@ export function virtualDisplay(environment=process.env,{home=homedir(),isExecuta
 // O(P + E), same invariants as virtualDisplay; produces arguments, never starts a game.
 export function gameLaunchPlan(values,{environment=process.env,home=homedir(),isExecutable=executableFile}={}){
   const virtual=values['virtual-display']?virtualDisplay(environment,{home,isExecutable}):null;
+  const renderOffscreen=Boolean(!virtual||values['render-offscreen']);
   const gameArgs=[`-PixelStreamingURL=ws://127.0.0.1:${values['streamer-port']}`,
-    ...(virtual?['-windowed','-vulkan','-NoEpicPortal']:['-RenderOffScreen']),'-AudioMixer',
+    renderOffscreen?'-RenderOffScreen':'-windowed',...(virtual?['-vulkan','-NoEpicPortal']:[]),'-AudioMixer',
     '-ForceRes',`-ResX=${values.width}`,`-ResY=${values.height}`,`-PixelStreamingEncoderCodec=${values.codec}`,
     '-PixelStreamingWebRTCFps=30','-ExecCmds=t.MaxFPS 30','-unattended','-stdout'];
   if(values['capture-fence'])gameArgs.push('-PixelStreamingCaptureUseFence');
   if(values['decouple-framerate'])gameArgs.push('-PixelStreamingDecoupleFramerate');
-  return {gameArgs,command:virtual?.command||null,
+  return {gameArgs,renderOffscreen,command:virtual?.command||null,
     wrapperArgs:virtual?['-a','-s',`-screen 0 ${values.width}x${values.height}x24 -nolisten tcp`]:[],
     environment:virtual?.environment||{...environment}};
 }
@@ -109,6 +112,7 @@ export function main(args=process.argv.slice(2)){
     console.log('doctor comprueba infraestructura/paquete y muestra el plan; no inicia servidor ni juego.');
     console.log('--codec H264|VP8: H264 por defecto; VP8 permite seleccionar codificación por software.');
     console.log('--virtual-display: Linux, Xvfb privado; ventana y pantalla coinciden con --width/--height (1280×720 por defecto).');
+    console.log('--render-offscreen: combina render sin ventana con --virtual-display; la pantalla privada conserva las mismas dimensiones.');
     console.log('--capture-fence y --decouple-framerate: opciones explícitas, desactivadas por defecto; desacoplar requiere fence.');
     console.log('Vista local: --codec VP8 --virtual-display --capture-fence --decouple-framerate');
     console.log('--dry-run muestra el plan; sin --package start sólo sirve señalización, sin vídeo Unreal.');
@@ -158,7 +162,7 @@ export function main(args=process.argv.slice(2)){
     const launch=gameLaunchPlan(values),gameArgs=launch.gameArgs;
     if(values['dry-run']||action==='doctor'){
       console.log(JSON.stringify({revision,host:values.host,port,streamerPort,executable,codec:values.codec,
-        virtualDisplay:values['virtual-display'],gameCommand:executable?(launch.command||executable):null,
+        virtualDisplay:values['virtual-display'],renderOffscreen:launch.renderOffscreen,gameCommand:executable?(launch.command||executable):null,
         gameCommandArgs:executable?[...launch.wrapperArgs,...(launch.command?[executable]:[]),...gameArgs]:null,
         virtualDisplayCommand:launch.command,virtualDisplayArgs:launch.wrapperArgs,
         gameArgs,gameRunning:false,serverRunning:false,runtimeValidated:false},null,2));

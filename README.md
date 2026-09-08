@@ -1,16 +1,47 @@
 # Neiva Abierta
 
-**Desarrollo actual: Unreal Engine 5.5.4.** La distribución oficial de Linux
-está instalada; el proyecto C++ compila y la importación de activos pasó sus
-comprobaciones. La partida de desarrollo cargó 35.873/35.873 edificios bajo
-Xvfb, con Vulkan SM6 y una NVIDIA RTX 4050 Laptop. Se comprobó vídeo real
-mediante Pixel Streaming con VP8, además de entrar, conducir, frenar y salir
-del coche. La prueba recibió unos 30 FPS a 1280 × 720 durante 18,56 segundos;
-es una medición breve del vídeo recibido, no del rendimiento máximo del motor.
-El paquete Linux descargable está en construcción y todavía no está validado.
-[Construcción, transmisión y publicación](docs/DISTRIBUCION.md) ·
-[Proyecto Unreal](docs/UNREAL.md) ·
+**Alfa Unreal 0.1.0 para Linux x86_64 disponible.** Explora Neiva a pie o en
+coche, con un personaje anónimo, peatones, colores de ropa y un pequeño estudio
+ficticio para contactar a Jhon. Creada y empaquetada con **Unreal Engine 5.5.4**.
+
+[Descargar gratis la alfa Linux en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha)
+
+Extrae el archivo completo y, desde la carpeta extraída, ejecuta:
+
+```sh
+./Jugar-Neiva.sh
+```
+
+Conserva `Linux/` junto al lanzador. Para jugar no necesitas instalar el editor;
+se requiere Linux x86_64 con GPU y controlador Vulkan. Esta descarga no contiene
+versiones para Windows ni celulares. Los requisitos mínimos todavía no están
+establecidos.
+
+**Controles Unreal:** WASD para caminar o conducir; ratón para mirar; Shift
+para correr; Espacio para saltar o frenar; E para interactuar, entrar o salir
+del coche; C/V para cambiar colores de ropa; R para volver al inicio;
+Esc/P para pausar y continuar.
+
+El paquete independiente abrió en una NVIDIA RTX 4050 Laptop. Se comprobaron
+suelo estable, cámara, pausa/reanudación y una secuencia de entrada al coche,
+avance de 4,8 m, freno y salida. Pixel Streaming recibió vídeo VP8 a 1280 × 720
+con 29,969 FPS durante 18,62 s: es una observación breve de vídeo recibido,
+no un benchmark del render. [Pruebas y descarga](docs/DISTRIBUCION.md).
+
+La ciudad carga 35.873 huellas y cuatro hitos interpretados; **no es una réplica
+idéntica ni hiperrealista de toda Neiva**. Hay alturas y fachadas estimadas,
+terreno plano e interiores pendientes. El perfil de sombras del lanzador reduce
+su resolución; los avisos VSM pueden reaparecer al desplazarse y no se consideran
+resueltos. [Alcance nativo y controles](docs/UNREAL.md) ·
+[Proyecto, transmisión y publicación](docs/DISTRIBUCION.md) ·
 [Revisar referencias sin usar el teclado o mouse del escritorio](docs/NAVEGACION-AISLADA.md).
+
+Para reconstruir la mejora visual 0.2 en desarrollo, sigue el
+[orden completo de descarga, importación y horneado](docs/UNREAL.md#orden-completo-desde-un-clon-limpio).
+`scripts/unreal.py package` ejecuta sólo la importación base: los árboles y
+bancos CC0 y el horneado de hitos requieren los pasos previos documentados.
+La [evidencia 0.2](docs/MEJORA-VISUAL-0.2.md) se mantiene separada de la alfa
+0.1.0 descargable.
 
 ## Prototipo web anterior 0.4 · Three.js
 
@@ -50,12 +81,9 @@ El suelo del juego es plano. No es una réplica
 fotográfica ni un levantamiento completo de cada barrio e interior de Neiva.
 El estudio mide 6 × 4 × 3,5 metros de juego y no representa una dirección real.
 
-El desarrollo nativo usa Unreal Engine 5.5.4, con Lumen, ciudad procedural,
-personaje, vehículo e interacción. Se comprobaron compilación, importación,
-conducción y recepción de vídeo VP8 de la partida de desarrollo. La entrega
-empaquetada y su ejecución independiente siguen pendientes. Los controles y la
-captura de esta sección pertenecen al prototipo web.
-[Estado y límites de Unreal](docs/UNREAL.md).
+La alfa Unreal descargable tiene sus propios controles y pruebas, descritos
+al inicio de esta página y en [UNREAL.md](docs/UNREAL.md). La captura y las
+funciones de esta sección pertenecen al prototipo web anterior.
 
 Google Photorealistic 3D Tiles puede conectarse mediante Cesium para Unreal.
 Se incluye una preparación opcional que requiere plugin, clave API, facturación
@@ -165,9 +193,11 @@ de la ejecución en la entrega; Unreal requiere su validación independiente.
 ## Licencias y fuentes
 
 Código original: [MIT](LICENSE). Three.js: MIT. Unreal Engine conserva la
-licencia de Epic y no está incluido. Datos y atribuciones: [MAPAS.md](docs/MAPAS.md).
+licencia de Epic: la descarga nativa incorpora su runtime, no el editor ni el
+código fuente del motor. Datos y atribuciones: [MAPAS.md](docs/MAPAS.md).
 Personaje Microsoft Rocketbox: MIT; automóvil Car Concept de Eric Chadwick,
 Darmstadt Graphics Group GmbH, 2024: CC BY 4.0, con sus condiciones de marcas
 conservadas. Materiales y HDR de Poly Haven: CC0. Atribuciones también disponibles
-dentro del juego, en Sobre este mundo. El código abierto del juego no cambia
+en `Licenses/` dentro de la descarga nativa y en Sobre este mundo del prototipo
+web. El código abierto del juego no cambia
 la licencia de los proveedores externos.

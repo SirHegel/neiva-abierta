@@ -10,6 +10,12 @@ tiene nombre y el pequeño estudio de Jhon es ficticio. El juego usa Unreal
 Engine 5.5.4. El código original del proyecto está disponible bajo MIT;
 el motor y los recursos de terceros conservan sus propias licencias.
 
+La alfa 0.2 incorpora materiales corregidos del personaje, árboles y bancos
+de Poly Haven, geometría Nanite en los hitos y sectores urbanos agrupados
+según su distancia al punto inicial. El límite inicial de la aplicación es
+60 FPS; no garantiza esa tasa en cada vista o equipo. La ciudad sigue siendo
+una interpretación parcial y su calidad visual no equivale a Cyberpunk 2077.
+
 ## Abrir el juego
 
 Extrae **todo** el archivo `.tar.gz` en una carpeta de tu equipo. Desde esa
@@ -87,7 +93,9 @@ metadatos originales en `Datos/neiva.metadata.json`, incluidos en la descarga.
 Código original: Jhon Steven Álvarez Ruiz, MIT. Personaje y animaciones:
 Microsoft Rocketbox, MIT. Coche Car Concept: Eric Chadwick / Darmstadt Graphics
 Group GmbH, CC BY 4.0; marcas Khronos sujetas a sus condiciones propias.
-Texturas: Poly Haven, CC0. Cartografía y geometría derivada: ODbL, con
+Texturas, jacaranda y banco modular: Poly Haven, CC0; las fuentes y cambios
+de los modelos están en `Licenses/visual/manifest.json` y su README.
+Cartografía y geometría derivada: ODbL, con
 atribución adicional CC BY 4.0 para Google Open Buildings.
 
 Las licencias y los manifiestos se distribuyen legibles en `Licenses/`.

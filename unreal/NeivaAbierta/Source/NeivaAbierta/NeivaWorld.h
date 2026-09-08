@@ -41,6 +41,8 @@ class NEIVAABIERTA_API UNeivaVisualSettings : public UObject
 public:
     UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<USkeletalMesh> CharacterMesh;
     UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UStaticMesh> CarMesh;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UStaticMesh> TreeMesh;
+    UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UStaticMesh> BenchMesh;
     UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UTextureCube> EnvironmentCube;
     UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UAnimSequence> IdleAnimation;
     UPROPERTY(Config, EditAnywhere, Category="Neiva|Visual") TSoftObjectPtr<UAnimSequence> WalkAnimation;
@@ -69,9 +71,16 @@ public:
     UPROPERTY(EditAnywhere, Category="Neiva") bool bGenerateMapGeometry = true;
     // Zero imports the entire dataset. Nonzero is an explicitly selected preview radius.
     UPROPERTY(EditAnywhere, Category="Neiva", meta=(ClampMin="0")) float BuildingRadiusMeters = 0;
-    UPROPERTY(EditAnywhere, Category="Neiva", meta=(ClampMin="100", ClampMax="2000")) float BuildingTileSizeMeters = 500;
+    // Fine render bounds around the initial spawn; distant geometry is grouped
+    // more broadly to keep Vulkan descriptor usage bounded. No buildings are removed.
+    UPROPERTY(EditAnywhere, Category="Neiva", meta=(ClampMin="100", ClampMax="2000")) float BuildingTileSizeMeters = 100;
+    UPROPERTY(EditAnywhere, Category="Neiva", meta=(ClampMin="100", ClampMax="2000")) float BuildingFarTileSizeMeters = 500;
+    // Zero disables fine grouping, not map geometry. This is a build-time radius,
+    // not runtime streaming, and remains centred on the original map spawn.
+    UPROPERTY(EditAnywhere, Category="Neiva", meta=(ClampMin="0", ClampMax="2000")) float BuildingFineRadiusMeters = 500;
 private:
     TSet<FString> BuildLandmarks(const TSharedPtr<FJsonObject>& MapData);
+    void BuildEnvironment(const TSharedPtr<FJsonObject>& MapData);
     UPROPERTY() TObjectPtr<UProceduralMeshComponent> Mesh;
     UPROPERTY() TArray<TObjectPtr<UProceduralMeshComponent>> BuildingMeshes;
     UPROPERTY() TObjectPtr<UMaterialInterface> Surface;
@@ -130,7 +139,7 @@ class NEIVAABIERTA_API ANeivaPedestrian : public ANeivaCharacter
 public:
     ANeivaPedestrian();
     virtual void Tick(float DeltaSeconds) override;
-    void SetRoute(const TArray<FVector>& Points, int32 AppearanceSeed);
+    void SetRoute(const TArray<FVector>& Points, int32 AppearanceSeed, int32 FirstTargetPoint = 1);
 private:
     TArray<FVector> Route;
     int32 TargetPoint = 1;

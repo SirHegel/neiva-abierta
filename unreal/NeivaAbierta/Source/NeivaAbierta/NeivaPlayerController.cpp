@@ -49,6 +49,16 @@ void ANeivaPlayerController::AuditState()
     if (--AuditSamplesRemaining <= 0) GetWorldTimerManager().ClearTimer(AuditTimer);
 }
 
+void ANeivaPlayerController::NeivaLook(float Yaw, float Pitch)
+{
+    // Reproducible review framing, opt-in only. Never teleports, disables
+    // collision or changes movement mode as CheatManager::BugItGo would.
+    if (!FParse::Param(FCommandLine::Get(), TEXT("NeivaAudit")) ||
+        !FMath::IsFinite(Yaw) || !FMath::IsFinite(Pitch) || IsPaused()) return;
+    SetControlRotation(FRotator(FMath::Clamp(Pitch, -70.f, 60.f), FMath::UnwindDegrees(Yaw), 0));
+    NeivaState();
+}
+
 void ANeivaPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();

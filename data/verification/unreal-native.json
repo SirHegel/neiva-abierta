@@ -1,6 +1,9 @@
 {
-  "checkedAt": "2026-09-07T17:37:46.641Z",
-  "scope": "Ejecución nativa de UnrealEditor -game en Linux verificada con telemetría, capturas y vídeo Pixel Streaming. Ejecutable empaquetado pendiente de validación.",
+  "schemaVersion": 3,
+  "checkedAt": "2026-09-07T18:47:22.323Z",
+  "observedAt": "2026-09-07T18:41:37.589Z",
+  "scope": "Alfa Unreal 0.1.0 Linux x64 descargada de GitHub Releases, ejecutada y verificada mediante telemetría nativa, capturas y vídeo continuo. La ficha del sitio está preparada para su despliegue.",
+  "releaseVersion": "unreal-v0.1.0-linux-alpha",
   "engine": {
     "requested": "Unreal Engine 5.5",
     "installed": true,
@@ -9,42 +12,40 @@
     "gameCompiled": true,
     "editorTargetCompiled": true,
     "standaloneGameTargetCompiled": true,
-    "standaloneGameTargetCompilationEvidence": "Compilación UAT comunicada por el agente principal durante package-01; cook aún en curso al registrar esta evidencia.",
     "imported": true,
-    "packaged": false,
+    "packaged": true,
     "runtimeValidated": true,
     "runtimeEditorVerified": true,
-    "runtimePackagedVerified": false,
-    "runtimeExecutable": "UnrealEditor",
-    "runtimeMode": "-game",
-    "platform": "Linux",
+    "runtimePackagedVerified": true,
+    "downloadedCopyRuntimeVerified": true,
+    "runtimeExecutable": "NeivaAbierta",
+    "runtimeMode": "packaged",
+    "configuration": "Development",
+    "platform": "Linux x64",
     "renderingBackend": "Vulkan SM6",
-    "gameplayCapture": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
-    "evidence": {
-      "importReport": {
-        "path": "artifacts/unreal-native/first-native-20260907T162729Z/import-03-report.json",
-        "bytes": 3477,
-        "sha256": "b8096294c20f1b3194a4a26e67721a4508792be81936a12da4d6f7ea3c66b68d",
-        "publiclyHosted": false
+    "sourceBinarySha256": "0ca1fcecc18198c8f609106f290908965757458ac27e5b955bb331d3541d720b",
+    "binaryBytes": 283284400,
+    "sourceCommit": "52ebd7fa55ff73c317fbb17134668b8398ec12eb",
+    "executableInsideDownloadedInstallationVerified": true,
+    "gameplayCapture": "artifacts/unreal-native/stream-observations/observation-gm7VwR/stream.webm",
+    "gameplayCaptureSha256": "8e087377745da8cdf67e7f35d0630f3ad150279ec87e25bbb513c4c1bbcfd233",
+    "startupShadowProfile": {
+      "directionalShadowLodBias": 0.5,
+      "movingDirectionalShadowLodBias": 0.5
+    },
+    "uat": {
+      "passed": true,
+      "exitCode": 0,
+      "buildCookRunSeconds": 2745.53,
+      "report": {
+        "path": "artifacts/unreal-native/first-native-20260907T162729Z/package-01-report.json",
+        "bytes": 5366,
+        "sha256": "28554d0d7aa2804bf6518efa017710906f0ed3db4c136679491e144f4a3148ba"
       },
-      "editorTargetBuildLog": {
-        "path": "artifacts/unreal-native/first-native-20260907T162729Z/build-06.log",
-        "bytes": 1002,
-        "sha256": "a5d0471e5d6900941964bd3e1abc0386d7316fdb17c178dafeca9d257b3c582a",
-        "publiclyHosted": false
-      },
-      "runtimeLog": {
-        "path": "artifacts/unreal-native/first-native-20260907T162729Z/editor-game-05.log",
-        "bytes": 361386,
-        "sha256": "3392fe043117ac65722b908ac72d9407767d662eb445d566d384bd0d9a2ec7c4",
-        "publiclyHosted": false
-      },
-      "publicLogExcerpt": {
-        "path": "data/verification/unreal-native-game05-log.txt",
-        "bytes": 11673,
-        "sha256": "5640339ff68d7ea62411520f22f5c865db2f19a711c1c0a293bc19647e286d5b",
-        "publiclyHosted": false,
-        "trackedForPublication": true
+      "safeBuildAndPackageLog": {
+        "path": "data/verification/unreal-package-log.txt",
+        "bytes": 22132,
+        "sha256": "5df12c5ea7a1f3b51544054997702b4b75c897e459892e1783bb07ea426374e2"
       }
     }
   },
@@ -63,99 +64,259 @@
     "stagedMapTestsPassed": 13,
     "unrealScriptsTestsPassed": 22,
     "totalTestsPassed": 178,
-    "countsRelation": "57 root Python = 44 launcher + 13 staged map. Total = 99 Node + 57 root Python + 22 Unreal Scripts.",
-    "runReportedBy": "Agente principal tras ejecutar la suite completa durante package-01.",
+    "nodeTestsRecheckedAt": "2026-09-07T18:31:20.813305+00:00",
     "webBuildPassed": true,
-    "previousWebBuildPassed": true,
-    "webBuildStatus": "Compilación web PASS, ejecutada por el agente principal durante package-01.",
-    "cppMotionKernelCompiledAndTested": true,
-    "cppMotionKernelIsTheGameExecutable": false,
-    "targetedAdditionalControlTestsPassed": 3,
-    "additionalControlsTestScope": "Cámara, pausa y lanzador de distribución: suite Node completa revalidada, 99 pruebas correctas. Las 79 pruebas Python corresponden a la corrida previa del mismo código Python.",
-    "nodeTestsRecheckedAt": "2026-09-07T18:31:20.813305+00:00"
+    "countsRelation": "178 = 99 Node + 57 root Python (44 launcher + 13 staged map) + 22 Unreal Scripts.",
+    "webBuildStatus": "PASS",
+    "scope": "Suites executed by the principal agent; controls tests are included in the 99 Node count, not added again.",
+    "realUatBuildCookStagePackageArchivePassed": true,
+    "publicDownloadHttpAndHashPassed": true,
+    "downloadedExecutableLaunchPassed": true
   },
   "streaming": {
     "upstreamRevision": "c3e3abea6590a19e1c0ab4d2954efd6a1d949db3",
     "infrastructureCompiled": true,
-    "playerHttpStatus": 200,
-    "websocketConfigReceived": true,
-    "streamerIds": [
-      "DefaultStreamer"
-    ],
     "videoReceived": true,
-    "linuxChildCleanupVerified": true,
-    "windowsExecutionVerified": false,
     "continuousVideoVerified": true,
     "codec": "VP8",
     "encoderType": "software",
     "renderingGpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
     "browser": "Chrome/152.0.7977.64",
-    "connection": "connected",
     "width": 1280,
     "height": 720,
-    "decodedFramesDelta": 557,
-    "bytesReceivedDelta": 26105588,
-    "observedSeconds": 18.557400000035763,
-    "decodedFps": 30.014980546786003,
+    "decodedFps": 29.49805216662641,
+    "observedSeconds": 18.713100000023843,
+    "decodedFramesDelta": 552,
+    "bytesReceivedDelta": 26755310,
     "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
     "liveAtEnd": true,
-    "inputWarmup": {
-      "passed": true,
-      "maxWaitMs": 8000,
-      "requiredNewFrames": 3,
-      "initialCounters": [
-        {
-          "id": "IT01V1519417151",
-          "bytesReceived": 141227,
-          "framesDecoded": 6,
-          "framesDropped": 0,
-          "packetsLost": 0,
-          "framesPerSecond": 33,
-          "totalDecodeTime": 0.015243999999999999
-        }
-      ],
-      "samples": [
-        {
-          "elapsedMs": 202,
-          "newFrames": 1,
-          "newBytes": 484361,
-          "ready": false
-        },
-        {
-          "elapsedMs": 404,
-          "newFrames": 6,
-          "newBytes": 645738,
-          "ready": true
-        }
-      ],
-      "elapsedMs": 404
-    },
+    "inputWarmupPassed": true,
     "recording": {
-      "mime": "video/webm;codecs=vp8",
-      "bytes": 3496469,
-      "durationMs": 20111.80000001192,
-      "stopReason": "observation-ended",
-      "sha256": "7cb62e26527cfd57cd260000b55a4aed41e57299e9ac77cc87489fe2edd96552",
-      "source": "HTMLVideoElement.srcObject MediaStream; not desktop capture",
+      "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/stream.webm",
+      "bytes": 3534978,
+      "sha256": "8e087377745da8cdf67e7f35d0630f3ad150279ec87e25bbb513c4c1bbcfd233",
+      "durationMs": 20395.30000001192,
       "completedStop": true,
       "coveredObservation": true,
-      "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
-      "publiclyHosted": false,
-      "ffprobe": {
-        "decodedSuccessfully": true,
-        "codec": "vp8",
-        "width": 1280,
-        "height": 720,
-        "decodedFrames": 603,
-        "firstFramePtsSeconds": 0,
-        "lastFramePtsSeconds": 20.078,
-        "containerDurationSeconds": null,
-        "note": "MediaRecorder WebM has no declared container duration; measured recorder duration and decoded frame timestamps are reported separately."
+      "ffprobeDecodePassed": true,
+      "ffprobeDecodedFrames": 600,
+      "mime": "video/webm;codecs=vp8",
+      "source": "HTMLVideoElement.srcObject MediaStream; no desktop capture",
+      "artifactPubliclyHosted": false
+    },
+    "nativeGpuBenchmarkCompleted": false,
+    "publicStreamingDeploymentVerified": false,
+    "testedTransport": "Local Pixel Streaming from the downloaded native executable.",
+    "linuxChildCleanupVerified": true,
+    "windowsExecutionVerified": false
+  },
+  "runtimeReview": {
+    "session": "github-downloaded-game-01",
+    "runtimeExecutable": "NeivaAbierta",
+    "downloadedCopy": true,
+    "observedAtUtc": "2026-09-07T18:41:37.589Z",
+    "lastNativeStateAtUtc": "2026-09-07T18:42:00.535Z",
+    "method": "Manually reviewed native telemetry and screenshots; the browser report independently verifies decoded video. Input delivery alone is not gameplay proof.",
+    "physicalDesktopInput": false,
+    "ownTemporaryBrowserClosed": true,
+    "coordinateSystem": {
+      "unit": "centimetres",
+      "x": "east",
+      "y": "north",
+      "z": "up",
+      "geographicOriginLonLat": [
+        -75.2809,
+        2.9252
+      ]
+    },
+    "gameplay": {
+      "verified": true,
+      "walkToCarVerified": true,
+      "entryVerified": true,
+      "entryAtUtc": "2026-09-07T18:41:44.031Z",
+      "carInitialLocationCm": [
+        -87740,
+        8250,
+        70
+      ],
+      "carFinalLocationCm": [
+        -87293.95,
+        8427.312,
+        70
+      ],
+      "driveVerified": true,
+      "carDisplacementCm": 480.00015400414463,
+      "brakeVerified": true,
+      "hudSpeedAfterBrakeKmH": 0,
+      "nativeCarSpeedPropertyAtEnd": 0,
+      "exitVerified": true,
+      "exitAtUtc": "2026-09-07T18:41:47.637Z",
+      "exitLocationCm": [
+        -87208.99,
+        8213.58,
+        96
+      ],
+      "passengerAtEnd": null,
+      "walkAfterExitVerified": true,
+      "vehicleCameraTransitionVisuallyVerified": true,
+      "outfitSelectorChangeVerified": true,
+      "outfitScope": "C/V change garment colour selectors; trousers1/4 before,2/4 after. Same garment meshes.",
+      "nativeStateAtUtc": "2026-09-07T18:42:00.535Z",
+      "worldSecondsAtFinalState": 136.243,
+      "finalPawn": "NeivaCharacter_2147482463",
+      "finalLocationCm": [
+        -86748.006,
+        8396.827,
+        95.15
+      ],
+      "finalVelocityCmPerSecond": [
+        0,
+        0,
+        0
+      ],
+      "finalMovementMode": "WALKING",
+      "finalControlRotationPitchYawRoll": [
+        0,
+        21.678587,
+        0
+      ],
+      "pauseAndFreeLookRepeatedInDownloadedCopy": false,
+      "priorSameBinaryControlsReview": "artifacts/unreal-native/stream-observations/observation-0W7xQy/native-controls-review.json"
+    },
+    "screenshots": {
+      "after-native-state.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/after-native-state.png",
+        "bytes": 993756,
+        "sha256": "70f205d860f49da26cc43ffee61954c224b5431a696a864371ecad3ba5a93b63"
+      },
+      "after.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/after.png",
+        "bytes": 1091811,
+        "sha256": "7a4e7675ba1fa493f00b9c0908f96984833686d168e4763217200b8ed93f2306"
+      },
+      "before.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/before.png",
+        "bytes": 1098288,
+        "sha256": "400533b7e9d30c307be1f8e65755ac24d40d7fbda00588f502cbd9b664a6d7da"
+      },
+      "car-drive.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/car-drive.png",
+        "bytes": 1266602,
+        "sha256": "f3acf6bdb7f59ed1becec9728df6e78a45191c7370b8cc38fc48e22552d41a89"
+      },
+      "car-enter.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/car-enter.png",
+        "bytes": 1173571,
+        "sha256": "678ad267fb2fd706405dede7f2205c7d0ef9b95c768dbc35130caa47d5a2e5c0"
+      },
+      "car-exit.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/car-exit.png",
+        "bytes": 902301,
+        "sha256": "3c24a21a7e61c52e18e0a0819570807545789e34108e4dced877d33538aea7a3"
+      },
+      "native-frame.png": {
+        "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/native-frame.png",
+        "bytes": 470525,
+        "sha256": "4f203ad408c70b9516be38397e213cf067736fcff20821f688ace8ccfc7a2094"
       }
     },
-    "softwareEncodingNote": "VP8 fue la ruta con vídeo continuo verificada; las pruebas locales anteriores con H.264 no progresaron más de un fotograma.",
-    "browserCompatibilityNote": "El Firefox aislado de esta máquina no ofreció H.264. La ejecución verificada utilizó Chrome con VP8.",
-    "publicStreamingDeploymentVerified": false
+    "recommendedSiteStill": {
+      "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/before.png",
+      "bytes": 1098288,
+      "sha256": "400533b7e9d30c307be1f8e65755ac24d40d7fbda00588f502cbd9b664a6d7da",
+      "reason": "Actual downloaded Unreal package at initial spawn; no VSM warning visible in this frame."
+    },
+    "observerReport": {
+      "path": "artifacts/unreal-native/stream-observations/observation-gm7VwR/report.json",
+      "bytes": 13601,
+      "sha256": "6e1b49cb9ab2e498b59b67d69aacd313e1d9207a270d054b5317df10c921b633"
+    },
+    "safeNativeLog": {
+      "path": "data/verification/unreal-downloaded-log.txt",
+      "bytes": 2744,
+      "sha256": "7f16445abc63355232bc34dd320fb97d630f5f7aaa66446eb2cbe6bcbe545658"
+    }
+  },
+  "priorPackagedControls": {
+    "session": "packaged-game-01",
+    "sameNativeBinaryVerified": true,
+    "sourceBinarySha256": "0ca1fcecc18198c8f609106f290908965757458ac27e5b955bb331d3541d720b",
+    "repeatedInFinalDownloadedSession": false,
+    "observedAtUtc": "2026-09-07T18:20:33.964Z",
+    "mouseWithoutHeldButtonsVerified": true,
+    "mouseMode": "Epic HoveringMouse",
+    "pointerLockVerified": false,
+    "physicalMouseVerified": false,
+    "foot": {
+      "lookVerified": true,
+      "mouseButtonsHeld": false,
+      "yawDeltaDegrees": 54.24457499999997,
+      "actorYawUnchanged": true,
+      "locationUnchangedDuringLook": true,
+      "pauseMenuVisuallyVerified": true,
+      "resumeMenuDismissalVisuallyVerified": true,
+      "pauseVerified": true,
+      "worldSecondsFrozen": 41.293,
+      "wallSecondsBetweenPausedSamples": 2.3,
+      "blockedMovementInput": "W for 700 ms",
+      "worldSecondsAfterResume": 42.66,
+      "resumeVerified": true,
+      "noRetainedMovementAfterResume": true
+    },
+    "car": {
+      "lookVerified": true,
+      "mouseButtonsHeld": false,
+      "yawDeltaDegrees": 54.244575,
+      "actorYawUnchanged": true,
+      "locationUnchangedDuringLook": true,
+      "pauseMenuVisuallyVerified": true,
+      "resumeMenuDismissalVisuallyVerified": true,
+      "pauseVerified": true,
+      "worldSecondsFrozen": 47.162,
+      "wallSecondsBetweenPausedSamples": 2.312,
+      "blockedMovementInput": "W for 700 ms",
+      "worldSecondsAfterResume": 48.531,
+      "resumeVerified": true,
+      "noRetainedMovementAfterResume": true
+    },
+    "initialFloor": {
+      "sampleCount": 15,
+      "firstWorldSeconds": 1.006,
+      "lastWorldSeconds": 15.028,
+      "locationCm": [
+        -88670,
+        7880,
+        99.66
+      ],
+      "movementMode": "WALKING",
+      "allPositionsIdentical": true,
+      "allVelocitiesZero": true
+    },
+    "priorScopeNote": "Cámara y pausa verificadas en una sesión previa del paquete, antes de crear el archivo tar.gz de distribución, con el mismo binario; el perfil de sombras de esa sesión era el anterior.",
+    "safeLog": {
+      "path": "data/verification/unreal-package-log.txt",
+      "bytes": 22132,
+      "sha256": "5df12c5ea7a1f3b51544054997702b4b75c897e459892e1783bb07ea426374e2"
+    },
+    "reviewArtifact": {
+      "path": "artifacts/unreal-native/stream-observations/observation-0W7xQy/native-controls-review.json",
+      "bytes": 15670,
+      "sha256": "744a6d6371e74e876069340e726f36ba793b05156687c1fc87e846d531dd1890"
+    }
+  },
+  "limitations": {
+    "persistentVsmWarning": true,
+    "warning": "Non-Nanite Marking Job Queue overflow remains visible in car-enter, car-drive, car-exit and after screenshots.",
+    "initialScreenshotWarningFree": true,
+    "allScreenshotsWarningFree": false,
+    "shadowProfileEffect": "The 0.5 directional biases reduce requested linear shadow resolution fourfold versus -1.5. This did not completely resolve visible VSM warnings and is not a measured GPU performance gain.",
+    "clothingInShadow": "Character appears dark in shade; selectors change garment colours, not garment geometry.",
+    "testedOtherHardware": false,
+    "wholeCityIdentical": false,
+    "allRealDimensionsVerified": false,
+    "geographicFidelity": "Map footprints, estimated heights and partially interpreted landmarks do not establish an identical reconstruction of all Neiva.",
+    "requestedVisualTargetAchieved": false,
+    "visualQualityAssessment": "Prototipo visual con calidad muy inferior a una producción AAA. No es hiperrealista y no satisface todavía el objetivo visual solicitado."
   },
   "city": {
     "baseChanged": false,
@@ -183,259 +344,46 @@
     "historicalReferenceViewCount": 1
   },
   "distribution": {
-    "githubExecutableRelease": null,
-    "siteNativeDownload": null,
+    "githubExecutableRelease": {
+      "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.1.0-linux-alpha/Neiva-Abierta-Unreal-0.1.0-Linux-x64.tar.gz",
+      "releasePage": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha",
+      "sha256": "1fc112c9037765f384bba7f441e7c96efee89b0ba39520d5cd65b8606f22c5ce",
+      "bytes": 596976129,
+      "platform": "Linux x64",
+      "verification": {
+        "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.1.0-linux-alpha/Neiva-Abierta-Unreal-0.1.0-Linux-x64.tar.gz",
+        "sha256": "1fc112c9037765f384bba7f441e7c96efee89b0ba39520d5cd65b8606f22c5ce",
+        "bytes": 596976129,
+        "platform": "Linux x64",
+        "httpStatus": 200,
+        "launchPassed": true,
+        "checkedAt": "2026-09-07T18:43:39.952447+00:00"
+      },
+      "publicDownloadVerified": true,
+      "downloadedCopyRuntimeVerified": true,
+      "sourceBinarySha256": "0ca1fcecc18198c8f609106f290908965757458ac27e5b955bb331d3541d720b"
+    },
+    "siteNativeDownload": {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/juegos/",
+      "downloadUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.1.0-linux-alpha/Neiva-Abierta-Unreal-0.1.0-Linux-x64.tar.gz",
+      "status": "ready-to-deploy",
+      "productionDeploymentVerified": false
+    },
     "epicSubmission": null
+  },
+  "history": {
+    "editorVerification": "data/verification/unreal-editor-history.json",
+    "editorCaptureIsCurrent": false
   },
   "evidence": [
     "docs/DISTRIBUCION.md",
     "docs/UNREAL.md",
     "docs/FIDELIDAD.md",
     "data/field-survey.json",
-    "artifacts/unreal-native/streaming-browser-audit.json",
-    "artifacts/unreal-native/streaming-process-audit-fixed.json",
-    "data/verification/unreal-native-game05-log.txt",
-    "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/report.json"
+    "data/verification/unreal-downloaded-log.txt",
+    "data/verification/unreal-package-log.txt",
+    "data/verification/unreal-editor-history.json",
+    "artifacts/unreal-native/stream-observations/observation-gm7VwR/report.json"
   ],
-  "preparationRecheckedAt": "2026-09-07T15:27:04.216809+00:00",
-  "installedDependencies": {
-    "linuxToolchain": {
-      "source": "https://cdn.unrealengine.com/Toolchain_Linux/native-linux-v23_clang-18.1.0-rockylinux8.tar.gz",
-      "archiveBytes": 1483760275,
-      "sha256": "048ad147d66e45b9dcfcbc986770f8df1ccbf94de11480877e72d2b3b1b48087",
-      "gzipIntegrity": true,
-      "tarInventoryValidated": true,
-      "compilerVersionCommandPassed": true,
-      "isUnrealEngine": false
-    },
-    "virtualDisplay": {
-      "name": "Xvfb",
-      "ubuntuPackage": "2:21.1.22-1ubuntu1",
-      "installedInUserCache": true,
-      "xdpyinfoPassed": true,
-      "resolution": [
-        1280,
-        720
-      ],
-      "unrealRunVerified": true
-    }
-  },
-  "schemaVersion": 2,
-  "observedAt": "2026-09-07T17:29:44.096Z",
-  "runtimeReview": {
-    "method": "Revisión visual de capturas, contadores RTP del navegador y telemetría del proceso nativo; enviar teclas por sí solo no valida jugabilidad.",
-    "session": "editor-game-05",
-    "observedAtUtc": "2026-09-07T17:29:44.096Z",
-    "lastNativeStateAtUtc": "2026-09-07T17:30:05.730Z",
-    "physicalDesktopInput": false,
-    "browser": "Chrome/152.0.7977.64",
-    "ownTemporaryBrowserClosed": true,
-    "coordinateSystem": {
-      "unit": "centimetres",
-      "x": "east",
-      "y": "north",
-      "z": "up",
-      "geographicOriginLonLat": [
-        -75.2809,
-        2.9252
-      ]
-    },
-    "spawnAndFloor": {
-      "verified": true,
-      "beforeBrowserInput": true,
-      "sampleCount": 15,
-      "sampleWorldSeconds": [
-        1.007,
-        2.007,
-        3.007,
-        4.007,
-        5.007,
-        6.007,
-        7.008,
-        8.008,
-        9.008,
-        10.008,
-        11.008,
-        12.008,
-        13.008,
-        14.008,
-        15.008
-      ],
-      "sampleSpanSeconds": 14.001,
-      "samplingCadenceSeconds": 1,
-      "locationCm": [
-        -88670,
-        7880,
-        99.66
-      ],
-      "velocityCmPerSecond": [
-        0,
-        0,
-        0
-      ],
-      "movementModeCode": 1,
-      "movementMode": "WALKING",
-      "allSamplesSamePositionAndZeroVelocity": true,
-      "controlYawDegrees": 20,
-      "limitation": "Quince muestras iniciales con la misma posición; no equivale a revisar todas las colisiones de la ciudad."
-    },
-    "walkToVehicle": {
-      "verified": true,
-      "input": "W durante 3 segundos desde spawn y yaw 20; después E.",
-      "evidence": [
-        "before.png",
-        "car-enter.png",
-        "native vehicle entry log"
-      ]
-    },
-    "vehicleEntry": {
-      "verified": true,
-      "atUtc": "2026-09-07T17:29:49.387Z",
-      "carLocationCm": [
-        -87740.0,
-        8250.0,
-        70.0
-      ],
-      "evidence": [
-        "car-enter.png",
-        "Neiva: entered vehicle"
-      ]
-    },
-    "vehicleDrive": {
-      "verified": true,
-      "input": "W durante 1 segundo y después freno Space durante 1 segundo.",
-      "initialCarLocationCm": [
-        -87740.0,
-        8250.0,
-        70.0
-      ],
-      "finalCarLocationCm": [
-        -87293.95,
-        8427.312,
-        70.0
-      ],
-      "displacementCm": 480.000154,
-      "evidence": [
-        "car-drive.png",
-        "native car coordinates before and after"
-      ]
-    },
-    "vehicleBrake": {
-      "verified": true,
-      "input": "Space durante 1 segundo tras acelerar.",
-      "hudSpeedAfterBrakeKmH": 0,
-      "finalNativeSpeedProperty": 0,
-      "evidence": [
-        "car-drive.png: 0 km/h",
-        "final NeivaState speed_property=0"
-      ]
-    },
-    "vehicleExit": {
-      "verified": true,
-      "atUtc": "2026-09-07T17:29:52.887Z",
-      "exitLocationCm": [
-        -87208.99,
-        8213.58,
-        96.0
-      ],
-      "distanceFromCarCentreCm": 229.999064,
-      "finalPassenger": null,
-      "evidence": [
-        "car-exit.png",
-        "Neiva: exited vehicle",
-        "final NeivaState passenger=None"
-      ]
-    },
-    "walkAfterExit": {
-      "verified": true,
-      "input": "Shift+W durante 1 segundo.",
-      "finalLocationCm": [
-        -86755.874,
-        8393.699,
-        95.15
-      ],
-      "finalVelocityCmPerSecond": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "finalMovementMode": "WALKING",
-      "evidence": [
-        "after.png",
-        "NeivaState at world_seconds=60.092"
-      ]
-    },
-    "outfit": {
-      "verified": true,
-      "input": [
-        "C",
-        "V"
-      ],
-      "verificationScope": "Cambio de selector de colores de camiseta y pantalón; misma geometría de prendas.",
-      "trouserSelectorBefore": "2/4",
-      "trouserSelectorAfter": "3/4",
-      "evidence": [
-        "before.png",
-        "after.png"
-      ],
-      "limitation": "La sombra dificulta apreciar colores en el personaje; no se ha validado un catálogo de prendas diferentes."
-    },
-    "freeLookCameraVerified": false,
-    "pauseResumeVerified": false,
-    "knownVisualIssues": [
-      "Advertencia visible Non-Nanite Marking Job Queue overflow durante esta ejecución.",
-      "El personaje en sombra queda oscuro.",
-      "El detalle vegetal del parque y muchas fachadas siguen incompletos o interpretados."
-    ],
-    "artifacts": {
-      "report.json": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/report.json",
-        "bytes": 13276,
-        "sha256": "3cf185c665493b2080734f2b506db6d208b6cfd2425a042037e53fbf47afcab9",
-        "publiclyHosted": false
-      },
-      "before.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/before.png",
-        "bytes": 1110181,
-        "sha256": "baba20e94b73d7147ed0e40a9ce838ea2d23c88afced71535f4c0aea686c7089",
-        "publiclyHosted": false
-      },
-      "car-enter.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-enter.png",
-        "bytes": 1162898,
-        "sha256": "ccc8f1c963de4039abe726a393c7450a494d3f524ea5f94b187ea26730d50437",
-        "publiclyHosted": false
-      },
-      "car-drive.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-drive.png",
-        "bytes": 1248177,
-        "sha256": "3d098626883e0980ace837e7f95a4966f281908cb65db61ddfa18db8ad59458b",
-        "publiclyHosted": false
-      },
-      "car-exit.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/car-exit.png",
-        "bytes": 861600,
-        "sha256": "ca36b61416c527b0dbc8cc3d995c491a626623bfdccaf57aa61431f1888c4252",
-        "publiclyHosted": false
-      },
-      "after.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/after.png",
-        "bytes": 1077274,
-        "sha256": "e8fb0c69dc6dd0850e4903c776719a6a2ccbfe85e4007b54bd89192528339af2",
-        "publiclyHosted": false
-      },
-      "after-native-state.png": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/after-native-state.png",
-        "bytes": 958544,
-        "sha256": "223e27ddb41d99bd3838002222e5d8443c809224b10f8bec5abe2a51131f0276",
-        "publiclyHosted": false
-      },
-      "stream.webm": {
-        "path": "artifacts/unreal-native/stream-observations/observation-ZoB8NJ/stream.webm",
-        "bytes": 3496469,
-        "sha256": "7cb62e26527cfd57cd260000b55a4aed41e57299e9ac77cc87489fe2edd96552",
-        "publiclyHosted": false
-      }
-    }
-  }
+  "evidenceAccessNote": "Repository-relative artifacts paths identify local audit files and hashes. They are not claims that those files are separately hosted on a public website."
 }

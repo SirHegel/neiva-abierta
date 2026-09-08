@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-07T18:54:13.474Z",
+  "scope": "Visual discrepancy audit of three central landmarks using already consulted primary photographs and the existing authored mesh. No new street-by-street inspection or measured survey.",
+  "sourceInputs": [
+    {
+      "path": "public/data/neiva.json",
+      "sha256": "e0ac42dbc49921439f80fb25081a7c9760e80c8296e835f48b0229135788f846"
+    },
+    {
+      "path": "public/data/neiva-survey.json",
+      "sha256": "f4381c586457b69cb0b2c4b1996247de09a0c226d9b940e60ecee46be6d3c511"
+    },
+    {
+      "path": "src/civic-scene.js",
+      "sha256": "4896c765f5cbb0a0d8fdacd8203ee65592afc097be88c592d00080af99aedba4"
+    },
+    {
+      "path": "src/landmarks.js",
+      "sha256": "c2902caf0e57ff37844542ebe49da481b2d27bb4282d4ed1eaaafa4ae40461ac"
+    },
+    {
+      "path": "scripts/export-unreal-landmarks.mjs",
+      "sha256": "a9a3a3428ecec59248a63634dc47a1d471bacee46b1c93b2e200aae72302c3dc"
+    },
+    {
+      "path": "unreal/NeivaAbierta/SourceArt/landmarks/neiva-landmarks.json",
+      "sha256": "35afc5019bd42ff6d34597c496ab62220f3abbf65ea908806ce8719e44538ef9"
+    }
+  ],
+  "references": [
+    {
+      "id": "hotel-official",
+      "url": "https://www.hotelneivaplaza.com/en/",
+      "type": "Primary establishment exterior photograph",
+      "imageCapturedAt": null,
+      "photographRedistributed": false
+    },
+    {
+      "id": "cathedral-diocese",
+      "url": "https://diocesisdeneiva.org/directorio/parroquias/Inmaculada-Concepcion---Catedral",
+      "type": "Primary diocesan cathedral photograph",
+      "imageCapturedAt": null,
+      "photographRedistributed": false
+    },
+    {
+      "id": "santander-municipality",
+      "url": "https://www.alcaldianeiva.gov.co/NuestraAlcaldia/SalaDePrensa/Paginas/Fuente-del-Parque-Santander-se-recupera-gracias-al-trabajo-de-la-alcald%C3%ADa-de-Neiva.aspx",
+      "publishedAt": "2024-03-12",
+      "imageCapturedAt": null,
+      "type": "Primary municipal fountain photograph",
+      "photographRedistributed": false
+    }
+  ],
+  "hotel": {
+    "geometry": {
+      "id": "way/313286678",
+      "areaM2": 2383.45,
+      "edgeLengthsM": [
+        38.448,
+        75.41,
+        33.509,
+        14.712,
+        13.261,
+        11.236,
+        7.69,
+        9.211,
+        7.783,
+        20.19,
+        5.349,
+        17.626,
+        12.945,
+        37.687
+      ],
+      "measurementMeaning": "Lengths and area calculated from OSM geometry, not independently measured physical dimensions.",
+      "physicalDimensionsVerified": false
+    },
+    "mesh": {
+      "id": "way/313286678",
+      "triangles": 67736,
+      "min": [
+        -885.78375,
+        0,
+        -89.93591
+      ],
+      "max": [
+        -822.31757,
+        19.895,
+        -6.80735
+      ],
+      "interpretation": "Existing authored exterior on OSM footprint; no verified field dimensions."
+    },
+    "frontEdgeIndex": 0,
+    "frontLengthFromMapM": 38.448,
+    "longSideLengthFromMapM": 75.41,
+    "worldAxisBoundingBoxDepthM": 83.12856,
+    "boundingBoxIsFacadeWidth": false,
+    "physicalHeightMeasuredM": null,
+    "modelNominalHeightM": 19.8,
+    "modelHeightEstimated": true,
+    "originalOsmHeightTagM": 40,
+    "originalOsmLevelsTag": 3,
+    "discrepancies": [
+      {
+        "priority": 1,
+        "finding": "Four identical upper window/balcony rows are generated on all 14 edges, including rear indentations, although only visible fronts have photographic support.",
+        "code": "src/civic-scene.js buildHotel loop over all facadeEdges and floor<4",
+        "proposedAction": "Author front0 and the photographed adjacent facade separately; retain other walls as explicitly unverified. Do not replicate decorative balconies throughout all recessed rear edges."
+      },
+      {
+        "priority": 1,
+        "finding": "Three repeated room balcony rows can be distinguished below an open upper gallery in the published oblique photograph; the model has four repeated rows plus an additional upper band.",
+        "certainty": "Visual row count from this single view; not a certified floor count.",
+        "proposedAction": "Review the 3 visible room rows and open gallery against the photo before retaining the current 6-level interpretation. No new physical height is inferred."
+      },
+      {
+        "priority": 1,
+        "finding": "Ground-floor retail bays in the model form long near-continuous reflective strips, while the reference has distinct shops, deep entrance recesses and masonry framing.",
+        "proposedAction": "Split visible shop openings and opaque supports and give recesses actual depth; keep unknown shop identities blank rather than inventing signs."
+      },
+      {
+        "priority": 2,
+        "finding": "The present model already includes an ochre corner and top arches but its repeated small modules obscure the photographed long horizontal balconies and broad corner composition.",
+        "proposedAction": "Preserve the broad opaque corner panel and compose continuous balcony slabs/railings; vary geometry by observed facade instead of shortening the footprint."
+      }
+    ],
+    "doNotDo": "Do not shrink the building because its rotated world-axis bounding box is 83 m. The mapped front is 38.448 m and the long side 75.410 m.",
+    "sourceTagsRequireReview": true,
+    "sourceTagCaution": "OSM height40m and3 levels are inconsistent with the current visual interpretation; neither value was verified by physical measurement."
+  },
+  "cathedral": {
+    "geometry": {
+      "id": "way/313286677",
+      "areaM2": 2421.455,
+      "edgeLengthsM": [
+        33.464,
+        72.277,
+        33.557,
+        72.241
+      ],
+      "measurementMeaning": "Lengths and area calculated from OSM geometry, not independently measured physical dimensions.",
+      "physicalDimensionsVerified": false
+    },
+    "mesh": {
+      "id": "way/313286677",
+      "triangles": 13753,
+      "min": [
+        -934.12024,
+        0.035,
+        -72.1652
+      ],
+      "max": [
+        -875.61176,
+        33.035,
+        9.22667
+      ],
+      "interpretation": "Existing authored exterior on OSM footprint; no verified field dimensions."
+    },
+    "modelHeightFromOsmTagM": 33,
+    "physicalHeightMeasuredM": null,
+    "spireModeledHeightM": 8.3674,
+    "discrepancies": [
+      {
+        "priority": 2,
+        "finding": "The model fills all pointed door openings with red wood; the primary photo shows a rectangular central red door below a separate glazed/ornamented pointed transom, and side openings have distinct shutter/door colours.",
+        "code": "src/landmarks.js frontWindow with door=true uses a complete pointed wooden shape",
+        "proposedAction": "Separate lower timber leaves, upper pointed tracery/glazing and side shutters; do not make all portals identical red pointed doors."
+      },
+      {
+        "priority": 2,
+        "finding": "The long red spire and gothic massing already match the main identity cues; their precise proportions and all hidden rear elevations remain interpreted.",
+        "proposedAction": "Retain the corrected silhouette and 33 m nominal OSM tag pending real measurement. Improve front openings, brick joints and cornice depths from the visible facade rather than rescaling the entire building."
+      }
+    ],
+    "nativeScreenshotScope": "The final downloaded intro looks away from the cathedral; this is a reference-versus-authored-mesh audit, not a claim of a newly captured native cathedral frontage."
+  },
+  "santander": {
+    "geometry": {
+      "id": "way/39365299",
+      "areaM2": 11183.76,
+      "edgeLengthsM": [
+        103.952,
+        85.455,
+        24.158,
+        104.697,
+        108.539
+      ],
+      "measurementMeaning": "Lengths and area calculated from OSM geometry, not independently measured physical dimensions.",
+      "physicalDimensionsVerified": false
+    },
+    "physicalAreaMeasuredM2": null,
+    "discrepancies": [
+      {
+        "priority": 1,
+        "finding": "The shipped native view is a broad paved clearing with empty tree wells; the official fountain and hotel photos show a dense broadleaf canopy with tall palms.",
+        "confirmedTechnicalCause": "scripts/export-unreal-landmarks.mjs explicitly omits Trees and does not call the vegetation module.",
+        "proposedAction": "Restore native broadleaf canopy and palm assets on collision-checked provisional locations. The12 existing interior positions are interpreted, not a surveyed tree inventory."
+      },
+      {
+        "priority": 1,
+        "finding": "The exported fountain retains static civic geometry but omits animated water particles, so the photographed active jets have no counterpart in that export.",
+        "confirmedTechnicalCause": "scene.traverse skips isPoints; provenance omits Animated fountain particles.",
+        "proposedAction": "Use a native fountain system inside the existing basin; mark the 6.2 m radius, 0.25 m rim, 2.5 m jets and provisional centre as estimates."
+      }
+    ],
+    "fountainEstimated": true,
+    "fountainPhysicalDimensionsMeasured": null,
+    "doNotDo": "Do not fill streets or the whole park with invented buildings, impose uniform grass, or claim exact surveyed tree positions."
+  },
+  "requestedVisualTargetAchieved": false,
+  "wholeCityIdentical": false,
+  "newMeasuredDimensions": 0,
+  "nextEvidenceNeeded": [
+    "Orthogonal facade photographs or a licensed measured survey to certify physical heights, setbacks and openings.",
+    "Independent roof/footprint evidence before changing the current hotel polygon."
+  ]
+}

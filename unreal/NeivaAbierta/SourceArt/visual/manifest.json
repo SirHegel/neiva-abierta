@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "license": "CC0-1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "sourceApiTerms": "https://github.com/Poly-Haven/Public-API/blob/master/ToS.md",
+  "assets": [
+    {
+      "assetId": "jacaranda_tree",
+      "name": "Jacaranda Tree",
+      "downloadedAtUtc": "2026-09-07T18:53:55.952675+00:00",
+      "sourcePage": "https://polyhaven.com/a/jacaranda_tree",
+      "metadataUrl": "https://api.polyhaven.com/info/jacaranda_tree",
+      "filesUrl": "https://api.polyhaven.com/files/jacaranda_tree",
+      "authors": {
+        "Rob Tuytel": "guidance",
+        "Rico Cilliers": "All"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "format": "glTF2.0",
+      "textureResolutionRequested": "2k",
+      "files": [
+        {
+          "path": "jacaranda_tree_2k.gltf",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/jacaranda_tree/jacaranda_tree_2k.gltf",
+          "bytes": 9526,
+          "sha256": "5c98732eae5a139f3883eca22766c7a523f37c2629cea1d74fd16e43cbf8a472",
+          "sourceMd5": "b204f429a52213e7bdc110a674738c95"
+        },
+        {
+          "path": "textures/jacaranda_tree_branches_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_branches_nor_gl_2k.jpg",
+          "bytes": 2437750,
+          "sha256": "e4cac77b4f35ad47ba4fcdb9061f91acf3318d9889dd259cb5e6e132b0ab60c7",
+          "sourceMd5": "0b598c975ce1515ea0d51fb0d5696ea3"
+        },
+        {
+          "path": "textures/jacaranda_tree_branches_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_branches_diff_2k.jpg",
+          "bytes": 1483476,
+          "sha256": "0c558fe09ce7e74e211ed181607be323f299724caf131af8605cc91b11335b66",
+          "sourceMd5": "4a8b8f050f4dd43c380b8d7721709cfd"
+        },
+        {
+          "path": "textures/jacaranda_tree_branches_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_branches_arm_2k.jpg",
+          "bytes": 1523257,
+          "sha256": "a39d8291ba54adf1ca42f15abe2f622d0ac59fb13c87087a0fabc755b91dfee8",
+          "sourceMd5": "969af8206d91a37edfefaf65a668470e"
+        },
+        {
+          "path": "textures/jacaranda_tree_trunk_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_trunk_nor_gl_2k.jpg",
+          "bytes": 4050519,
+          "sha256": "bb7b2c4914c139bc61c9ac5e0e1fd1c4b38f781351ead433a1e93dd886c732d6",
+          "sourceMd5": "4c397e335b200ebb47f2af4a36e97de6"
+        },
+        {
+          "path": "textures/jacaranda_tree_trunk_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_trunk_diff_2k.jpg",
+          "bytes": 3397103,
+          "sha256": "d3ab4fd9f3d6237a4e7c3d2b7ac0fde9f34a8d09c3aee443c0a3e1a033ce7d96",
+          "sourceMd5": "313836f3418f75c8a3be7b562d50c2d5"
+        },
+        {
+          "path": "textures/jacaranda_tree_trunk_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_trunk_arm_2k.jpg",
+          "bytes": 3444454,
+          "sha256": "c98dfe0951bcc1fe40ecbf12bf893c3d6bd37fd06c2d450ebc6f9be6239e2b62",
+          "sourceMd5": "aa54b0fddd758972efa6509a41945583"
+        },
+        {
+          "path": "textures/jacaranda_tree_leaves_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_leaves_nor_gl_2k.jpg",
+          "bytes": 2162002,
+          "sha256": "b5515c611ae7faa6245a0f1a056d50905118366e7ebf1aacb9e220160c7b989f",
+          "sourceMd5": "7333d450f7d695069496416db73ca3ce"
+        },
+        {
+          "path": "textures/jacaranda_tree_leaves_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_leaves_diff_2k.jpg",
+          "bytes": 1608661,
+          "sha256": "8915643cdd8b4eb8abb3020bc3a3c2c239daccee0d4adbe3194935439f693d8e",
+          "sourceMd5": "f8df03e04d5d5b9f50d21efc3b1de32f"
+        },
+        {
+          "path": "textures/jacaranda_tree_leaves_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/jacaranda_tree/jacaranda_tree_leaves_arm_2k.jpg",
+          "bytes": 1184148,
+          "sha256": "f3847a854562c8ac49d2d35ac8b08ca4d20c879c0f38bf25d414f777a0afe729",
+          "sourceMd5": "0b344a7c044e51485ad1fe579a56ec26"
+        },
+        {
+          "path": "jacaranda_tree.bin",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/jacaranda_tree/jacaranda_tree.bin",
+          "bytes": 208307808,
+          "sha256": "4310d1e25db8ac63d6d345afc8154a1df7e85b301dfad228be66d85d6c52bbfc",
+          "sourceMd5": "ae25eacd5e67ea2e9bbbaa2854b6ed99"
+        },
+        {
+          "path": "textures/jacaranda_tree_leaves_alpha_2k.png",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/jacaranda_tree/jacaranda_tree_leaves_alpha_2k.png",
+          "bytes": 1252539,
+          "sha256": "48b37ef95590d96c39d43af51b4d7683ad1ab7db8dae474f29d3b8c3e726f352",
+          "sourceMd5": "9f8afd60299fd936ef95a4c3235102cf"
+        }
+      ],
+      "totalBytes": 230861243
+    },
+    {
+      "assetId": "modular_street_seating",
+      "name": "Modular Street Seating",
+      "downloadedAtUtc": "2026-09-07T18:53:34.226945+00:00",
+      "sourcePage": "https://polyhaven.com/a/modular_street_seating",
+      "metadataUrl": "https://api.polyhaven.com/info/modular_street_seating",
+      "filesUrl": "https://api.polyhaven.com/files/modular_street_seating",
+      "authors": {
+        "Stuart Attenborrow": "All"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "format": "glTF2.0",
+      "textureResolutionRequested": "2k",
+      "files": [
+        {
+          "path": "modular_street_seating_2k.gltf",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/modular_street_seating/modular_street_seating_2k.gltf",
+          "bytes": 29629,
+          "sha256": "c6caa0fc062bed799c3a84fdd9ce6b7a8209b1bfcb3ed777a03e9c12c0b29082",
+          "sourceMd5": "9602035ed8ce036b5eb19524df78007a"
+        },
+        {
+          "path": "textures/modular_street_seating_supports_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_supports_nor_gl_2k.jpg",
+          "bytes": 1733497,
+          "sha256": "9e8e772bb7482f3ff6aaf20092500a15176ec185d99ceb09e3c2a3f44aaad3ae",
+          "sourceMd5": "9b0456513d0c0125d5bdffd41207463b"
+        },
+        {
+          "path": "textures/modular_street_seating_armrests_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_armrests_diff_2k.jpg",
+          "bytes": 2299594,
+          "sha256": "108e03dceeec52949a6b1c3dd0275d526360e5b7e228f1a874c51ba6ec44c627",
+          "sourceMd5": "1df516088e92dc2e4db5a229f994e85b"
+        },
+        {
+          "path": "textures/modular_street_seating_timber_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_timber_diff_2k.jpg",
+          "bytes": 2400500,
+          "sha256": "4571cee6a7c43caf39135bc84af124396b945935080bfc88ecee6c8456f201be",
+          "sourceMd5": "b28f937feec52f10701347375656daea"
+        },
+        {
+          "path": "textures/modular_street_seating_connectors_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_connectors_arm_2k.jpg",
+          "bytes": 2108273,
+          "sha256": "d13e865491c9be16a49c4945dbceaebe8af6d1fd9e5292160093ea2176d568b9",
+          "sourceMd5": "564a14f2a10bc8254c1699872da40bf5"
+        },
+        {
+          "path": "textures/modular_street_seating_connectors_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_connectors_nor_gl_2k.jpg",
+          "bytes": 1821216,
+          "sha256": "13a8c1d9804c8ec9107444cea7df2698b951f0750f7af5401774438f34243ec4",
+          "sourceMd5": "8c2c3a8a192f8f8580893c6d8622b3ce"
+        },
+        {
+          "path": "textures/modular_street_seating_timber_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_timber_nor_gl_2k.jpg",
+          "bytes": 2592455,
+          "sha256": "a14540e6c86144cc36cf02d34721fa135efc1865b6cc798992b736700c2d7b53",
+          "sourceMd5": "fe8e5c6b0f40147e46f9c579c4c8c9b3"
+        },
+        {
+          "path": "textures/modular_street_seating_armrests_nor_gl_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_armrests_nor_gl_2k.jpg",
+          "bytes": 1165480,
+          "sha256": "195c3891efcb73dd6df05841db0d16568dd23583a7d729aa9f3b7d73b4fbe905",
+          "sourceMd5": "6b06d48d281a2f7d0407bd9e69d2ce53"
+        },
+        {
+          "path": "textures/modular_street_seating_armrests_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_armrests_arm_2k.jpg",
+          "bytes": 2348093,
+          "sha256": "0353d72a88894fde9d981364fb9cc22a5f37fecf7c0553f16cdc9195cc49acc6",
+          "sourceMd5": "89677529b385f129afa31b3514e27e71"
+        },
+        {
+          "path": "textures/modular_street_seating_supports_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_supports_diff_2k.jpg",
+          "bytes": 2552643,
+          "sha256": "005542d67891932d799b48dc010a1c96886e68366aa146d1dfcf7b0415ee0642",
+          "sourceMd5": "3965289bd3861b778632e6e4ed7e2b7c"
+        },
+        {
+          "path": "textures/modular_street_seating_supports_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_supports_arm_2k.jpg",
+          "bytes": 2624832,
+          "sha256": "1141eba656fc493c378a54332cfd827fea8425c3680d168bdc808a346e6f8e16",
+          "sourceMd5": "34beeb0b3023c9eb2a16fa11e50b0a70"
+        },
+        {
+          "path": "textures/modular_street_seating_timber_arm_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_timber_arm_2k.jpg",
+          "bytes": 3013735,
+          "sha256": "ffe4fa8e6be4309cd26053ee9723dc66288f62ba62d78bc95aa17734d2deea45",
+          "sourceMd5": "456838681c86daccf74387dd915854a5"
+        },
+        {
+          "path": "textures/modular_street_seating_connectors_diff_2k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/modular_street_seating/modular_street_seating_connectors_diff_2k.jpg",
+          "bytes": 758472,
+          "sha256": "643d9bfd835cdfd074371ebb3b9e094ed00040e8c96aacce68588ac4b76cf7ac",
+          "sourceMd5": "1eb758649f68b52d335f93a7947f7f95"
+        },
+        {
+          "path": "modular_street_seating.bin",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/modular_street_seating/modular_street_seating.bin",
+          "bytes": 977224,
+          "sha256": "968558aa808b6cf74783b375d32a346a4de2ce9c118c0f17fba24c6999f03547",
+          "sourceMd5": "5c0426b5068d5d41f0a301035ecac9ab"
+        }
+      ],
+      "totalBytes": 26425643
+    }
+  ]
+}
