@@ -12,6 +12,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {findFirefox, isolatedEnvironment} from './isolated-firefox.mjs';
 import {decodedBetween, inputReadiness} from './stream-progress.mjs';
 import {nativeControlsPlan, validateInteractionModes} from './stream-controls.mjs';
+import {installEncodedRecording, finishEncodedRecording} from './stream-encoded-recording.mjs';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const {values} = parseArgs({options: {
@@ -23,6 +24,7 @@ const {values} = parseArgs({options: {
   controls: {type: 'boolean', default: false},
   fixture: {type: 'boolean', default: false},
   record: {type: 'boolean', default: false},
+  'record-encoded': {type: 'boolean', default: false},
   'record-bitrate': {type: 'string', default: '2000000'},
   browser: {type: 'string', default: 'firefox'},
   'native-state': {type: 'boolean', default: false},
@@ -34,6 +36,8 @@ const {values} = parseArgs({options: {
   'quit-game': {type: 'boolean', default: false},
 }});
 if (!['firefox', 'chrome'].includes(values.browser)) throw Error('browser must be firefox or chrome.');
+if (values['record-encoded'] && (values.browser !== 'chrome' || values.record || values['profile-after-disconnect']))
+  throw Error('--record-encoded requires Chrome without --record or disconnected profiling.');
 if (values['native-state'] && values.fixture) throw Error('--native-state requires the native game, not a fixture.');
 if (values['quit-game'] && (values.fixture || values.controls || values['profile-after-disconnect']))
   throw Error('--quit-game requires a native game with no pause or disconnected profiling audit.');
@@ -54,7 +58,7 @@ if (!Number.isInteger(recordBitrate) || recordBitrate < 1000000 || recordBitrate
 if (!Number.isInteger(seconds) || seconds < 3 || seconds > 60 ||
     !Number.isInteger(timeout) || timeout < 5 || timeout > 300)
   throw Error('seconds must be 3–60; timeout must be 5–300.');
-validateInteractionModes({...values, seconds});
+validateInteractionModes({...values, record: values.record || values['record-encoded'], seconds});
 const lookYaw = values['look-yaw'] === undefined ? null : Number(values['look-yaw']);
 const lookPitch = Number(values['look-pitch']);
 if (lookYaw !== null && (!Number.isFinite(lookYaw) || Math.abs(lookYaw) > 180 ||
@@ -74,7 +78,7 @@ const output = await mkdtemp(join(artifacts, 'observation-'));
 const profile = await mkdtemp(join(tmpdir(), 'neiva-stream-observer-'));
 const abort = new AbortController();
 const launchAbort = new AbortController();
-let browser, page, recordingStarted = false;
+let browser, page, recordingStarted = false, encodedRecordingInstalled = false;
 const heldKeys = new Set();
 const browserMessages = [];
 const recordingLimitBytes = 32 * 1024 * 1024;
@@ -291,6 +295,11 @@ try {
       'network.protocol-handler.external-default': false}} : {}), timeout: 30000});
   report.browser = await browser.version();
   page = await browser.newPage();
+  if (values['record-encoded']) {
+    await installEncodedRecording(page, {maxBytes: recordingLimitBytes, maxDurationMs: 60000});
+    encodedRecordingInstalled = true;
+    report.encodedRecordingRequested = true;
+  }
   const noteBrowserMessage = (type, message) => {
     if (browserMessages.length >= 80) return;
     let text = String(message);
@@ -329,7 +338,7 @@ try {
       droppedFrames: quality.droppedVideoFrames, connection: peer.connectionState, incoming};
   });
   report.samples.push(await sample());
-  if (values.drive || values.exercise || values.controls || values.profile || values['profile-after-disconnect'] || values['quit-game'] || lookYaw !== null) {
+  if (values.drive || values.exercise || values.controls || values.profile || values['profile-after-disconnect'] || values['quit-game'] || values['record-encoded'] || lookYaw !== null) {
     const baseline = report.samples[0], started = performance.now();
     const maxWaitMs = 8000;
     report.warmup = {passed: false, maxWaitMs, requiredNewFrames: 3,
@@ -523,6 +532,18 @@ try {
       process.exitCode = 1;
     }
   }
+  if (encodedRecordingInstalled && page && report.videoVerified && !report.error) {
+    try {
+      report.encodedRecording = await finishEncodedRecording(page, output);
+      report.encodedRecording.evidenceKind = report.evidenceKind;
+      if (!report.encodedRecording.coveredObservation)
+        throw Error('Encoded recording stopped before the full observation completed.');
+    } catch (error) {
+      if (error.recordingStatus) report.encodedRecordingDiagnostics = error.recordingStatus;
+      report.recordingError = String(error.message).replace(/https?:\/\/[^\s"']+/g, '[player URL]').slice(0, 500);
+      process.exitCode = 1;
+    }
+  }
   // Finish captures first, then ask the native application to release its GPU
   // resources normally. The launcher exit code must still be checked separately.
   if (values['quit-game'] && report.videoVerified && !report.error && !report.recordingError && !abort.signal.aborted) {
@@ -555,6 +576,7 @@ try {
   await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n', {flag: 'wx'});
   console.log(JSON.stringify({output, videoVerified: report.videoVerified,
     observedFps: report.observedFps, recording: report.recording,
+    encodedRecording: report.encodedRecording,
     error: report.error, recordingError: report.recordingError, cleanupError: report.cleanupError}));
   for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.removeListener(signal, stop);
 }

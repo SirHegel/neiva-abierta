@@ -315,9 +315,9 @@ Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable U
    ```bash
    node scripts/pixel-streaming-local.mjs prepare
    node scripts/pixel-streaming-local.mjs doctor --codec VP8 --virtual-display \
-     --capture-fence --decouple-framerate
+     --render-offscreen --capture-fence --decouple-framerate
    node scripts/pixel-streaming-local.mjs start --package /ruta/al/paquete-validado \
-     --codec VP8 --virtual-display --capture-fence --decouple-framerate
+     --codec VP8 --virtual-display --render-offscreen --capture-fence --decouple-framerate
    ```
 
    El CLI valida el informe, los binarios y los datos antes de iniciar. Prefiere
@@ -325,10 +325,12 @@ Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable U
    para una salida UAT sin wrapper usa `Linux/NeivaAbierta.sh`. La elección se
    comprobó en la partida real `distribution-launch-01`.
 
-   Esta configuración usa VP8 por software, ventana y pantalla Xvfb privadas de
+   Esta configuración usa VP8 por software y una pantalla Xvfb privada de
    1280 × 720, con objetivo de 30 FPS. `--width` y `--height` ajustan ambas
-   dimensiones. En modo virtual no se usa `RenderOffScreen`; el lanzador cierra
-   únicamente su juego y su Xvfb al terminar. `--codec H264` sigue siendo el
+   dimensiones. `--render-offscreen` evita presentar la imagen en una ventana
+   de Xvfb; omitirlo conserva el modo virtual con ventana. Las pruebas de 0.2
+   usaron esta opción a 1920 × 1080. El lanzador gestiona únicamente su juego
+   y su Xvfb. `--codec H264` sigue siendo el
    valor predeterminado por compatibilidad; su ruta NVENC se congeló en un cuadro
    durante la prueba local con Firefox. Los flags de fence y desacople son
    explícitos; desacoplar exige fence. `doctor` y `--dry-run` no ejecutan Unreal.
@@ -337,10 +339,36 @@ Vercel aloja la ficha del proyecto y la edición web anterior. **Un ejecutable U
 
 El flujo local, la revisión fijada de infraestructura oficial y las mediciones VP8 están en [DISTRIBUCION.md](DISTRIBUCION.md). La señalización aislada no acredita vídeo; las pruebas del paquete citadas arriba incluyen proceso nativo, transmisión y controles. El estado de la copia descargada públicamente se registra por separado en esa página. No se ha contratado alojamiento GPU ni activado servicios de Google. [Documentación oficial de Pixel Streaming](https://dev.epicgames.com/documentation/en-us/unreal-engine/pixel-streaming-in-unreal-engine), [infraestructura oficial](https://github.com/EpicGamesExt/PixelStreamingInfrastructure).
 
+### Grabar el vídeo recibido sin recodificar
+
+Con la partida y el reproductor local activos, Chrome instalado y `ffmpeg` y
+`ffprobe` en PATH:
+
+```bash
+node scripts/inspect-unreal-stream.mjs --browser chrome --record-encoded --seconds 8
+```
+
+El observador abre su propio navegador sin usar el teclado, ratón o perfil del
+escritorio. Copia los cuadros VP8 recibidos desde el primer cuadro clave y guarda
+`stream-encoded.ivf`, `stream-encoded.webm`, dos PNG a resolución original y
+`report.json` en una carpeta nueva de `artifacts/unreal-native/stream-observations/`.
+El WebM conserva los datos comprimidos, su orden y las marcas de tiempo, incluidas
+las repetidas; FFprobe comprueba cada cuadro después de cambiar el contenedor.
+El IVF conserva los ticks RTP exactos; WebM cuantiza el tiempo a milisegundos.
+No se reescala ni se añade audio. Incluye el arranque de la conexión y tiene
+límites de 32 MiB y 60 segundos; `coveredObservation` indica si abarcó toda la
+observación o se detuvo antes. Requiere VP8 y la API `createEncodedStreams` de
+Chrome; no activa una recodificación alternativa si falla.
+
+Los FPS recibidos por WebRTC no equivalen a los FPS de renderizado nativo. El
+[registro visual de 0.2](MEJORA-VISUAL-0.2.md) separa ambas mediciones. Para cerrar
+normalmente un juego nativo después de capturarlo, puede añadirse `--quit-game`;
+comprueba después la salida del proceso antes de cerrar su pantalla virtual.
+
 ## Validación disponible
 
-La revisión de código de esta entrega pasó **178 pruebas: 99 Node, 57 Python
-de raíz y 22 Python de scripts Unreal**. Por separado, se completaron UHT,
+La revisión 0.2 y su grabador pasaron **207 pruebas: 109 Node, 57 Python
+de raíz y 41 Python de scripts Unreal**. Por separado, se completaron UHT,
 compilación C++, importación y UAT, y se probaron partidas del ejecutable Linux.
 El [registro del paquete](../data/verification/unreal-package-log.txt) conserva
 evidencia de esas ejecuciones; las pruebas portables no las sustituyen.

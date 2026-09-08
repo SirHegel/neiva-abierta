@@ -179,7 +179,7 @@ descargar esta infraestructura MIT.
 ```sh
 node scripts/pixel-streaming-local.mjs prepare
 node scripts/pixel-streaming-local.mjs doctor --codec VP8 --virtual-display \
-  --capture-fence --decouple-framerate
+  --render-offscreen --capture-fence --decouple-framerate
 ```
 
 `doctor` comprueba la infraestructura y muestra el plan sin abrir un servidor
@@ -188,16 +188,16 @@ completa de distribución, que contiene `neiva-build-report.json`, y ejecuta:
 
 ```sh
 node scripts/pixel-streaming-local.mjs start --package /ruta/al/paquete-validado \
-  --codec VP8 --virtual-display --capture-fence --decouple-framerate
+  --codec VP8 --virtual-display --render-offscreen --capture-fence --decouple-framerate
 ```
 
 `start --package` exige el informe, los binarios y los datos de un paquete
 construido para el sistema actual. Después de esa validación, en Linux prefiere
 `Jugar-Neiva.sh` si existe en la raíz y conserva su perfil de sombras; para una
 salida UAT sin ese wrapper utiliza `Linux/NeivaAbierta.sh`. La preferencia se
-comprobó también con la distribución real. El comando anterior abre Unreal en una
-ventana dentro de Xvfb privado en Linux y sirve el reproductor oficial en
-`http://127.0.0.1:8080`. No usa `RenderOffScreen` en ese modo. La GPU produce la
+comprobó también con la distribución real. El comando anterior ejecuta Unreal
+con Xvfb privado y `RenderOffScreen` en Linux y sirve el reproductor oficial en
+`http://127.0.0.1:8080`. La GPU produce la
 imagen y VP8 se codifica por software; el navegador recibe vídeo y envía controles.
 La pantalla virtual y el juego comparten la resolución inicial de **1280 × 720**;
 `--width` y `--height` cambian ambas. El objetivo configurado es 30 FPS mediante
@@ -206,7 +206,10 @@ La pantalla virtual y el juego comparten la resolución inicial de **1280 × 720
 `--codec` admite `H264` y `VP8`; H264 conserva el valor predeterminado por
 compatibilidad, pero **VP8 es la configuración con recepción comprobada aquí**.
 `--capture-fence` y `--decouple-framerate` son opciones explícitas, desactivadas
-por defecto; la segunda exige la primera en UE 5.5. Sin `--virtual-display`
+por defecto; la segunda exige la primera en UE 5.5. Con `--virtual-display`,
+`--render-offscreen` evita presentar una ventana; omitir esta opción conserva
+el modo con ventana. Las pruebas visuales de 0.2 usaron ambas opciones a 1080p.
+Sin `--virtual-display`
 se conserva el modo `RenderOffScreen`, disponible para Windows y Linux. El
 modo virtual requiere `xvfb-run`, Xvfb y `xauth`, en PATH o en
 `~/.cache/neiva-unreal-display/usr/bin`. Al cerrar la sesión, el lanzador termina
