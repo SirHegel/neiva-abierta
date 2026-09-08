@@ -12,7 +12,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {findFirefox, isolatedEnvironment} from './isolated-firefox.mjs';
 import {decodedBetween, inputReadiness} from './stream-progress.mjs';
 import {nativeControlsPlan, validateInteractionModes} from './stream-controls.mjs';
-import {installEncodedRecording, startEncodedRecording, finishEncodedRecording} from './stream-encoded-recording.mjs';
+import {encodedRecordingPlan, installEncodedRecording, startEncodedRecording, finishEncodedRecording} from './stream-encoded-recording.mjs';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const {values} = parseArgs({options: {
@@ -25,6 +25,7 @@ const {values} = parseArgs({options: {
   fixture: {type: 'boolean', default: false},
   record: {type: 'boolean', default: false},
   'record-encoded': {type: 'boolean', default: false},
+  'record-after-warmup': {type: 'boolean', default: false},
   'record-bitrate': {type: 'string', default: '2000000'},
   browser: {type: 'string', default: 'firefox'},
   'native-state': {type: 'boolean', default: false},
@@ -36,8 +37,7 @@ const {values} = parseArgs({options: {
   'quit-game': {type: 'boolean', default: false},
 }});
 if (!['firefox', 'chrome'].includes(values.browser)) throw Error('browser must be firefox or chrome.');
-if (values['record-encoded'] && (values.browser !== 'chrome' || values.record || values['profile-after-disconnect']))
-  throw Error('--record-encoded requires Chrome without --record or disconnected profiling.');
+const encodedPlan = encodedRecordingPlan(values);
 if (values['native-state'] && values.fixture) throw Error('--native-state requires the native game, not a fixture.');
 if (values['quit-game'] && (values.fixture || values.controls || values['profile-after-disconnect']))
   throw Error('--quit-game requires a native game with no pause or disconnected profiling audit.');
@@ -296,9 +296,11 @@ try {
   report.browser = await browser.version();
   page = await browser.newPage();
   if (values['record-encoded']) {
-    await installEncodedRecording(page, {maxBytes: recordingLimitBytes, maxDurationMs: 60000});
+    await installEncodedRecording(page, {maxBytes: recordingLimitBytes, maxDurationMs: 60000,
+      deferStart: encodedPlan.deferStart});
     encodedRecordingInstalled = true;
     report.encodedRecordingRequested = true;
+    report.encodedRecordingMode = encodedPlan.deferStart ? 'after-warmup-experimental' : 'first-keyframe';
   }
   const noteBrowserMessage = (type, message) => {
     if (browserMessages.length >= 80) return;
@@ -362,7 +364,7 @@ try {
     if (!report.warmup.passed)
       throw Error('No advancing video before input: required 3 new decoded frames and new bytes within 8 seconds. No input sent.');
   }
-  if (values['record-encoded']) {
+  if (values['record-after-warmup']) {
     report.encodedRecordingStart = await startEncodedRecording(page);
     report.samples[0] = await sample();
   }

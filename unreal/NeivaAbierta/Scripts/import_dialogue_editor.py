@@ -5,6 +5,12 @@ Outside Editor: python import_dialogue_editor.py --check (no writes).
 Editor: -ExecutePythonScript=/absolute/path/import_dialogue_editor.py
 No playback/packaging claim: Saved/NeivaDialogue-import.json records import only.
 
+Import with -nosound remains supported: load BinkAudioDecoder directly before
+setting compression, because the disabled AudioDeviceManager does not register
+its codec factories. This loads a decoder module, not an audio output device.
+UE5.5 load_module returns None, so completing that call is not itself proof of
+factory registration; native logs and packaged playback require validation.
+
 APIs: SoundFactory.h (AudioEditor), SoundWave.h (Engine), and UE Python5.5
 https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/SoundWave?application_version=5.5
 """
@@ -193,6 +199,14 @@ def main(check_only=False):
     try:
         _, clips, readme, model_card = validate_manifest()
         manifest_bytes = MANIFEST.read_bytes()
+        # SoundWave.cpp:192/1432 queries the decoder even during import.
+        # BinkAudioInfo.cpp StartupModule registers it without starting a mixer.
+        # PyCore.cpp LoadModule returns None, including on a null module pointer:
+        # record completion honestly, not a fabricated factory-ready assertion.
+        report['decoderModule'] = {'name': 'BinkAudioDecoder', 'loadRequested': True,
+                                   'loadCallCompleted': False, 'factoryVerified': False}
+        u.load_module('BinkAudioDecoder')
+        report['decoderModule']['loadCallCompleted'] = True
         for clip in clips:
             try:
                 report['clips'].append(import_clip(u, clip, content_dir))

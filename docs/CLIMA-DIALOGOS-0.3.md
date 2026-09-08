@@ -56,13 +56,17 @@ Los registros de trabajo locales están en `artifacts/upgrade-03/`. No se presen
 
 [stream-encoded-recording.mjs](../scripts/stream-encoded-recording.mjs) copia los cuadros VP8 recibidos después de reconstruirlos desde RTP y antes de decodificarlos. El vídeo se remultiplexa con FFmpeg mediante copia de códec: sin `MediaRecorder`, recodificación, cambio de resolución, inserción de cuadros ni ajustes artificiales de FPS.
 
-La conexión puede entregar una ráfaga de vídeo anterior con timestamps repetidos o en retroceso. El grabador ahora se instala antes de abrir el reproductor, pero empieza a guardar después del calentamiento del vídeo decodificado. Exige tres avances reales del reloj RTP tras la última discontinuidad, solicita un fotograma clave mediante la API oficial `PixelStreaming.requestIframe()` y empieza en ese fotograma. El inspector espera ese inicio antes de enviar las acciones que quiere registrar.
+`--record-encoded --browser chrome` conserva el inicio desde el primer fotograma clave recibido, como en 0.2. La conexión puede entregar una ráfaga anterior con timestamps repetidos o en retroceso: las repeticiones se conservan y un retroceso provoca un fallo explícito, sin arreglar artificialmente el reloj.
 
-El informe declara el instante efectivo de inicio, los cuadros de conexión excluidos y sus anomalías. No afirma cubrir acciones anteriores. Los timestamps repetidos dentro de la grabación se conservan; una vuelta válida del reloj RTP de 32 bits se desenvuelve. Un retroceso posterior al inicio sigue siendo un error: los cuadros no se ordenan por timestamp ni se les inventan tiempos para producir un vídeo aparentemente correcto. El diagnóstico conserva el último retroceso aunque la ráfaga anterior haya llenado las muestras con repeticiones.
+La opción adicional `--record-after-warmup` es **experimental** y requiere `--record-encoded`. Espera tres avances reales de RTP tras la última discontinuidad, solicita un fotograma clave mediante `PixelStreaming.requestIframe()` y comienza en ese fotograma. El inspector espera ese inicio antes de enviar acciones. Este modo falló en la prueba nativa con VP8: las tres peticiones fueron enviadas, pero no llegó un nuevo keyframe.
 
-El límite es de 60 s y 32 MiB. El IVF conserva ticks exactos de 90 kHz; WebM cuantiza los tiempos a milisegundos. La comprobación compara cantidad y orden de cuadros, SHA-256 de cada payload y PTS tras remultiplexar. Diez [pruebas del grabador](../tests/stream-encoded-recording.test.mjs) están aprobadas, incluidas fronteras de vuelta RTP, paquetes antiguos, inicio diferido y decodificación real de un fixture VP8 con FFmpeg/ffprobe. El fixture se genera sólo para la prueba; no representa una captura del juego.
+La causa se comprobó en la fuente instalada de Epic 5.5.4: `PixelStreaming/Private/VideoEncoderFactorySingleLayer.cpp` activa `bForceNextKeyframe`, pero sólo `VideoEncoderSingleLayerHardware.cpp:243` lo consume. `VideoEncoderSingleLayerVPX.cpp:90` pasa a VP8 los tipos de cuadro recibidos de WebRTC y no consulta ese flag. El `true` de la API del frontend confirma envío, no una respuesta del codificador. No se modificó el motor para esta herramienta.
 
-Estas comprobaciones del contenedor no prueban la identidad del proceso Unreal, fidelidad geográfica, rendimiento del juego ni validez de una interacción. La nueva grabación nativa después del calentamiento debe validarse también en el escenario real.
+El informe declara el modo y el instante efectivo de inicio; en el modo experimental también cuenta los cuadros de conexión excluidos y sus anomalías. No afirma cubrir acciones anteriores. Una vuelta válida del reloj RTP de 32 bits se desenvuelve. Un retroceso posterior al inicio sigue siendo un error: los cuadros no se ordenan por timestamp ni se les inventan tiempos para producir un vídeo aparentemente correcto. El diagnóstico conserva el último retroceso aunque la ráfaga anterior haya llenado las muestras con repeticiones.
+
+El límite es de 60 s y 32 MiB. El IVF conserva ticks exactos de 90 kHz; WebM cuantiza los tiempos a milisegundos. La comprobación compara cantidad y orden de cuadros, SHA-256 de cada payload y PTS tras remultiplexar. Once [pruebas del grabador](../tests/stream-encoded-recording.test.mjs) están aprobadas, incluidas opciones incompatibles, ambos modos, fronteras de vuelta RTP, paquetes antiguos y decodificación real de un fixture VP8 con FFmpeg/ffprobe. El fixture se genera sólo para la prueba; no representa una captura del juego.
+
+Estas comprobaciones del contenedor no prueban la identidad del proceso Unreal, fidelidad geográfica, rendimiento del juego ni validez de una interacción. La restauración del modo predeterminado no se presenta como corrección de los timestamps del stream. La evidencia de esta entrega puede usar `--record` con MediaRecorder, declarando su recodificación, y capturas PNG del juego.
 
 ## Conversaciones y comprobación local del editor
 
@@ -112,3 +116,13 @@ y `audio-observations/observation-LlZjJM/audio-rms.json`. Esta sesión
 usó el suplemento automático de alturas; la revisión manual única se
 aplicó después y debe comprobarse en el paquete final. Estos ensayos
 no se presentan como prueba de una descarga pública 0.3.
+
+La importación automática con `-nosound` detectó un aviso real: el editor no
+había registrado la fábrica del decodificador Bink al configurar las voces.
+El importador ahora carga explícitamente `BinkAudioDecoder` antes de procesar
+los clips, sin iniciar el mezclador ni un dispositivo de salida. La API Python
+5.5 devuelve `None`; el informe registra que terminó la llamada, **no** que
+verificó la fábrica. Dos pruebas CPU adicionales comprueban el orden de carga
+y que un módulo ausente impide importar o preparar el JSON del diálogo. La
+confirmación de ausencia del aviso requiere una ejecución nativa posterior;
+el cook anterior terminó con código 0, pero ese resultado no borra el aviso.

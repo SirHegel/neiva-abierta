@@ -5,7 +5,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createContext, runInContext} from 'node:vm';
-import {createVp8Collector, parseIvf, remuxIvf, finishEncodedRecording, startEncodedRecording} from '../scripts/stream-encoded-recording.mjs';
+import {createVp8Collector, parseIvf, remuxIvf, finishEncodedRecording, startEncodedRecording,
+  encodedRecordingPlan, installEncodedRecording} from '../scripts/stream-encoded-recording.mjs';
 
 function frame(timestamp, {key = false, width = 160, height = 90, show = true, sourceId = 'one'} = {}) {
   const data = new Uint8Array(key ? 10 : 3);
@@ -13,6 +14,25 @@ function frame(timestamp, {key = false, width = 160, height = 90, show = true, s
   if (key) { data.set([0x9d, 1, 0x2a], 3); data[6] = width & 255; data[7] = width >> 8; data[8] = height & 255; data[9] = height >> 8; }
   return {data: data.buffer, timestamp, type: key ? 'key' : 'delta', mimeType: 'video/VP8', sourceId};
 }
+
+test('recording options preserve first-keyframe default and isolate the experimental warmup mode', async () => {
+  assert.deepEqual(encodedRecordingPlan({browser: 'firefox'}), {enabled: false, deferStart: false});
+  assert.deepEqual(encodedRecordingPlan({browser: 'chrome', 'record-encoded': true}), {enabled: true, deferStart: false});
+  assert.deepEqual(encodedRecordingPlan({browser: 'chrome', 'record-encoded': true, 'record-after-warmup': true}),
+    {enabled: true, deferStart: true});
+  assert.throws(() => encodedRecordingPlan({'record-after-warmup': true}), /requires --record-encoded/);
+  for (const invalid of [{browser: 'firefox'}, {browser: 'chrome', record: true},
+    {browser: 'chrome', 'profile-after-disconnect': true}])
+    assert.throws(() => encodedRecordingPlan({...invalid, 'record-encoded': true}), /requires Chrome/);
+  for (const options of [{}, {deferStart: true}]) {
+    const context = createContext({window: {}, performance, Blob, setTimeout, clearTimeout});
+    await installEncodedRecording({evaluateOnNewDocument: async source => runInContext(source, context)}, options);
+    const status = context.window.__neivaEncodedRecording.status();
+    assert.equal(status.deferredStart, options.deferStart === true);
+    assert.equal(status.armed, options.deferStart !== true);
+    assert.equal(status.frames, 0);
+  }
+});
 
 test('VP8 collector starts at a keyframe and preserves RTP wrap, invisible reference frames and exact ticks', async () => {
   const c = createVp8Collector();

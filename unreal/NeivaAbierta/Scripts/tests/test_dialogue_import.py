@@ -3,7 +3,9 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 import wave
 
 SPEC = importlib.util.spec_from_file_location('dialogue_import', Path(__file__).resolve().parents[1] / 'import_dialogue_editor.py')
@@ -124,6 +126,55 @@ class DialogueSourceTests(unittest.TestCase):
         self.save()
         with self.assertRaisesRegex(ValueError, 'modelCardSha256 is missing'):
             self.check()
+
+    def test_decoder_load_precedes_asset_mutations_without_requesting_an_audio_device(self):
+        events = []
+        content = self.repo / 'unreal/NeivaAbierta/Content'
+        saved = content.parent / 'Saved'
+        u = SimpleNamespace(
+            Paths=SimpleNamespace(project_saved_dir=lambda: str(saved), project_content_dir=lambda: str(content)),
+            load_module=lambda name: events.append(('module', name)),
+            SystemLibrary=SimpleNamespace(execute_console_command=lambda *args: events.append(('finish', args))),
+            EditorAssetLibrary=SimpleNamespace(save_directory=lambda *args, **kw: events.append(('save', args)) or True),
+            log=lambda message: None, log_error=lambda message: None)
+        validated = self.check()
+        def import_clip(*args):
+            self.assertEqual(events, [('module', 'BinkAudioDecoder')])
+            events.append(('clip', args[1]['id']))
+            return {'id': args[1]['id']}
+        with patch.dict('sys.modules', {'unreal': u}), patch.object(module, 'REPO', self.repo), \
+                patch.object(module, 'MANIFEST', self.manifest), patch.object(module, 'validate_manifest', return_value=validated), \
+                patch.object(module, 'import_clip', side_effect=import_clip):
+            module.main()
+        report = json.loads((saved / 'NeivaDialogue-import.json').read_text())
+        self.assertEqual([item[0] for item in events], ['module', 'clip', 'finish', 'save'])
+        self.assertEqual(report['decoderModule'], {'name': 'BinkAudioDecoder', 'loadRequested': True,
+            'loadCallCompleted': True, 'factoryVerified': False})
+        self.assertTrue(report['engineImportPassed'])
+        self.assertFalse(report['runtimePlaybackPassed'])
+        self.assertEqual((content / 'Data/neiva-dialogue.json').read_bytes(), self.manifest.read_bytes())
+
+    def test_missing_decoder_module_stops_before_import_and_does_not_stage_dialogue(self):
+        content = self.repo / 'unreal/NeivaAbierta/Content'
+        saved = content.parent / 'Saved'
+        def load_module(name):
+            self.assertEqual(name, 'BinkAudioDecoder')
+            raise KeyError('BinkAudioDecoder is not a known module')
+        u = SimpleNamespace(
+            Paths=SimpleNamespace(project_saved_dir=lambda: str(saved), project_content_dir=lambda: str(content)),
+            load_module=load_module, log_error=lambda message: None)
+        with patch.dict('sys.modules', {'unreal': u}), patch.object(module, 'REPO', self.repo), \
+                patch.object(module, 'MANIFEST', self.manifest), patch.object(module, 'validate_manifest', return_value=self.check()), \
+                patch.object(module, 'import_clip') as importer:
+            with self.assertRaisesRegex(KeyError, 'BinkAudioDecoder'):
+                module.main()
+            importer.assert_not_called()
+        report = json.loads((saved / 'NeivaDialogue-import.json').read_text())
+        self.assertFalse(report['decoderModule']['loadCallCompleted'])
+        self.assertFalse(report['engineImportPassed'])
+        self.assertEqual(report['status'], 'FAIL')
+        self.assertEqual(report['clips'], [])
+        self.assertFalse((content / 'Data/neiva-dialogue.json').exists())
 
 
 if __name__ == '__main__':

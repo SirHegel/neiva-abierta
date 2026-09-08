@@ -10,6 +10,15 @@ import {promisify} from 'node:util';
 const runFile = promisify(execFile);
 export const ENCODED_LIMIT_BYTES = 32 * 1024 * 1024;
 
+export function encodedRecordingPlan(values) {
+  const enabled = values['record-encoded'] === true;
+  const deferStart = values['record-after-warmup'] === true;
+  if (deferStart && !enabled) throw Error('--record-after-warmup requires --record-encoded (experimental).');
+  if (enabled && (values.browser !== 'chrome' || values.record || values['profile-after-disconnect']))
+    throw Error('--record-encoded requires Chrome without --record or disconnected profiling.');
+  return {enabled, deferStart};
+}
+
 // Self-contained so the identical collector runs in the page and CPU tests.
 export function createVp8Collector({maxBytes = 32 * 1024 * 1024, maxDurationMs = 60000,
   deferStart = false, stableRtpAdvances = 3} = {}) {
@@ -242,15 +251,17 @@ export function installRecorderInPage(factory, options) {
 }
 
 export async function installEncodedRecording(page, options = {}) {
-  const deferred = {deferStart: true, ...options};
+  const deferred = {deferStart: false, ...options};
   // Validate without keeping a timer or any frame buffers in Node.
   createVp8Collector(deferred);
   return page.evaluateOnNewDocument(`(${installRecorderInPage.toString()})(${createVp8Collector.toString()},${JSON.stringify(deferred)});`);
 }
 
 // Call after decoded-video warmup and before any action that must be recorded.
-// Epic UE5.5 PixelStreaming.requestIframe() sends IFrameRequest, handled by
-// FStreamer::ForceKeyFrame; this is transport control, not game/desktop input.
+// Experimental: Epic UE5.5 handles IFrameRequest in FStreamer::ForceKeyFrame,
+// but only its hardware encoder consumes the factory's forced-keyframe flag.
+// VP8 software encoding may never produce the requested keyframe. A true API
+// return acknowledges frontend submission only, not a new encoded frame.
 export async function startEncodedRecording(page, {timeoutMs = 8000} = {}) {
   if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 15000)
     throw Error('Keyframe wait must be 100..15000 ms.');
