@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-linux-alpha",
+  "checkedAtUtc": "2026-09-08T05:45:01.981923+00:00",
+  "releaseUrl": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha",
+  "download": {
+    "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz",
+    "platform": "Linux x64",
+    "bytes": 741359235,
+    "sha256": "2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d",
+    "httpStatus": 200,
+    "withoutAuthentication": true,
+    "launchPassed": true
+  },
+  "build": {
+    "engine": "Unreal Engine5.5.4",
+    "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
+    "binarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558"
+  },
+  "runtime": {
+    "executable": "NeivaAbierta",
+    "mode": "packaged-public-download",
+    "nativeExitCode": 0,
+    "physicalDesktopInput": false,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "backend": "Vulkan SM6",
+    "testedGpu": "NVIDIA RTX4050 Laptop",
+    "gameplayChecks": {
+      "footLookWithoutMouseButtons": true,
+      "footPauseBlocksMovement": true,
+      "footResumeAdvancesWorld": true,
+      "carLookWithoutMouseButtons": true,
+      "carPauseBlocksMovement": true,
+      "carResumeAdvancesWorld": true,
+      "allMouseMovesUsedZeroButtons": true,
+      "enteredCar": true,
+      "exitedToCharacter": true
+    },
+    "gameplayCheckCount": 9,
+    "scope": "Mouse-look uses zero held buttons; native state proves pause freezes position/world time and resume advances world time. Entry/exit verified. This public-download controls route is separate from the first extracted-package driving route.",
+    "nativeLog": {
+      "path": "artifacts/visual-upgrade/downloaded-visual-02/game.log",
+      "bytes": 141841,
+      "sha256": "751ee8a1932117268ff11f35ca1f3b5d6245dc4335b1a1e8b414f9429b3e1d76"
+    },
+    "controlsProof": {
+      "path": "artifacts/visual-upgrade/downloaded-controls-02-verified.json",
+      "bytes": 3694,
+      "sha256": "da914799b35e656eef93be87abcdd27c83a0f6c7cd1c2dfbb0afa7c9e77a5b86"
+    },
+    "observation": "b1g3Oa"
+  },
+  "websiteDeploymentVerified": false,
+  "limitations": [
+    "Alpha visual quality is substantially below the requested hyperrealistic/AAA target.",
+    "Geographic dimensions/facades and tree placements remain partly interpreted; not an identical whole-city reconstruction.",
+    "No sustained60FPS or cross-device performance guarantee."
+  ],
+  "detailedEvidence": "data/verification/unreal-visual-upgrade.json"
+}

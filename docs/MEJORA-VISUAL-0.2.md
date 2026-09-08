@@ -1,6 +1,8 @@
 # Mejora visual 0.2: evidencia y trabajo pendiente
 
-La versión 0.2 está **en desarrollo: todavía no está empaquetada ni publicada**. Este documento recoge pruebas del 7 y 8 de septiembre de 2026 UTC en Unreal Engine 5.5.4, ejecutando `UnrealEditor -game` en Linux con Vulkan SM6. La evidencia histórica de la alfa 0.1.0 conserva su alcance y no acredita esta nueva versión.
+La **alfa Unreal 0.2.0 para Linux ya está empaquetada y publicada en [GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)**. Pasaron la primera extracción local y una **segunda ejecución desde la descarga HTTP pública**, con el mismo SHA-256 de archivo y binario. **Sólo el despliegue del sitio sigue pendiente** en este registro de distribución. El [recibo público compacto](../data/verification/unreal-visual-download.json) reúne enlaces, hashes y controles comprobados.
+
+Este documento conserva las pruebas del 7 y 8 de septiembre de 2026 UTC en Unreal Engine 5.5.4: primero `UnrealEditor -game`, después el ejecutable `NeivaAbierta`, en Linux con Vulkan SM6. La evidencia histórica de la alfa 0.1.0 conserva su alcance y no acredita esta nueva versión.
 
 El registro estructurado está en [unreal-visual-upgrade.json](../data/verification/unreal-visual-upgrade.json). Contiene hashes, fechas, métricas y referencias a los artefactos locales. Las rutas `artifacts/` y `Saved/` son evidencias de trabajo; su inclusión en el registro no significa que estén publicadas.
 
@@ -35,7 +37,7 @@ La hora de inicio del observador no equivale a la hora exacta de cada cuadro. Lo
 
 ## Rendimiento medido en A
 
-Se recomputaron los promedios de `FrameTime` directamente desde los CSV del motor. La ejecución A usó 1080p, escala de render del 100 %, límite configurado de 30 FPS, ventana en pantalla virtual privada y transmisión VP8. Son muestras cortas de un solo equipo, no resultados del futuro paquete 0.2.
+Se recomputaron los promedios de `FrameTime` directamente desde los CSV del motor. La ejecución A usó 1080p, escala de render del 100 %, límite configurado de 30 FPS, ventana en pantalla virtual privada y transmisión VP8. Son muestras cortas del editor en un solo equipo; las pruebas posteriores del paquete 0.2 se distinguen más abajo.
 
 | Muestra | Frames analizados | FrameTime medio | RenderThread medio | GPUTime medio |
 | --- | ---: | ---: | ---: | ---: |
@@ -82,6 +84,25 @@ Entre B2 y B4, B3 terminó con **código 139 antes de obtener un cuadro verifica
 
 En esa transición se detectó que terminar el wrapper de B2 no garantizaba que el motor anterior hubiera salido. Es un riesgo de cierre que se documenta, **no prueba suficiente para atribuirle por sí solo el fallo B3**. B4 completó la ejecución con los mismos argumentos de lanzamiento que B3. No se culpa al ajuste de sombras ni se declara resuelta de forma general cualquier falta de memoria.
 
+## Paquete Linux 0.2 y publicación
+
+UAT terminó con **`BUILD SUCCESSFUL` y código 0** en `artifacts/visual-upgrade/package-02.log`. El informe `package-report-02.json` registra compilación, importación y empaquetado correctos; su campo `runtimeValidated: false` conserva el alcance de ese script. La validación de juego se realizó después, en una sesión separada.
+
+La fuente del paquete corresponde al commit [`3d42c1f7ab113544f90a2934fcb52b8797f32143`](https://github.com/SirHegel/neiva-abierta/commit/3d42c1f7ab113544f90a2934fcb52b8797f32143). El binario Linux extraído mide **283.317.168 bytes** y su SHA-256 comprobado es `0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558`.
+
+La sesión `packaged-visual-02`, iniciada a las **05:34:01 UTC del 8 de septiembre**, ejecutó ese binario a 1080p offscreen, con escala del 100 % y límite 60. Cargó las **35.873 huellas en 682 secciones**, 150 partes detalladas —149 Nanite—, 15 árboles, seis bancos y tres peatones. El log confirmó entrada al coche en `X=-87740; Y=8250; Z=70` cm y salida con el coche en `X=-87252.824; Y=8443.660; Z=70`: **unos 5,243 m de avance**. El cuadro `car-drive.png` muestra **0 km/h** después de frenar; `NeivaState` posterior confirma coche detenido, sin pasajero y personaje de nuevo en `WALKING`. La partida terminó mediante Quit, con salida registrada y código **0**.
+
+- [Freno del coche, captura del reproductor](../artifacts/unreal-native/stream-observations/observation-agp4KQ/car-drive.png): incluye la interfaz del navegador; no es el cuadro nativo original 1080p.
+- [Cuadro nativo del paquete junto al parque](../artifacts/unreal-native/stream-observations/observation-uZD7zz/before-native.png): original **1920 × 1080**, personaje vestido, coche, árboles y estudio ficticio actual. No hay aviso VSM visible; el log de esa sesión tampoco contiene ese aviso. La repetición de fachadas del fondo sigue siendo una limitación.
+
+El CSV nativo `native-performance-packaged-02.json` resume **592 frames**, con **21,1391 ms de FrameTime medio**, p95 **33,4687 ms** y **47,3057 FPS derivados**. Se recomputaron los valores desde el CSV fuente. `GPUTime` reporta 21,1796 ms y `GPU/Total` 18,2231 ms, métricas distintas del tiempo total del frame. Es una vista al parque después de conducir, con otra posición respecto de B4: **47,31 frente a 56,27 no constituye una comparación controlada entre paquete y editor**, ni acredita 60 FPS sostenidos o rendimiento en otros equipos.
+
+La grabación diagnóstica `agp4KQ` usó MediaRecorder con una tasa solicitada de 6 Mbps y la observación recibió sólo **12,45 FPS decodificados**. Se conserva como evidencia, pero **no se selecciona como vídeo final del sitio**. No se atribuye con ello la caída a una causa única ni se usa esa tasa como medida del renderizador. La observación posterior sin esa grabación, `uZD7zz`, recibió 28,52 FPS; tampoco equivale a los FPS nativos.
+
+El [archivo público Linux](https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz) mide **741.359.235 bytes** y tiene SHA-256 `2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d`. El recibo `download-public-02.json`, actualizado a las **05:45:01 UTC**, registra HTTP 200 sin autenticación, coincidencia de bytes/hash, el binario esperado y **`launchPassed: true`**. La copia descargada se extrajo por separado, abrió y terminó con código **0** en `downloaded-visual-02`, sin fallo fatal observado.
+
+La observación `b1g3Oa` se contrastó con `downloaded-controls-02-verified.json`: **nueve comprobaciones pasaron**. Mirar sin mantener botones del ratón cambió el yaw unos **82,24°**, tanto a pie como en el coche. Durante las entradas W con pausa, posición y tiempo del mundo permanecieron iguales —8,428 s a pie y 14,370 s en el coche—; al reanudar volvió a avanzar el tiempo del juego. También se confirmaron entrada al coche y retorno al personaje. Los estados nativos se asociaron a los comandos con diferencias temporales de hasta 30 ms. No se atribuye este resultado al mero envío de teclas ni se reutiliza como un benchmark. El despliegue del sitio 0.2 sigue sin acreditarse.
+
 ## Validación y fases pendientes
 
 El último conjunto previo al empaquetado pasó **103 pruebas Node, 41 pruebas Python de los scripts nativos y 57 pruebas Python de la raíz: 201 en total**. Incluyen reproducción byte a byte de los hitos, orientación de triángulos, conservación de normales/UV y comprobaciones de topología. `npm run build` también pasó para el prototipo web anterior; no acredita un paquete Unreal. Los logs `node-tests-final-20260908.log`, `native-python-final-20260908.log` y `root-python-20260908-final.log` están bajo `artifacts/visual-upgrade/`. No se suman otra vez las pruebas históricas de la alfa 0.1.0.
@@ -95,8 +116,10 @@ El último conjunto previo al empaquetado pasó **103 pruebas Node, 41 pruebas P
 | Tres peatones creados en una partida; recorrido completo de cada uno | Creación verificada; recorridos individuales pendientes |
 | Caminata, coche, avance, freno y salida de B2 | Verificados por log y cuadros |
 | Vista fija B4 con límite 60; salida nativa ordenada | Muestra y salida verificadas; 60 FPS sostenidos no demostrados |
-| Empaquetado y ejecución del paquete 0.2 | **No verificados** |
-| Descarga pública y despliegue del sitio para 0.2 | **No verificados** |
+| Empaquetado y ejecución de la primera extracción local 0.2 | Verificados, UAT y partida con salida 0 |
+| Publicación GitHub y descarga HTTP sin autenticación | Verificados, tamaño y SHA coinciden |
+| Ejecución de la copia descargada públicamente | Verificada: binario coincidente, nueve controles y salida 0 |
+| Despliegue del sitio para 0.2 | **No verificado** |
 
 ## Límite principal de fidelidad
 

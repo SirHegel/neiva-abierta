@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "checkedAtUtc": "2026-09-08T05:24:21.813742+00:00",
+  "checkedAtUtc": "2026-09-08T05:47:48.998821+00:00",
   "releaseCandidate": "0.2",
-  "status": "in-development-not-packaged-or-published",
-  "scope": "New visual-upgrade evidence from UnrealEditor game mode; separate from the released and downloaded alpha0.1.0 record.",
+  "status": "released-package-and-public-download-runtime-verified-site-pending",
+  "scope": "Visual-upgrade Editor history, first locally extracted package driving test, and separately downloaded publicLinux0.2 controls/runtime test. Both packaged sessions terminated normally. Website deployment remains pending; alpha0.1 evidence is preserved separately.",
   "previousReleaseEvidence": {
     "path": "data/verification/unreal-native.json",
     "sha256WhenThisManifestWasCreated": "f25d85136b957011fae8a7f3da12cf660b75d2493e8c1723e01ec62e1596c706",
@@ -19,8 +19,8 @@
     "tile100RuntimeVerified": true,
     "extraNpcRuntimeVerified": true,
     "renderOffscreenRuntimeVerified": true,
-    "version02Packaged": false,
-    "version02PublicDownloadVerified": false,
+    "version02Packaged": true,
+    "version02PublicDownloadVerified": true,
     "version02SiteDeployed": false,
     "wholeCityPhysicalDimensionsVerified": false,
     "requestedHyperrealisticQualityAchieved": false,
@@ -29,7 +29,11 @@
     "nativeCsvPerformanceB4At60CapCollected": true,
     "cleanEditorGameExitVerified": true,
     "tile100AllCityRuntimeVerified": false,
-    "additionalNpcIndividualRoutesVerified": false
+    "additionalNpcIndividualRoutesVerified": false,
+    "version02RuntimePackagedVerified": true,
+    "version02GithubReleasePublished": true,
+    "version02PublicHttpDownloadIntegrityVerified": true,
+    "version02PublicDownloadRuntimeVerified": true
   },
   "engine": {
     "version": "5.5.4-40574608+++UE5+Release-5.5",
@@ -42,16 +46,20 @@
     ],
     "streamingCodec": "VP8 software encoder",
     "screenPercentage": 100,
-    "runtimeExecutable": "UnrealEditor",
-    "runtimeMode": "editor-game",
-    "latestVerifiedSession": "B4",
-    "displayModeObserved": "A private virtual window; B2 and B4 RenderOffScreen on an isolated virtual display.",
+    "runtimeExecutable": "NeivaAbierta",
+    "runtimeMode": "packaged",
+    "latestVerifiedSession": "downloaded-visual-02",
+    "displayModeObserved": "Latest packaged session: RenderOffScreen with an isolated virtual display; earlier Editor modes remain in runtimeSessions.",
     "initialSessionFrameLimit": 30,
     "latestTestedFrameLimit": 60,
     "streamingFrameLimit": 30,
     "cleanExitVerified": true,
-    "nativeGamePackage": false,
-    "note": "Full session-specific settings, logs and termination evidence are preserved in runtimeSessions. A is historical; B4 is the latest completed session. The configured frame limit is not guaranteed FPS."
+    "nativeGamePackage": true,
+    "note": "Latest session is the independent GitHub HTTP download, extracted separately and executed with the matching packaged binarySHA. Both native package sessions exited normally. Website deployment is pending.",
+    "packaged": true,
+    "runtimePackagedVerified": true,
+    "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+    "publicDownloadRuntimeVerified": true
   },
   "character": {
     "savedBindingsVerified": true,
@@ -421,6 +429,166 @@
       "recording": null,
       "nativeGameplayLogCrossCheckPassed": false,
       "nativeQuitVerifiedSeparately": true
+    },
+    {
+      "id": "agp4KQ",
+      "session": "packaged-visual-02",
+      "observedAtUtc": "2026-09-08T05:34:29.318Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/report.json",
+        "bytes": 8693,
+        "sha256": "fb2c6911536eae8719c91ceb0232a9a1e4c056a53e9965148dc266b9b4b80036"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/before-native.png",
+          "bytes": 2422627,
+          "sha256": "0d64d5477b8d623e0ac8e0ae8de34c209d8444e5ddfb0c5c86cb2dc5a75ca3ce",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/after-native.png",
+          "bytes": 2600929,
+          "sha256": "6ac5e63795197aa68ed7f75237f219fb660119c9fd9b1c11b1afddf011c13c93",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 12.44797136967547,
+      "receivedDecodedFrames": 192,
+      "observationSeconds": 15.42419999998808,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Matched to independent packagedLinux executableSHA, launch record, native NeivaState and entry/exit/quit timestamps.",
+      "nativeGameplayLogCrossCheckPassed": true,
+      "recording": {
+        "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/stream.webm",
+        "bytes": 5295753,
+        "sha256": "803bbbfc82b69025ddb416286cc61eec00fbcaa495b3518d125203a042ad0215",
+        "mime": "video/webm;codecs=vp8",
+        "recordedIntervalMs": 16432.400000035763,
+        "completedStop": true,
+        "desktopCapture": false,
+        "requestedBitsPerSecond": 6000000,
+        "approvedForWebsite": false,
+        "reasonNotSelected": "The browser-recorded observation received only12.45decodedFPS while recording at requested6Mbps. Keep as diagnostic evidence, not final website showcase video.",
+        "causeOfReceivedFrameRateDropEstablished": false
+      },
+      "driveScreenshots": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/car-enter.png",
+          "bytes": 952941,
+          "sha256": "27517602390a8b3d8f8120df134231dbd78bf91a973bd069ab0bc6ba0691d285",
+          "source": "Browser screenshot including player overlay; not the original1920x1080native video frame."
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/car-drive.png",
+          "bytes": 1046179,
+          "sha256": "f325109e202dc74fe458ce770650704d4cf129e0c7414a8d01ccb377fbd0e8e5",
+          "source": "Browser screenshot including player overlay; not the original1920x1080native video frame."
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-agp4KQ/car-exit.png",
+          "bytes": 761459,
+          "sha256": "171946bd76cb9837938d209651478a88368e5ffc8be86c1dae37d698ecf0a8d4",
+          "source": "Browser screenshot including player overlay; not the original1920x1080native video frame."
+        }
+      ]
+    },
+    {
+      "id": "uZD7zz",
+      "session": "packaged-visual-02",
+      "observedAtUtc": "2026-09-08T05:35:18.069Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-uZD7zz/report.json",
+        "bytes": 25768,
+        "sha256": "5c4ad908b3a18091b622e9264494614f303244b15b8ade7ede16c628c7846f7d"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-uZD7zz/before-native.png",
+          "bytes": 3632115,
+          "sha256": "49d93585ed0bcd9457e381db6e70fc48bed82b40f5fc8fc8a927ee5092f0eb5f",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-uZD7zz/after-native.png",
+          "bytes": 3709773,
+          "sha256": "f590c4739079060c7712a9d75b9a8efbc352f5cdbb6c5c2d4a8ba95767ab9e7c",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 28.51577018216001,
+      "receivedDecodedFrames": 445,
+      "observationSeconds": 15.605399999976159,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "nativeIdentityCrossCheck": "Matched to independent packagedLinux executableSHA, launch record, native NeivaState and entry/exit/quit timestamps.",
+      "nativeGameplayLogCrossCheckPassed": true,
+      "recording": null,
+      "nativeQuitVerifiedSeparately": true,
+      "visualReview": "Before-native original1080p frame shows dressed character, car, trees/benches and the current fictitious studio; no VSM warning banner visible. Generic repeated facades and incomplete geographic fidelity remain."
+    },
+    {
+      "id": "b1g3Oa",
+      "session": "downloaded-visual-02",
+      "observedAtUtc": "2026-09-08T05:42:23.373Z",
+      "report": {
+        "path": "artifacts/unreal-native/stream-observations/observation-b1g3Oa/report.json",
+        "bytes": 42223,
+        "sha256": "d9248caaffa90f422125b962c2c1fc0a9bc5ca4e4d602472477a6b104752bba5"
+      },
+      "nativeFrames": [
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-b1g3Oa/before-native.png",
+          "bytes": 2747910,
+          "sha256": "0dc97be829f242483ca29d49cf0745de51b0e5c2a794289fe56910ffb3bd513b",
+          "width": 1920,
+          "height": 1080,
+          "view": "before",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        },
+        {
+          "path": "artifacts/unreal-native/stream-observations/observation-b1g3Oa/after-native.png",
+          "bytes": 2168723,
+          "sha256": "ddc92b8b5b71b0a5a4417e5eb8af9ce5428cafe66ed0ee37face97e2078c1e65",
+          "width": 1920,
+          "height": 1080,
+          "view": "after",
+          "source": "Decoded WebRTC video, original resolution, no rescaling or visual edits"
+        }
+      ],
+      "continuousVideoVerified": true,
+      "receivedDecodedFps": 29.662524042504526,
+      "receivedDecodedFrames": 859,
+      "observationSeconds": 28.95910000002384,
+      "fpsBasis": "inbound-rtp framesDecoded delta / elapsed time; not native render FPS",
+      "physicalDesktopInput": false,
+      "rawObserverEngineIdentityVerified": false,
+      "rawObserverControlsVerified": false,
+      "controlsVerifiedBySeparateNativeProof": true,
+      "controlsProof": {
+        "path": "artifacts/visual-upgrade/downloaded-controls-02-verified.json",
+        "bytes": 3694,
+        "sha256": "da914799b35e656eef93be87abcdd27c83a0f6c7cd1c2dfbb0afa7c9e77a5b86"
+      },
+      "nativeIdentityCrossCheck": "Independent public archive download, matching packaged binarySHA and native log timestamps. The raw browser report alone is not a controls or engine-identity proof.",
+      "recording": null
     }
   ],
   "nativePerformance": {
@@ -647,6 +815,55 @@
         "equivalentFramesPerSecondFromMeanFrameTime": 56.27123174791111,
         "rateFormula": "1000 / mean FrameTime ms; not an average of instantaneous FPS and not a sustained-rate promise.",
         "scope": "Short fixed park view, not an across-device or sustained-driving60FPS benchmark."
+      },
+      {
+        "scenario": "Packaged02 park view after driving,60cap with VP8 client",
+        "session": "packaged-visual-02",
+        "frameLimit": 60,
+        "summary": {
+          "path": "artifacts/visual-upgrade/native-performance-packaged-02.json",
+          "bytes": 1472,
+          "sha256": "d1693527d776c176907ec2facca90abaae6989b3eb263cb5ceef134da5160fe5"
+        },
+        "csv": {
+          "path": "artifacts/unreal-native/local-package-tests/visual-02/Neiva-Abierta-Unreal-0.2.0-Linux-x64/Linux/NeivaAbierta/Saved/Profiling/CSV/Profile(20260908_003525).csv",
+          "bytes": 1156811,
+          "sha256": "37a262e8a08c2f83acf2e8bbcda93e97f37a353fab1eb363d341d8cecf3050d8"
+        },
+        "nativeCsvRecomputed": true,
+        "discardFirstFrames": 0,
+        "frameTime": {
+          "count": 592,
+          "meanMs": 21.13910439189189,
+          "medianMs": 19.59845,
+          "p95Ms": 33.4687
+        },
+        "renderThreadTime": {
+          "meanMs": 15.605863175675676,
+          "medianMs": 12.4535,
+          "p95Ms": 31.104
+        },
+        "gameThreadTime": {
+          "meanMs": 3.5264138513513514,
+          "medianMs": 2.349,
+          "p95Ms": 9.737
+        },
+        "gpuTime": {
+          "meanMs": 21.17962837837838,
+          "medianMs": 19.017,
+          "p95Ms": 32.199,
+          "reportedMetricOnly": true
+        },
+        "gpuTotal": {
+          "sourceColumn": "GPU/Total",
+          "meanMs": 18.223077702702703,
+          "medianMs": 17.7365,
+          "p95Ms": 21.053,
+          "acceptedReportedTiming": true
+        },
+        "equivalentFramesPerSecondFromMeanFrameTime": 47.3056938203853,
+        "rateFormula": "1000/meanFrameTimeMs; not an average of instantaneousFPS or guarantee.",
+        "scope": "Short park view after the packaged driving route on one machine. Different view/state from EditorB4-60; do not interpret47.31vs56.27as a controlled performance regression."
       }
     ],
     "rawNativeCsvAvailable": true,
@@ -654,7 +871,7 @@
     "vramConsumptionInferred": false,
     "acrossDevicesBenchmarkCompleted": false,
     "causalABComparison": false,
-    "scope": "Historical A and subsequent B2/B4 native CSVs on one machine. B2/B4 verify offscreen rendering. FrameTime remains separate from WebRTC receipt. GPUTime=0 is invalid in offscreen; GPU/Total is usable in the30cap samples but inconsistent in B4-60 and excluded there. Different cameras, frame limits and settings prevent causal one-variable comparisons.",
+    "scope": "Historical A and subsequent B2/B4 native CSVs on one machine. B2/B4 verify offscreen rendering. FrameTime remains separate from WebRTC receipt. GPUTime=0 is invalid in offscreen; GPU/Total is usable in the30cap samples but inconsistent in B4-60 and excluded there. Different cameras, frame limits and settings prevent causal one-variable comparisons. The packaged02 sample is a separate592-frame park view after driving, not a controlled comparison against EditorB4-60.",
     "measuredGpuBoardMemory": {
       "source": {
         "path": "artifacts/visual-upgrade/vram-B4.csv",
@@ -742,14 +959,39 @@
     "B4-60 averages56.27 derived FPS in a short static view; sustained60FPS and performance across devices are not established. Its GPU counters are inconsistent and excluded.",
     "B2/B4 verify near100m/far500m sectors and3/8NPCs spawned in a playable offscreen session; individual NPC route coverage remains unverified.",
     "The initial B descriptor-limit failure and B3 Vulkan OOM failure are preserved. Later successful sessions do not erase them or prove a single cause.",
-    "The0.2 package, public download and website deployment are still unverified; no new distribution URL is claimed."
+    "The package recording agp4KQ is diagnostic only and not approved as the final website clip. Recording bitrate and receivedFPS are not measurements of native renderer FPS.",
+    "Package02 and the independently downloaded public copy passed their scoped native tests; deployment of the0.2 website remains unverified."
   ],
   "distribution": {
-    "version02PackageUrl": null,
-    "version02PackageSha256": null,
-    "version02PackageBytes": null,
-    "version02GithubReleaseUrl": null,
-    "version02WebsiteDeploymentUrl": null
+    "version02PackageUrl": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.2.0-linux-alpha/Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz",
+    "version02PackageSha256": "2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d",
+    "version02PackageBytes": 741359235,
+    "version02GithubReleaseUrl": "https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha",
+    "version02WebsiteDeploymentUrl": null,
+    "platform": "Linux x64",
+    "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
+    "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+    "publicHttpReceipt": {
+      "path": "artifacts/visual-upgrade/download-public-02.json",
+      "bytes": 1345,
+      "sha256": "49d0fd230eb250cb2f290c09c2cb8605dadfd0dcf78a9581b7934de7b31455f3"
+    },
+    "publicHttpDownload": {
+      "httpStatus": 200,
+      "withoutAuthentication": true,
+      "bytes": 741359235,
+      "sha256": "2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d",
+      "checkedAtUtc": "2026-09-08T05:45:01.981923+00:00",
+      "launchPassed": true
+    },
+    "publicDownloadLaunchVerified": true,
+    "websiteDeploymentVerified": false,
+    "publicDownloadSourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+    "compactPublicReceipt": {
+      "path": "data/verification/unreal-visual-download.json",
+      "bytes": 2591,
+      "sha256": "1ea4b6d7c8d7da2fe0de5f2034183172ed76e0006e86bd7e2c1b50c0c659736b"
+    }
   },
   "documentation": "docs/MEJORA-VISUAL-0.2.md",
   "failedAttempts": [
@@ -872,7 +1114,7 @@
       "note": "B3 started with a much lower reported GPU memory budget. Operator observed that terminating the B2 wrapper had not guaranteed native process exit. The record does not establish that as the sole cause or blame the shadow profile."
     }
   ],
-  "phaseScope": "B2/B4 verify near 100m and far 500m sectors, 3/8 NPCs spawned during real gameplay, offscreen video and B2 driving. Individual routes for all NPCs, an all-city100m configuration, packaged0.2 and distribution remain unverified.",
+  "phaseScope": "UAT, first local package extraction and independent public HTTP download execution all passed. The public-download route proves9controls checks; driving/braking was tested earlier with the identical binary. Site deployment and individual NPC route coverage remain pending.",
   "runtimeSessions": [
     {
       "id": "A",
@@ -1126,6 +1368,276 @@
       "nativeLogCrashObserved": false,
       "ownedProcessGroupMembersRemaining": 0,
       "gpuBoardMemoryAfterExitMiB": 133
+    },
+    {
+      "id": "packaged-visual-02",
+      "runtimeExecutable": "NeivaAbierta",
+      "runtimeMode": "packaged",
+      "runtimeDistributionOrigin": "First local extraction of the release archive; not the later public HTTP download extraction.",
+      "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
+      "binary": {
+        "path": "artifacts/unreal-native/local-package-tests/visual-02/Neiva-Abierta-Unreal-0.2.0-Linux-x64/Linux/NeivaAbierta/Binaries/Linux/NeivaAbierta",
+        "bytes": 283317168,
+        "sha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558"
+      },
+      "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+      "startedAtUtc": "2026-09-08T05:34:01.593730+00:00",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/packaged-visual-02/command.json",
+        "bytes": 1841,
+        "sha256": "9a1ebbe15e1455a30916e257786e2f48b3853a4697fd44432dcffa0ddeac7e91"
+      },
+      "gameLog": {
+        "path": "artifacts/visual-upgrade/packaged-visual-02/game.log",
+        "bytes": 137740,
+        "sha256": "78b755a7b4f633ae2e0a76e68a4395ea249179de92e6c7260aa2cec79d21d754"
+      },
+      "exitRecord": {
+        "path": "artifacts/visual-upgrade/packaged-visual-02/exit.json",
+        "bytes": 16,
+        "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+      },
+      "renderOffscreen": true,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "screenPercentage": 100,
+      "frameLimit": 60,
+      "streamCodec": "VP8 software encoder",
+      "streamFrameLimit": 30,
+      "nativeGamePackage": true,
+      "physicalDesktopInput": false,
+      "mappedBuildings": 35873,
+      "genericBuildingMeshChunks": 682,
+      "nearTileMetres": 100,
+      "farTileMetres": 500,
+      "fineRadiusMetresFromInitialSpawn": 500,
+      "landmarkStaticParts": 150,
+      "landmarkNaniteParts": 149,
+      "landmarkSourceTriangles": 71311,
+      "treeInstances": 15,
+      "benchInstances": 6,
+      "spawnedNpcs": 3,
+      "requestedNpcs": 8,
+      "drivingVerifiedByNativeLogAndFrames": true,
+      "carStartCm": [
+        -87740,
+        8250,
+        70
+      ],
+      "carStoppedCm": [
+        -87252.824,
+        8443.66,
+        70
+      ],
+      "carAdvanceMetres": 5.2425628329663345,
+      "brakeScreenshotHudKmh": 0,
+      "brakeSpeedPropertyAfterExit": 0,
+      "exitReturnedToWalking": true,
+      "postExitPlayerCm": [
+        -86738.731,
+        8400.514,
+        95.15
+      ],
+      "postExitMovementMode": 1,
+      "postExitCarPassenger": null,
+      "controlYawAfterReview": 145,
+      "controlPitchAfterReview": -5,
+      "wrapperExitCode": 0,
+      "cleanNativeExitVerified": true,
+      "vsmWarningCount": 0,
+      "safeRuntimeSnippets": [
+        {
+          "line": 1227,
+          "text": "[2026.09.08-05.34.05:274][  0]LogTemp: Display: Neiva baked landmarks: 150 static parts, 149 Nanite, 71311 source triangles, 3 labels; source hash verified."
+        },
+        {
+          "line": 1228,
+          "text": "[2026.09.08-05.34.06:487][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 682 mesh chunks (682 cells); tiles near 100 m / far 500 m, fine radius 500 m around initial spawn (567 near / 35302 far procedural buildings); preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1229,
+          "text": "[2026.09.08-05.34.07:092][  0]LogTemp: Display: Neiva: environment 15 trees, 6 benches; placements/heights/species are interpreted, not individually surveyed."
+        },
+        {
+          "line": 1234,
+          "text": "[2026.09.08-05.34.07:283][  0]LogTemp: Display: Neiva: spawned 3/8 pedestrians on 3 candidate paths; 12 sampled positions, 9 blocked, 0 within 12 m; original OSM paths retained."
+        },
+        {
+          "line": 1321,
+          "text": "[2026.09.08-05.34.35:247][485]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm."
+        },
+        {
+          "line": 1322,
+          "text": "[2026.09.08-05.34.39:130][617]LogTemp: Display: Neiva: exited vehicle at V(X=-87167.86, Y=8229.93, Z=96.00) cm; car at V(X=-87252.82, Y=8443.66, Z=70.00) cm."
+        },
+        {
+          "line": 1338,
+          "text": "[2026.09.08-05.35.21:260][670]LogTemp: Display: NeivaState: world_seconds=71.345 pawn=NeivaCharacter_2147482463 location_cm=X=-86738.731 Y=8400.514 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-5.000000 Y=145.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1339,
+          "text": "[2026.09.08-05.35.21:260][670]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1"
+        },
+        {
+          "line": 1340,
+          "text": "[2026.09.08-05.35.21:260][670]LogTemp: Display: NeivaState: car=NeivaCar_2147481769 location_cm=X=-87252.824 Y=8443.660 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None"
+        },
+        {
+          "line": 1358,
+          "text": "[2026.09.08-05.35.39:093][525]LogTemp: Display: NeivaState: world_seconds=89.191 pawn=NeivaCharacter_2147482463 location_cm=X=-86738.731 Y=8400.514 Z=95.150 actor_rotation=P=0.000000 Y=21.678587 R=-0.000000 control_rotation=P=-5.000000 Y=145.000000 R=0.000000 velocity_cm_s=X=0.000 Y=0.000 Z=0.000"
+        },
+        {
+          "line": 1359,
+          "text": "[2026.09.08-05.35.39:093][525]LogTemp: Display: NeivaState: capsule_radius_cm=36.000 capsule_half_height_cm=92.000 movement_mode=1"
+        },
+        {
+          "line": 1360,
+          "text": "[2026.09.08-05.35.39:093][525]LogTemp: Display: NeivaState: car=NeivaCar_2147481769 location_cm=X=-87252.824 Y=8443.660 Z=70.000 yaw=21.679 speed_property=0.000 passenger=None"
+        },
+        {
+          "line": 1362,
+          "text": "[2026.09.08-05.35.40:271][585]LogCore: FUnixPlatformMisc::RequestExit(0, UGameEngine::HandleExitCommand)"
+        },
+        {
+          "line": 1363,
+          "text": "[2026.09.08-05.35.40:271][585]LogGenericPlatformMisc: FPlatformMisc::RequestExit(0, UGameEngine::HandleExitCommand)"
+        },
+        {
+          "line": 1445,
+          "text": "[2026.09.08-05.35.46:624][586]LogExit: Exiting."
+        }
+      ],
+      "note": "Entry/exit and movement mode are verified by native log; braking is visible at0km/h and the later native state reports zero speed. No fullcity exactness, allroutesVSM or device-wide performance claim."
+    },
+    {
+      "id": "downloaded-visual-02",
+      "runtimeExecutable": "NeivaAbierta",
+      "runtimeMode": "packaged-public-download",
+      "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
+      "sourceBinarySha256": "0430776be9477f6980951e66c1920040da06a028853ddb2a664346beca714558",
+      "startedAtUtc": "2026-09-08T05:42:21.986016+00:00",
+      "launchRecord": {
+        "path": "artifacts/visual-upgrade/downloaded-visual-02/command.json",
+        "bytes": 1756,
+        "sha256": "39103b6a9266508b9ecdd79b565aa5b5a681d278db3fd6628f17f70aa5c6f04b"
+      },
+      "gameLog": {
+        "path": "artifacts/visual-upgrade/downloaded-visual-02/game.log",
+        "bytes": 141841,
+        "sha256": "751ee8a1932117268ff11f35ca1f3b5d6245dc4335b1a1e8b414f9429b3e1d76"
+      },
+      "exitRecord": {
+        "path": "artifacts/visual-upgrade/downloaded-visual-02/exit.json",
+        "bytes": 16,
+        "sha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+      },
+      "nativeGamePackage": true,
+      "renderOffscreen": true,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "physicalDesktopInput": false,
+      "mappedBuildings": 35873,
+      "genericBuildingMeshChunks": 682,
+      "landmarkStaticParts": 150,
+      "landmarkNaniteParts": 149,
+      "landmarkSourceTriangles": 71311,
+      "treeInstances": 15,
+      "benchInstances": 6,
+      "spawnedNpcs": 3,
+      "requestedNpcs": 8,
+      "wrapperExitCode": 0,
+      "cleanNativeExitVerified": true,
+      "controlsProof": {
+        "path": "artifacts/visual-upgrade/downloaded-controls-02-verified.json",
+        "bytes": 3694,
+        "sha256": "da914799b35e656eef93be87abcdd27c83a0f6c7cd1c2dfbb0afa7c9e77a5b86"
+      },
+      "controlsChecks": {
+        "footLookWithoutMouseButtons": true,
+        "footPauseBlocksMovement": true,
+        "footResumeAdvancesWorld": true,
+        "carLookWithoutMouseButtons": true,
+        "carPauseBlocksMovement": true,
+        "carResumeAdvancesWorld": true,
+        "allMouseMovesUsedZeroButtons": true,
+        "enteredCar": true,
+        "exitedToCharacter": true
+      },
+      "controlsMeasurements": {
+        "footLookYawDeltaDegrees": 82.241784,
+        "carLookYawDeltaDegrees": 82.241783,
+        "footPausedWorldSecondsBeforeAfter": [
+          8.428,
+          8.428
+        ],
+        "carPausedWorldSecondsBeforeAfter": [
+          14.37,
+          14.37
+        ],
+        "footResumedWorldSeconds": 9.814,
+        "carResumedWorldSeconds": 15.773,
+        "positionsUnchangedDuringPausedInput": true,
+        "maxStateTimestampMatchDeltaSeconds": 0.03
+      },
+      "safeRuntimeSnippets": [
+        {
+          "line": 1228,
+          "text": "[2026.09.08-05.42.26:626][  0]LogTemp: Display: Neiva: 35873/35873 buildings in 682 mesh chunks (682 cells); tiles near 100 m / far 500 m, fine radius 500 m around initial spawn (567 near / 35302 far procedural buildings); preview radius 0 m (0=all); 3 exterior-only courtyard footprints."
+        },
+        {
+          "line": 1324,
+          "text": "[2026.09.08-05.42.42:325][844]LogTemp: Display: Neiva: entered vehicle at V(X=-87740.00, Y=8250.00, Z=70.00) cm."
+        },
+        {
+          "line": 1349,
+          "text": "[2026.09.08-05.42.52:485][404]LogTemp: Display: Neiva: exited vehicle at V(X=-87655.04, Y=8036.27, Z=96.00) cm; car at V(X=-87740.00, Y=8250.00, Z=70.00) cm."
+        },
+        {
+          "line": 1455,
+          "text": "[2026.09.08-05.43.39:815][964]LogExit: Exiting."
+        }
+      ],
+      "note": "Nine controls checks confirmed with native states and zero-button mouse events. Resuming advances world time; the check does not claim walking input after resume. Independent download is verified by HTTP, archive SHA and matching binary SHA."
     }
-  ]
+  ],
+  "releaseVersion": "0.2.0-linux-alpha",
+  "packageBuild": {
+    "sourceCommit": "3d42c1f7ab113544f90a2934fcb52b8797f32143",
+    "engineVersion": [
+      5,
+      5,
+      4
+    ],
+    "target": "Linux x64",
+    "compiled": true,
+    "baseAssetsImported": true,
+    "packaged": true,
+    "errors": [],
+    "report": {
+      "path": "artifacts/visual-upgrade/package-report-02.json",
+      "bytes": 5356,
+      "sha256": "817c18ef6a10ad86ed19b90f4a4a76388b4281a441f29b6c7e44c61e2580debc"
+    },
+    "log": {
+      "path": "artifacts/visual-upgrade/package-02.log",
+      "bytes": 359748,
+      "sha256": "fdcf2130e747f42bad3db6af681bbc69faa99ba03885fa6b9411611872e70516"
+    },
+    "safeBuildSnippets": [
+      {
+        "line": 3439,
+        "text": "BUILD SUCCESSFUL"
+      },
+      {
+        "line": 3441,
+        "text": "AutomationTool exiting with ExitCode=0 (Success)"
+      }
+    ],
+    "runtimeValidatedByPackageScript": false,
+    "note": "The package script reports UAT and file checks. The separate runtime session below supplies gameplay evidence; the original report is not rewritten."
+  }
 }

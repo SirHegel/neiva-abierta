@@ -1,12 +1,12 @@
 # Ejecutable Unreal, descarga y transmisión
 
-La [alfa Unreal 0.1.0 para Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha)
+La [alfa Unreal 0.2.0 para Linux x86_64](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
 ya se puede descargar gratis. Está compilada y empaquetada con **Unreal Engine
 5.5.4** e incluye el runtime necesario para jugar sin instalar el editor.
 
 ## Descargar y jugar
 
-Descarga `Neiva-Abierta-Unreal-0.1.0-Linux-x64.tar.gz` desde la release, extrae
+Descarga `Neiva-Abierta-Unreal-0.2.0-Linux-x64.tar.gz` desde la release, extrae
 el archivo completo y ejecuta desde la carpeta extraída:
 
 ```sh
@@ -19,21 +19,26 @@ No hay ejecutables de esta versión para Windows, Android o iOS ni requisitos
 mínimos del juego establecidos. Los [controles nativos](UNREAL.md#abrir-y-jugar)
 incluyen WASD, ratón, Shift, Espacio, E, C/V, R y Esc/P.
 
-El archivo publicado ocupa **596.976.129 bytes**. Su SHA-256 es:
+El archivo publicado ocupa **741.359.235 bytes**. Su SHA-256 es:
 
 ```text
-1fc112c9037765f384bba7f441e7c96efee89b0ba39520d5cd65b8606f22c5ce
+2fd09f22b18a790f44876a5b87ae1a0e50d517c17853c1df831d0fd8821d7c5d
 ```
 
 La release incluye `SHA256SUMS`. El código compilado corresponde a
-[`52ebd7fa55ff73c317fbb17134668b8398ec12eb`](https://github.com/SirHegel/neiva-abierta/commit/52ebd7fa55ff73c317fbb17134668b8398ec12eb).
+[`3d42c1f7ab113544f90a2934fcb52b8797f32143`](https://github.com/SirHegel/neiva-abierta/commit/3d42c1f7ab113544f90a2934fcb52b8797f32143).
 Se omiten únicamente los archivos externos `.debug`; se conservan binarios,
 bibliotecas, contenedores de datos y atribuciones.
-**La copia descargada públicamente está en comprobación:** las pruebas del
-paquete local descritas abajo ya finalizaron, pero todavía no acreditan esa
-segunda copia descargada.
+La copia pública se descargó sin autenticación, coincidió por tamaño y hash,
+y abrió con salida normal. Cámara, pausa y vehículo pasaron las comprobaciones
+registradas en el [recibo 0.2](../data/verification/unreal-visual-download.json).
+Las mejoras, capturas 1080p y métricas nativas están en
+[MEJORA-VISUAL-0.2.md](MEJORA-VISUAL-0.2.md).
 
 ## Estado comprobado
+
+El historial siguiente corresponde a la **alfa 0.1.0 anterior**; sus cifras y
+pruebas se conservan separadas de la descarga 0.2 indicada arriba.
 
 El 7 de septiembre de 2026 pasaron la compilación C++, la importación de activos
 y el flujo UAT de cook, staging, empaquetado y archivo para Linux. UAT terminó
@@ -229,7 +234,7 @@ el escritorio. El PC debe permanecer encendido mientras transmite.
 
 | Destino | Qué aloja | Estado de esta entrega |
 | --- | --- | --- |
-| GitHub | Código y ejecutable compilado | [Alfa Linux 0.1.0 pública](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha) |
+| GitHub | Código y ejecutable compilado | [Alfa Linux 0.2.0 pública](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha) |
 | Sitio personal en Vercel | Ficha y enlace de descarga | [Sala de juegos](https://jhonstevenalvarezruiz.vercel.app/juegos/); el ejecutable se aloja en GitHub |
 | itch.io | Juego descargable sin coste de alojamiento | Alternativa comprobada; no se ha creado una cuenta ni publicado |
 | Epic Games Store | Juego descargable gratuito para el jugador | Borrador local; sin envío ni pago |

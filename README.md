@@ -1,10 +1,10 @@
 # Neiva Abierta
 
-**Alfa Unreal 0.1.0 para Linux x86_64 disponible.** Explora Neiva a pie o en
+**Alfa Unreal 0.2.0 para Linux x86_64 disponible.** Explora Neiva a pie o en
 coche, con un personaje anónimo, peatones, colores de ropa y un pequeño estudio
 ficticio para contactar a Jhon. Creada y empaquetada con **Unreal Engine 5.5.4**.
 
-[Descargar gratis la alfa Linux en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha)
+[Descargar gratis la alfa Linux en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha)
 
 Extrae el archivo completo y, desde la carpeta extraída, ejecuta:
 
@@ -22,11 +22,13 @@ para correr; Espacio para saltar o frenar; E para interactuar, entrar o salir
 del coche; C/V para cambiar colores de ropa; R para volver al inicio;
 Esc/P para pausar y continuar.
 
-El paquete independiente abrió en una NVIDIA RTX 4050 Laptop. Se comprobaron
-suelo estable, cámara, pausa/reanudación y una secuencia de entrada al coche,
-avance de 4,8 m, freno y salida. Pixel Streaming recibió vídeo VP8 a 1280 × 720
-con 29,969 FPS durante 18,62 s: es una observación breve de vídeo recibido,
-no un benchmark del render. [Pruebas y descarga](docs/DISTRIBUCION.md).
+La descarga pública 0.2 se comprobó por tamaño y SHA-256 y se ejecutó a
+1080p en una NVIDIA RTX 4050 Laptop. Se verificaron suelo, cámara sin mantener
+clic, pausa, conducción y salida del coche. Una muestra nativa de la vista del
+parque promedió 21,14 ms por cuadro (47,31 FPS derivados), con límite de 60;
+no es una garantía para otras vistas o equipos.
+[Descarga comprobada](data/verification/unreal-visual-download.json) ·
+[Mejoras y mediciones](docs/MEJORA-VISUAL-0.2.md).
 
 La ciudad carga 35.873 huellas y cuatro hitos interpretados; **no es una réplica
 idéntica ni hiperrealista de toda Neiva**. Hay alturas y fachadas estimadas,
@@ -36,12 +38,12 @@ resueltos. [Alcance nativo y controles](docs/UNREAL.md) ·
 [Proyecto, transmisión y publicación](docs/DISTRIBUCION.md) ·
 [Revisar referencias sin usar el teclado o mouse del escritorio](docs/NAVEGACION-AISLADA.md).
 
-Para reconstruir la mejora visual 0.2 en desarrollo, sigue el
+Para reconstruir la mejora visual 0.2, sigue el
 [orden completo de descarga, importación y horneado](docs/UNREAL.md#orden-completo-desde-un-clon-limpio).
 `scripts/unreal.py package` ejecuta sólo la importación base: los árboles y
 bancos CC0 y el horneado de hitos requieren los pasos previos documentados.
 La [evidencia 0.2](docs/MEJORA-VISUAL-0.2.md) se mantiene separada de la alfa
-0.1.0 descargable.
+0.1.0 anterior, que conserva su propia descarga.
 
 ## Prototipo web anterior 0.4 · Three.js
 

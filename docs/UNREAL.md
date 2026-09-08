@@ -2,21 +2,18 @@
 
 El proyecto fuente está en `unreal/NeivaAbierta/NeivaAbierta.uproject`, compilado con **Unreal Engine 5.5.4**. Incluye código C++ original, personaje anónimo en tercera persona, coche arcade conducible, peatones que recorren caminos OSM, colores de ropa persistentes, colisiones, calles y edificios procedurales a partir del mismo JSON que usa la web. Un estudio ficticio de **6 × 4 m, altura 3,5 m** permite abrir un correo a `alvarezruizj289@gmail.com` al acercarse y pulsar **E**. La página pública de Jhon es <https://jhonstevenalvarezruiz.vercel.app/hoja-de-vida/>.
 
-**Alfa Linux 0.1.0 disponible:**
-[descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.1.0-linux-alpha).
-El 7 de septiembre de 2026 pasaron la compilación C++, la importación y el
-empaquetado UAT real con UE 5.5.4. El ejecutable independiente abrió con Vulkan
-SM6 en una NVIDIA RTX 4050 Laptop y cargó **35.873/35.873 edificios**.
-Se comprobaron suelo estable, cámara, pausa/reanudación, entrada al coche,
-avance de unos 4,8 m, freno y salida.
+**Alfa Linux 0.2.0 disponible:**
+[descarga gratuita en GitHub Releases](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.2.0-linux-alpha).
+La compilación, importación y empaquetado UAT terminaron correctamente el
+8 de septiembre de 2026. La copia descargada públicamente coincidió por tamaño
+y SHA-256 y se ejecutó a 1080p con Vulkan SM6. Carga las **35.873 huellas** en
+682 sectores, los hitos preparados, vegetación y personajes; se verificaron
+cámara, pausa y vehículo. El límite inicial es 60 FPS, sin garantía de sostenerlo.
 
-Pixel Streaming recibió 558 cuadros VP8 a 1280 × 720 durante 18,6192 s,
-**29,969 FPS recibidos**, en una partida del paquete. Es vídeo decodificado de
-una sesión breve, no un benchmark del render ni rendimiento garantizado.
-La [evidencia del paquete](DISTRIBUCION.md#estado-comprobado) distingue estas
-pruebas de las anteriores del editor y de la comprobación de la copia descargada
-públicamente. Los avisos VSM pueden reaparecer al conducir: el perfil de sombras
-del lanzador reduce resolución, pero no se considera una solución completa.
+La [evidencia 0.2](MEJORA-VISUAL-0.2.md) distingue los ensayos del Editor,
+el paquete y la copia pública. El [recibo de descarga](../data/verification/unreal-visual-download.json)
+registra la integridad y ejecución. Las pruebas anteriores de 0.1 permanecen
+separadas en el [historial de distribución](DISTRIBUCION.md#estado-comprobado).
 
 Los recursos importados incluyen el humano con esqueleto y animaciones,
 el coche, materiales PBR, fachadas generadas y las mallas de Catedral,
