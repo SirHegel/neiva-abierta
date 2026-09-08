@@ -1,0 +1,477 @@
+{
+  "schemaVersion": 1,
+  "version": "0.3.0-linux-alpha",
+  "checkedAtUtc": "2026-09-08T09:46:17.853141+00:00",
+  "websiteDeploymentVerified": true,
+  "siteRepository": "https://github.com/SirHegel/sitio",
+  "siteCommit": "f049d3bd449b8d0bf0b0b3e2dcd999bfaa89e626",
+  "deploymentId": "dpl_4ShfU3bhHG9Um2N29RWggSPJAu8p",
+  "deploymentUrl": "https://jhonstevenalvarezruiz-fzkbtlaxl-sir-hegel.vercel.app",
+  "canonicalOrigin": "https://jhonstevenalvarezruiz.vercel.app",
+  "pages": [
+    {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/juegos/",
+      "httpStatus": 200,
+      "bytes": 17827,
+      "sha256": "75489d3a3fbf136b90db370f2c37485d9ab3707fe491014000774c7824c68519",
+      "canonical": "https://jhonstevenalvarezruiz.vercel.app/juegos/",
+      "downloadUrlMatches": true
+    },
+    {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/",
+      "httpStatus": 200,
+      "bytes": 20032,
+      "sha256": "59e25fad015f0628a58bdb0f214cb1a6e34ac113320e8fc95e1f782589f9ed12",
+      "canonical": "https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/",
+      "downloadUrlMatches": true
+    }
+  ],
+  "assets": [
+    {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.png",
+      "httpStatus": 200,
+      "bytes": 2864670,
+      "sha256": "5753ac5f47428afd5899eb07f6cc837dbc1715bdef955a0890d4166e8ed953e3",
+      "contentType": "image/png",
+      "matchesApprovedLocalBytes": true
+    },
+    {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.webm",
+      "httpStatus": 200,
+      "bytes": 19522814,
+      "sha256": "98701845b7bd3006d69ff333b0f77ca8734ba8191f5b65e5ddc9039fce6a3247",
+      "contentType": "video/webm",
+      "matchesApprovedLocalBytes": true
+    },
+    {
+      "url": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux-es.vtt",
+      "httpStatus": 200,
+      "bytes": 327,
+      "sha256": "06126fce2b94142ea820ca1896c69aabda53a16445c9e6e5da473ebcc3469e63",
+      "contentType": "text/vtt; charset=utf-8",
+      "matchesApprovedLocalBytes": true
+    }
+  ],
+  "archiveLink": {
+    "url": "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz",
+    "httpStatus": 206,
+    "contentRange": "bytes 0-3/743035069",
+    "gzipMagic": "1f8b0808",
+    "bytes": 743035069,
+    "sha256FromVerifiedReceipt": "65a11768f536f81d9c47ab62788d28e054007e6eb7ec05c4bd9ce28f1cda4cfb",
+    "verification": "GET Range only; earlier full downloaded file hash matched receipt"
+  },
+  "pinnedDownloadReceipt": {
+    "url": "https://raw.githubusercontent.com/SirHegel/neiva-abierta/73f34183af717941cd709e98e38e813c7db39d88/data/verification/unreal-03-download.json",
+    "httpStatus": 200,
+    "sha256Matches": true,
+    "bytesMatch": true,
+    "launchPassed": true
+  },
+  "bloquitos": {
+    "url": "https://bloquitos.vercel.app/",
+    "httpStatus": 200
+  },
+  "siteTests": {
+    "passed": 103,
+    "skipped": 0,
+    "buildPages": 46,
+    "localResponsiveCasesPassed": 8,
+    "productionResponsiveCasesPassed": 8,
+    "viewportWidths": [
+      320,
+      390,
+      960,
+      1440
+    ]
+  },
+  "productionBrowserCases": [
+    {
+      "width": 320,
+      "route": "/juegos/",
+      "overflow": 0,
+      "viewport": 320,
+      "images": [
+        {
+          "src": "/activos/neiva-unreal-linux.png",
+          "width": 1920,
+          "height": 1080,
+          "loaded": true
+        }
+      ],
+      "elements": [
+        {
+          "tag": "ARTICLE",
+          "left": 18.40625,
+          "right": 301.59375,
+          "width": 283.1875
+        },
+        {
+          "tag": "ARTICLE",
+          "left": 18.40625,
+          "right": 301.59375,
+          "width": 283.1875
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 0,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 320,
+      "route": "/proyectos/neiva-abierta/",
+      "overflow": 0,
+      "viewport": 320,
+      "images": [],
+      "elements": [
+        {
+          "tag": "FIGURE",
+          "left": 41.796875,
+          "right": 278.203125,
+          "width": 236.40625
+        },
+        {
+          "tag": "PRE",
+          "left": 41.796875,
+          "right": 278.203125,
+          "width": 236.40625
+        },
+        {
+          "tag": "TABLE",
+          "left": 41.796875,
+          "right": 278.203125,
+          "width": 236.40625
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 1,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "time": 0.060925,
+        "paused": false,
+        "error": null,
+        "frames": 8
+      },
+      "captions": {
+        "tracks": 1,
+        "cues": 1,
+        "text": "Se llama Jhon Steven Álvarez Ruiz.\nSe dedica al desarrollo de software.\nAquí puedes conocer su trabajo y encontrar\nel contacto para contarle tu proyecto."
+      },
+      "audio": {
+        "audioDecodedBytes": 5097,
+        "muted": false,
+        "volume": 1
+      },
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 390,
+      "route": "/juegos/",
+      "overflow": 0,
+      "viewport": 390,
+      "images": [
+        {
+          "src": "/activos/neiva-unreal-linux.png",
+          "width": 1920,
+          "height": 1080,
+          "loaded": true
+        }
+      ],
+      "elements": [
+        {
+          "tag": "ARTICLE",
+          "left": 19.5,
+          "right": 370.5,
+          "width": 351
+        },
+        {
+          "tag": "ARTICLE",
+          "left": 19.5,
+          "right": 370.5,
+          "width": 351
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 0,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 390,
+      "route": "/proyectos/neiva-abierta/",
+      "overflow": 0,
+      "viewport": 390,
+      "images": [],
+      "elements": [
+        {
+          "tag": "FIGURE",
+          "left": 42.890625,
+          "right": 347.109375,
+          "width": 304.21875
+        },
+        {
+          "tag": "PRE",
+          "left": 42.890625,
+          "right": 347.109375,
+          "width": 304.21875
+        },
+        {
+          "tag": "TABLE",
+          "left": 42.890625,
+          "right": 347.109375,
+          "width": 304.21875
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 1,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "time": 0.053708,
+        "paused": false,
+        "error": null,
+        "frames": 6
+      },
+      "captions": {
+        "tracks": 1,
+        "cues": 1,
+        "text": "Se llama Jhon Steven Álvarez Ruiz.\nSe dedica al desarrollo de software.\nAquí puedes conocer su trabajo y encontrar\nel contacto para contarle tu proyecto."
+      },
+      "audio": {
+        "audioDecodedBytes": 4846,
+        "muted": false,
+        "volume": 1
+      },
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 960,
+      "route": "/juegos/",
+      "overflow": 0,
+      "viewport": 960,
+      "images": [
+        {
+          "src": "/activos/neiva-unreal-linux.png",
+          "width": 1920,
+          "height": 1080,
+          "loaded": true
+        }
+      ],
+      "elements": [
+        {
+          "tag": "ARTICLE",
+          "left": 43.203125,
+          "right": 465.59375,
+          "width": 422.390625
+        },
+        {
+          "tag": "ARTICLE",
+          "left": 494.390625,
+          "right": 916.796875,
+          "width": 422.40625
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 0,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 960,
+      "route": "/proyectos/neiva-abierta/",
+      "overflow": 0,
+      "viewport": 960,
+      "images": [],
+      "elements": [
+        {
+          "tag": "FIGURE",
+          "left": 149.75,
+          "right": 810.234375,
+          "width": 660.484375
+        },
+        {
+          "tag": "PRE",
+          "left": 77.796875,
+          "right": 882.203125,
+          "width": 804.40625
+        },
+        {
+          "tag": "TABLE",
+          "left": 77.796875,
+          "right": 574.296875,
+          "width": 496.5
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 1,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "time": 0.063346,
+        "paused": false,
+        "error": null,
+        "frames": 7
+      },
+      "captions": {
+        "tracks": 1,
+        "cues": 1,
+        "text": "Se llama Jhon Steven Álvarez Ruiz.\nSe dedica al desarrollo de software.\nAquí puedes conocer su trabajo y encontrar\nel contacto para contarle tu proyecto."
+      },
+      "audio": {
+        "audioDecodedBytes": 5097,
+        "muted": false,
+        "volume": 1
+      },
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 1440,
+      "route": "/juegos/",
+      "overflow": 0,
+      "viewport": 1440,
+      "images": [
+        {
+          "src": "/activos/neiva-unreal-linux.png",
+          "width": 1920,
+          "height": 1080,
+          "loaded": true
+        }
+      ],
+      "elements": [
+        {
+          "tag": "ARTICLE",
+          "left": 64.796875,
+          "right": 698.390625,
+          "width": 633.59375
+        },
+        {
+          "tag": "ARTICLE",
+          "left": 741.578125,
+          "right": 1375.1875,
+          "width": 633.609375
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 0,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos/neiva-abierta/",
+      "overflow": 0,
+      "viewport": 1440,
+      "images": [],
+      "elements": [
+        {
+          "tag": "FIGURE",
+          "left": 400.15625,
+          "right": 1039.828125,
+          "width": 639.671875
+        },
+        {
+          "tag": "PRE",
+          "left": 252.984375,
+          "right": 1186.984375,
+          "width": 934
+        },
+        {
+          "tag": "TABLE",
+          "left": 252.984375,
+          "right": 749.484375,
+          "width": 496.5
+        }
+      ],
+      "violations": [],
+      "downloadButtons": 1,
+      "releaseLinks": [
+        "https://github.com/SirHegel/neiva-abierta/releases/download/unreal-v0.3.0-linux-alpha/Neiva-Abierta-Unreal-0.3.0-Linux-x64.tar.gz"
+      ],
+      "alpha": true,
+      "pending": false,
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "time": 0.066714,
+        "paused": false,
+        "error": null,
+        "frames": 7,
+        "fullPlayback": {
+          "ended": true,
+          "time": 18.5,
+          "duration": 18.5,
+          "frames": 555,
+          "dropped": 0,
+          "error": null,
+          "audioDecodedBytes": 148890
+        }
+      },
+      "captions": {
+        "tracks": 1,
+        "cues": 1,
+        "text": "Se llama Jhon Steven Álvarez Ruiz.\nSe dedica al desarrollo de software.\nAquí puedes conocer su trabajo y encontrar\nel contacto para contarle tu proyecto."
+      },
+      "audio": {
+        "audioDecodedBytes": 5097,
+        "muted": false,
+        "volume": 1
+      },
+      "errors": [],
+      "failed": []
+    }
+  ],
+  "method": "Excluded to avoid synthetic visit records; page and media responses use production",
+  "localEvidence": [
+    {
+      "file": "report.json",
+      "bytes": 9951,
+      "sha256": "01cd68a3cdcfbb6974328ea3488c6e0bcead437f9adb20fcb42e0b443b7a51b6"
+    },
+    {
+      "file": "http-assets.json",
+      "bytes": 2723,
+      "sha256": "feeb8d2f0bdbca51ab50e78dc3abc74a0ab37eec31e2864ad289430c524f41f5"
+    }
+  ],
+  "scope": "Website/download/media publication verified. This does not establish a mobile Unreal executable, Windows/macOS packages, full-city photogrammetry or AAA graphics."
+}

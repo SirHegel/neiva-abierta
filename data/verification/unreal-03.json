@@ -885,7 +885,8 @@
         "Repeated source frame timestamps triggered null-muxer DTS warnings."
       ],
       "deliveredFullDecodeExitCode": 0,
-      "deliveredFullDecodeWarningBytes": 0
+      "deliveredFullDecodeWarningBytes": 0,
+      "siteUrl": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.webm"
     },
     "poster": {
       "name": "Neiva-Abierta-0.3-Linux-1080p.png",
@@ -897,7 +898,8 @@
       "width": 1920,
       "height": 1080,
       "sourceFrame": "jhon-dialogue-native.png",
-      "method": "PNG copied from decoded native video at original dimensions; no resize or visual editing."
+      "method": "PNG copied from decoded native video at original dimensions; no resize or visual editing.",
+      "siteUrl": "https://jhonstevenalvarezruiz.vercel.app/activos/neiva-unreal-linux.png"
     },
     "visualReview": {
       "posterViewed": true,
@@ -978,9 +980,9 @@
       ]
     },
     "publicAnonymousDownloadsVerified": true,
-    "websiteDeploymentVerified": false
+    "websiteDeploymentVerified": true
   },
-  "websiteDeploymentVerified": false,
+  "websiteDeploymentVerified": true,
   "limitations": [
     "This is an alpha, substantially below the requested Cyberpunk/AAA visual quality.",
     "Not a whole-city scan or identical Neiva replica: generic facades, estimated heights, flat terrain and no building interiors remain.",
@@ -992,5 +994,7 @@
     "The first automated public-download NPC pursuit stopped at its attempt budget; corrected test timing reached the moving NPC through normal WASD/sprint input.",
     "VP8 encoded-copy recording can fail with backwards initial RTP timestamps; experimental warmup keyframe requests are unreliable in UE 5.5. The published preview is explicitly re-encoded by MediaRecorder.",
     "Virtual shadow map warnings and procedural building/lighting limitations remain; successful cook/runtime checks do not prove AAA quality."
-  ]
+  ],
+  "websiteDeploymentEvidence": "data/verification/unreal-03-site.json",
+  "websiteDeploymentCheckedAtUtc": "2026-09-08T09:46:17.853141+00:00"
 }
