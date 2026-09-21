@@ -8,6 +8,8 @@ superficies se mojan y secan gradualmente. Creada y empaquetada con
 
 [Descargar gratis la alfa Linux 0.3](https://github.com/SirHegel/neiva-abierta/releases/tag/unreal-v0.3.0-linux-alpha)
 
+El alojamiento del prototipo web en Vercel se retiró el **20 de septiembre de 2026**. Se conservan en este repositorio el código, sus 21 revisiones desplegadas y las versiones descargables de GitHub Releases, incluidos el ejecutable Linux 0.3, su vídeo y su captura. La eliminación del proyecto web se verificó mediante HTTP 204 y su ausencia posterior mediante HTTP 404.
+
 La copia pública se descargó sin credenciales y pasó **19 comprobaciones de
 juego y seis de integridad**, con cierre normal. Se revisó a 1080p en una
 RTX 4050 Laptop con límite de 30 FPS; no es un benchmark sin límite.
@@ -40,8 +42,8 @@ interiores pendientes. Los avisos VSM tampoco se consideran resueltos.
 [Reconstrucción y límites](docs/RECONSTRUCCION-0.3.md) ·
 [Clima y diálogos](docs/CLIMA-DIALOGOS-0.3.md).
 
-[Ficha del proyecto y vídeo](https://jhonstevenalvarezruiz.vercel.app/proyectos/neiva-abierta/#descarga-unreal) ·
-[Juegos: Neiva Abierta y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/).
+[Ficha del proyecto y vídeo](https://sirhegel.vercel.app/proyectos/neiva-abierta/#descarga-unreal) ·
+[Juegos: Neiva Abierta y Bloquitos](https://sirhegel.vercel.app/juegos/).
 La ficha se adapta a móvil; el ejecutable es para Linux. El vídeo de revisión
 0.3 incluye audio y se recodifica desde MediaRecorder a 30 FPS; esa cadencia
 no mide el rendimiento original. Las PNG conservan la captura nativa.
@@ -74,14 +76,14 @@ sin nombre, caminata en tercera persona, un carro conducible, tráfico ambiental
 mapa con destinos y un pequeño estudio ficticio para contactar a Jhon Steven
 Álvarez Ruiz. Controles de teclado y controles táctiles para celular.
 
-[Jugar al prototipo web anterior](https://neiva-abierta.vercel.app/) ·
-[Sala de juegos y Bloquitos](https://jhonstevenalvarezruiz.vercel.app/juegos/)
+El prototipo web ya no tiene una publicación activa. Su código se conserva aquí y se puede ejecutar localmente con las instrucciones de desarrollo.
+[Sala de juegos y Bloquitos](https://sirhegel.vercel.app/juegos/)
 
 ![Captura del prototipo Three.js 0.4: personaje en el Santander, Catedral, hotel y fuente](public/preview.webp)
 
 ## Alcance del prototipo web 0.4
 
-La edición web usa Three.js/WebGL 2 y funciona como sitio estático en Vercel.
+La edición web usa Three.js/WebGL 2 y se puede compilar como sitio estático.
 Las calles, parques y huellas de edificios proceden de datos abiertos. Las
 alturas ausentes, fachadas y árboles son una interpretación visual. La edición
 0.4 usa un personaje humano animado de Microsoft Rocketbox, el automóvil
